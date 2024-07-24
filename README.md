@@ -9,5 +9,5 @@ Currently, two official plugins are available:
 
 
 Build project: 
-- Làm theo hướng dẫn: https://ui.shadcn.com/docs/installation/vite
+- Chạy npm install
 - Chạy "npm run dev"
