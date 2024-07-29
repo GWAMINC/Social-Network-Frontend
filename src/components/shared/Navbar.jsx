@@ -16,7 +16,7 @@ const Navbar = () => {
                 <div className='flex items-center gap-12'>
                     <ul className='flex font-medium items-center gap-5'>
                         <li>Home</li>
-                        <li>Create a new Post</li>
+                        <Link to='/profile/update'><Button variant='outline'>Profile Update</Button></Link>
                         <Link to='/addPost'><Button variant='outline'>Create a new Post</Button></Link>
                         <Link to='/login'><Button variant='outline'>Sign in</Button></Link>
                         <Link to='/register'><Button variant='outline'>Register</Button></Link>
