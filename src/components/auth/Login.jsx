@@ -1,13 +1,15 @@
+// Login.jsx
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({setUser}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
-  const [user, setUser] = useState(null);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,10 +18,13 @@ const Login = () => {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
-      const res = await axios.post(`${apiUrl}/user/login`, { email, password, role });
-      console.log("Đăng nhập thành công:", res.data);
-      setUser(res.data.user);
+      const res = await axios.post(`${apiUrl}/user/login`, { email, password, role }, {
+        withCredentials: true, // Đảm bảo cookies được gửi cùng với yêu cầu
+    });
+      setUser(res.data.user);  
+      console.log(res.data);
       setMessage("Đăng nhập thành công!");
+      navigate('/profile/update', { state: { user: res.data.user } });
     } catch (error) {
       console.error("Đăng nhập thất bại:", error.response?.data?.message || error.message);
       setError(error.response?.data?.message || "Đăng nhập thất bại");
@@ -31,7 +36,6 @@ const Login = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold mb-4 text-center">Sign in</h1>
-        {user && <div className="text-green-500 text-center mb-4">Chào mừng, {user.name}!</div>}
         {message && <div className="text-green-500 text-center mb-4">{message}</div>}
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
         <form onSubmit={handleLogin} className="space-y-4">

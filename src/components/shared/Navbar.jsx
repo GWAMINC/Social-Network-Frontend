@@ -62,6 +62,14 @@ const Navbar = () => {
                     </Link>
                 </div>
 
+                    <ul className='flex font-medium items-center gap-5'>
+                        <li>Home</li>
+                        <Link to='/profile/update'><Button variant='outline'>Profile Update</Button></Link>
+                        <Link to='/addPost'><Button variant='outline'>Create a new Post</Button></Link>
+                        <Link to='/login'><Button variant='outline'>Sign in</Button></Link>
+                        <Link to='/register'><Button variant='outline'>Register</Button></Link>
+                    </ul>
+
                     <div className="absolute top-0 right-12 mt-3 ml-6">
                     <Popover>
                         <PopoverTrigger asChild>
