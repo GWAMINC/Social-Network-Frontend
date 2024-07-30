@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Login = ({setUser}) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
@@ -20,15 +20,13 @@ const Login = ({setUser}) => {
       const apiUrl = import.meta.env.VITE_API_URL;
       const res = await axios.post(`${apiUrl}/user/login`, { email, password, role }, {
         withCredentials: true, // Đảm bảo cookies được gửi cùng với yêu cầu
-    });
-      setUser(res.data.user);  
+    }); 
       console.log(res.data);
       setMessage("Đăng nhập thành công!");
       navigate('/profile/update', { state: { user: res.data.user } });
     } catch (error) {
       console.error("Đăng nhập thất bại:", error.response?.data?.message || error.message);
       setError(error.response?.data?.message || "Đăng nhập thất bại");
-      setUser(null);
     }
   };
 
