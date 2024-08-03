@@ -13,12 +13,14 @@ import { FiBell, FiMessageSquare } from "react-icons/fi";
 
 const Navbar = () => {
   return (
-    <div className="bg-[#1C2E4E] fixed top-0 left-0 w-full z-10 shadow-md">
+    <div className="bg-[#1E3A8A] fixed top-0 left-0 w-full z-10 shadow-md">
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16 px-6">
         <div className="flex items-center flex-grow">
           <div className="flex items-center">
             <h1 className="text-4xl font-bold text-white absolute top-0 left-3 mt-2 ml-6">
-              Kit<span className="text-[#B48FD9]">Kat</span>
+              <Link to="/">
+                Kit<span className="text-[#B48FD9]">Kat</span>
+              </Link>
             </h1>
           </div>
 
@@ -73,13 +75,21 @@ const Navbar = () => {
           </div>
 
           <ul className="flex font-medium items-center gap-5">
-            <li>Home</li>
-            <Link to="/profile/update">
-              <Button variant="outline">Profile Update</Button>
-            </Link>
-            <Link to="/addPost">
-              <Button variant="outline">Create a new Post</Button>
-            </Link>
+            <li>
+              <Link to="/">
+                <Button variant="outline">Home</Button>
+              </Link>
+            </li>
+            <li>
+              <Link to="/profile/update">
+                <Button variant="outline">Profile Update</Button>
+              </Link>
+            </li>
+            <li>
+              <Link to="/addPost">
+                <Button variant="outline">Create a new Post</Button>
+              </Link>
+            </li>
           </ul>
 
           <div className="absolute top-0 right-12 mt-3 ml-6">

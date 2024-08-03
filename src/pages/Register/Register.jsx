@@ -62,6 +62,7 @@ const Register = () => {
             <span className="block text-gray-700">Name:</span>
             <input
               type="text"
+              placeholder="Vui lòng nhập tên"
               value={newUser.name}
               onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -72,6 +73,7 @@ const Register = () => {
             <span className="block text-gray-700">Email:</span>
             <input
               type="email"
+              placeholder="Vui lòng nhập email"
               value={newUser.email}
               onChange={(e) =>
                 setNewUser({ ...newUser, email: e.target.value })
@@ -84,6 +86,7 @@ const Register = () => {
             <span className="block text-gray-700">Password:</span>
             <input
               type="password"
+              placeholder="Vui lòng nhập mật khẩu"
               value={newUser.password}
               onChange={(e) =>
                 setNewUser({ ...newUser, password: e.target.value })
@@ -96,6 +99,7 @@ const Register = () => {
             <span className="block text-gray-700">ConfirmPassword:</span>
             <input
               type="password"
+              placeholder="Vui lòng xác nhận mật khẩu"
               value={newUser.confirmPassword}
               onChange={(e) =>
                 setNewUser({ ...newUser, confirmPassword: e.target.value })
@@ -108,6 +112,7 @@ const Register = () => {
             <span className="block text-gray-700">PhoneNumber:</span>
             <input
               type="text"
+              placeholder="Vui lòng nhập số điện thoại"
               value={newUser.phoneNumber}
               onChange={(e) =>
                 setNewUser({ ...newUser, phoneNumber: e.target.value })
