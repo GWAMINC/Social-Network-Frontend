@@ -1,4 +1,3 @@
-// Login.jsx
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -19,17 +18,24 @@ const Login = () => {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
+
       const res = await axios.post(`${apiUrl}/user/login`, { email, password, role }, {
-        withCredentials: true, // Đảm bảo cookies được gửi cùng với yêu cầu
-    });
-     
+        withCredentials: true, 
+      });
+
+
+
       console.log(res.data);
       setMessage("Đăng nhập thành công!");
-      navigate('/profile/update', { state: { user: res.data.user } });
+      navigate('/'); 
+
     } catch (error) {
-      console.error("Đăng nhập thất bại:", error.response?.data?.message || error.message);
+      console.error(
+        "Đăng nhập thất bại:",
+        error.response?.data?.message || error.message
+      );
       setError(error.response?.data?.message || "Đăng nhập thất bại");
-      
+
     }
   };
 
@@ -42,7 +48,9 @@ const Login = () => {
     <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
     <div className="max-w-md mx-auto">
         <h1 className="text-2xl font-bold mb-4 text-center">Sign in</h1>
-        {message && <div className="text-green-500 text-center mb-4">{message}</div>}
+        {message && (
+          <div className="text-green-500 text-center mb-4">{message}</div>
+        )}
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
         <form onSubmit={handleLogin} className="space-y-4">
         <div className="divide-y divide-gray-200">
@@ -55,6 +63,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Vui lòng nhập email"
               required
             />
           </label>
@@ -67,6 +76,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Vui lòng nhập password"
               required
             />
           </label>
@@ -78,9 +88,11 @@ const Login = () => {
               value={role}
               onChange={(e) => setRole(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              disabled
             >
-              <option  value="user">User</option>
-              <option hidden value="admin">Admin</option> 
+
+              <option value="user">User</option>
+
             </select>
           </label>
           </div>
@@ -108,3 +120,6 @@ const Login = () => {
 };
 
 export default Login;
+
+
+

@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { Listbox } from '@headlessui/react';
 
-const AddPost = ({ userId }) => {
+const AddPost = () => {
     const [content, setContent] = useState('');
     const [access, setAccess] = useState('public');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
 
     const accessOptions = ['public', 'private'];
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         setError(null);
 
         try {
-            const response = await axios.post('http://localhost:9090/api/post/createPost', { userId, content, access });
+            const response = await axios.post('http://localhost:9090/api/post/createPost', { content, access },{withCredentials: true});
             console.log('Post created:', response.data);
             setContent('');
             setAccess('public');
