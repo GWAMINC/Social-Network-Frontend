@@ -26,7 +26,7 @@ const Register = () => {
         email: newUser.email,
         password: newUser.password,
         phoneNumber: newUser.phoneNumber,
-        role: newUser.role
+        role: newUser.role,
       });
       console.log("Đăng ký thành công:", response.data);
       setMessage(response.data.message);
@@ -53,13 +53,16 @@ const Register = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold mb-4 text-center">Register</h1>
-        {message && <div className="text-green-500 text-center mb-4">{message}</div>}
+        {message && (
+          <div className="text-green-500 text-center mb-4">{message}</div>
+        )}
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
         <form onSubmit={handleRegister} className="space-y-4">
           <label className="block">
             <span className="block text-gray-700">Name:</span>
             <input
               type="text"
+              placeholder="Vui lòng nhập tên"
               value={newUser.name}
               onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -70,8 +73,11 @@ const Register = () => {
             <span className="block text-gray-700">Email:</span>
             <input
               type="email"
+              placeholder="Vui lòng nhập email"
               value={newUser.email}
-              onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+              onChange={(e) =>
+                setNewUser({ ...newUser, email: e.target.value })
+              }
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
@@ -80,8 +86,11 @@ const Register = () => {
             <span className="block text-gray-700">Password:</span>
             <input
               type="password"
+              placeholder="Vui lòng nhập mật khẩu"
               value={newUser.password}
-              onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+              onChange={(e) =>
+                setNewUser({ ...newUser, password: e.target.value })
+              }
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
@@ -90,8 +99,11 @@ const Register = () => {
             <span className="block text-gray-700">ConfirmPassword:</span>
             <input
               type="password"
+              placeholder="Vui lòng xác nhận mật khẩu"
               value={newUser.confirmPassword}
-              onChange={(e) => setNewUser({ ...newUser, confirmPassword: e.target.value })}
+              onChange={(e) =>
+                setNewUser({ ...newUser, confirmPassword: e.target.value })
+              }
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
@@ -100,8 +112,11 @@ const Register = () => {
             <span className="block text-gray-700">PhoneNumber:</span>
             <input
               type="text"
+              placeholder="Vui lòng nhập số điện thoại"
               value={newUser.phoneNumber}
-              onChange={(e) => setNewUser({ ...newUser, phoneNumber: e.target.value })}
+              onChange={(e) =>
+                setNewUser({ ...newUser, phoneNumber: e.target.value })
+              }
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
@@ -112,9 +127,9 @@ const Register = () => {
               value={newUser.role}
               onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              disabled
             >
               <option value="user">User</option>
-              <option value="admin">Admin</option>
             </select>
           </label>
           <button
