@@ -9,7 +9,6 @@ const Register = () => {
     password: "",
     confirmPassword: "",
     phoneNumber: "",
-    role: "user",
   });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -28,7 +27,6 @@ const Register = () => {
         email: newUser.email,
         password: newUser.password,
         phoneNumber: newUser.phoneNumber,
-        role: newUser.role,
       });
       console.log("Đăng ký thành công:", response.data);
       setMessage(response.data.message);
@@ -39,7 +37,6 @@ const Register = () => {
         password: "",
         confirmPassword: "",
         phoneNumber: "",
-        role: "user",
       });
     } catch (error) {
       console.error(
@@ -123,17 +120,6 @@ const Register = () => {
               required
             />
           </label>
-          <label className="block">
-            <span className="block text-gray-700">Role:</span>
-            <select
-              value={newUser.role}
-              onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              disabled
-            >
-              <option value="user">User</option>
-            </select>
-          </label>
           <button
             type="submit"
             className="w-full py-2 px-4 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -142,12 +128,11 @@ const Register = () => {
           </button>
         </form>
         <div className="mt-4 text-center">
-          <p className="text-gray-700">
-            Bạn đã có tài khoản?{" "}
-            <a href="/login" className="text-blue-500 hover:underline">
-              Đăng nhập
+          <div className="text-gray-700 mb-2">
+            <a href="/login" className="text-blue-500 hover:text-blue-600">
+              Đã có tài khoản? Đăng nhập ngay!
             </a>
-          </p>
+          </div>
         </div>
       </div>
     </div>

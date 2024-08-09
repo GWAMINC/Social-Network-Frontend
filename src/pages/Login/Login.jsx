@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 const Login = ({ setUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -19,7 +18,7 @@ const Login = ({ setUser }) => {
       const apiUrl = import.meta.env.VITE_API_URL;
       const res = await axios.post(
         `${apiUrl}/user/login`,
-        { email, password, role },
+        { email, password },
         {
           withCredentials: true, // Đảm bảo cookies được gửi cùng với yêu cầu
         }
@@ -68,17 +67,6 @@ const Login = ({ setUser }) => {
               placeholder="Vui lòng nhập password"
               required
             />
-          </label>
-          <label className="block">
-            <span className="block text-gray-700">Role:</span>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              disabled
-            >
-              <option value="user">User</option>
-            </select>
           </label>
           <button
             type="submit"

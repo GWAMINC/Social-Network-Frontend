@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation, Link } from "react-router-dom";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button.jsx";
 import { PopoverContent } from "@radix-ui/react-popover";
@@ -8,7 +9,6 @@ import {
   AvatarFallback,
 } from "@/components/ui/avatar.jsx";
 import { LogOut, User2, Settings, HelpCircle } from "lucide-react";
-import { Link } from "react-router-dom";
 import {
   FiHome,
   FiUsers,
@@ -19,14 +19,21 @@ import {
 } from "react-icons/fi";
 
 const Navbar = () => {
+  const location = useLocation();
+
+  // Ẩn navbar khi ở trang đăng nhập hoặc trang đăng ký
+  if (location.pathname === "/login" || location.pathname === "/register") {
+    return null;
+  }
+
   return (
-    <div className="bg-slate-950 fixed top-0 left-0 w-full z-10 shadow-lg">
+    <div className="bg-gray-800 fixed top-0 left-0 w-full z-10 shadow-lg">
       <div className="flex items-center justify-between max-w-full h-16 mx-auto px-6">
         {/* Logo and Search Bar */}
         <div className="flex items-center flex-1">
           <h1 className="text-2xl font-bold text-white mr-5">
             <Link to="/" className="text-inherit no-underline">
-              Kit<span className="text-purple-300">Kat</span>
+              Kit<span className="text-white">Kat</span>
             </Link>
           </h1>
           <div className="relative w-72">
