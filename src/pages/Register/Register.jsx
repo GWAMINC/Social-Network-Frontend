@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [newUser, setNewUser] = useState({
@@ -12,6 +13,7 @@ const Register = () => {
   });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -96,7 +98,7 @@ const Register = () => {
             />
           </label>
           <label className="block">
-            <span className="block text-gray-700">ConfirmPassword:</span>
+            <span className="block text-gray-700">Confirm Password:</span>
             <input
               type="password"
               placeholder="Vui lòng xác nhận mật khẩu"
@@ -109,7 +111,7 @@ const Register = () => {
             />
           </label>
           <label className="block">
-            <span className="block text-gray-700">PhoneNumber:</span>
+            <span className="block text-gray-700">Phone Number:</span>
             <input
               type="text"
               placeholder="Vui lòng nhập số điện thoại"
@@ -139,6 +141,14 @@ const Register = () => {
             Register
           </button>
         </form>
+        <div className="mt-4 text-center">
+          <p className="text-gray-700">
+            Bạn đã có tài khoản?{" "}
+            <a href="/login" className="text-blue-500 hover:underline">
+              Đăng nhập
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

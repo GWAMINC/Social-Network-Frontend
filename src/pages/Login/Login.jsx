@@ -1,4 +1,3 @@
-// Login.jsx
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -88,6 +87,21 @@ const Login = ({ setUser }) => {
             Login
           </button>
         </form>
+        <div className="mt-4 text-center">
+          <div className="text-gray-700 mb-2">
+            <a
+              href="/forgot-password"
+              className="text-blue-500 hover:text-blue-600"
+            >
+              Bạn quên tài khoản ư?
+            </a>
+          </div>
+          <div>
+            <a href="./Register" className="text-blue-500 hover:text-blue-600">
+              Đăng ký tài khoản
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

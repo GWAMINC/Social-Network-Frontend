@@ -20,65 +20,23 @@ import {
 
 const Navbar = () => {
   return (
-    <div
-      style={{
-        backgroundColor: "#1E3A8A",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        zIndex: 10,
-        boxShadow: "0 4px 2px -2px gray",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          maxWidth: "100%",
-          height: "64px",
-          margin: "0 auto",
-          padding: "0 24px",
-        }}
-      >
+    <div className="bg-slate-950 fixed top-0 left-0 w-full z-10 shadow-lg">
+      <div className="flex items-center justify-between max-w-full h-16 mx-auto px-6">
         {/* Logo and Search Bar */}
-        <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
-          <h1
-            style={{
-              fontSize: "32px",
-              fontWeight: "bold",
-              color: "white",
-              marginRight: "20px",
-            }}
-          >
-            <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
-              Kit<span style={{ color: "#B48FD9" }}>Kat</span>
+        <div className="flex items-center flex-1">
+          <h1 className="text-2xl font-bold text-white mr-5">
+            <Link to="/" className="text-inherit no-underline">
+              Kit<span className="text-purple-300">Kat</span>
             </Link>
           </h1>
-          <div style={{ position: "relative", width: "300px" }}>
+          <div className="relative w-72">
             <input
               type="text"
               placeholder="Search for friends, groups, pages"
-              style={{
-                width: "100%",
-                padding: "8px 16px 8px 40px",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-                backgroundColor: "white",
-                color: "#333",
-              }}
+              className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 bg-white text-gray-800"
             />
             <svg
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "12px",
-                transform: "translateY(-50%)",
-                width: "20px",
-                height: "20px",
-                color: "#666",
-              }}
+              className="absolute top-1/2 left-3 transform -translate-y-1/2 w-5 h-5 text-gray-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -95,102 +53,33 @@ const Navbar = () => {
         </div>
 
         {/* Navigation Buttons */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flex: 1,
-          }}
-        >
-          <Link to="/" style={{ textDecoration: "none", margin: "0 10px" }}>
-            <Button
-              variant="outline"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "black",
-                opacity: 1,
-                backgroundColor: "white",
-              }}
-            >
+        <div className="flex items-center justify-center flex-1">
+          <Link to="/" className="text-decoration-none mx-2">
+            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600 ">
               <FiHome />
               Home
             </Button>
           </Link>
-          <Link
-            to="/friends"
-            style={{ textDecoration: "none", margin: "0 10px" }}
-          >
-            <Button
-              variant="outline"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "black",
-                opacity: 1,
-                backgroundColor: "white",
-              }}
-            >
+          <Link to="/friends" className="text-decoration-none mx-2">
+            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
               <FiUsers />
               Friends
             </Button>
           </Link>
-          <Link
-            to="/create-post"
-            style={{ textDecoration: "none", margin: "0 10px" }}
-          >
-            <Button
-              variant="outline"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "black",
-                opacity: 1,
-                backgroundColor: "white",
-              }}
-            >
+          <Link to="/create-post" className="text-decoration-none mx-2">
+            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
               <FiPlusSquare />
               Create a Post
             </Button>
           </Link>
-          <Link
-            to="/video"
-            style={{ textDecoration: "none", margin: "0 10px" }}
-          >
-            <Button
-              variant="outline"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "black",
-                opacity: 1,
-                backgroundColor: "white",
-              }}
-            >
+          <Link to="/video" className="text-decoration-none mx-2">
+            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
               <FiVideo />
               Video
             </Button>
           </Link>
-          <Link
-            to="/group"
-            style={{ textDecoration: "none", margin: "0 10px" }}
-          >
-            <Button
-              variant="outline"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                color: "black",
-                opacity: 1,
-                backgroundColor: "white",
-              }}
-            >
+          <Link to="/group" className="text-decoration-none mx-2">
+            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
               <FiGitPullRequest />
               Group
             </Button>
@@ -198,185 +87,72 @@ const Navbar = () => {
         </div>
 
         {/* Avatar and Menu */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            flex: 1,
-          }}
-        >
+        <div className="flex items-center justify-end flex-1">
           <Popover>
             <PopoverTrigger asChild>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "16px" }}
-              >
-                <FiMenu style={{ color: "white", cursor: "pointer" }} />
+              <div className="flex items-center gap-4 cursor-pointer">
+                <FiMenu className="text-white" />
               </div>
             </PopoverTrigger>
-            <PopoverContent
-              style={{
-                width: "300px",
-                padding: "16px",
-                backgroundColor: "white",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "8px",
-              }}
-            >
-              <Link to="/create" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+            <PopoverContent className="w-72 p-4 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col gap-2">
+              <Link to="/create" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
                   <FiPlusSquare />
-                  <span style={{ color: "black" }}>Tạo</span>
+                  <span>Tạo</span>
                 </div>
               </Link>
-              <Link to="/post" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/post" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
                   <FiGitPullRequest />
-                  <span style={{ color: "black" }}>Đăng</span>
+                  <span>Đăng</span>
                 </div>
               </Link>
-              <Link to="/news" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/news" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
                   <FiUsers />
-                  <span style={{ color: "black" }}>Tin</span>
+                  <span>Tin</span>
                 </div>
               </Link>
-              <Link to="/reels" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/reels" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
                   <FiVideo />
-                  <span style={{ color: "black" }}>Thước phim</span>
+                  <span>Thước phim</span>
                 </div>
               </Link>
-              <Link to="/life-events" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/life-events" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
                   <FiHome />
-                  <span style={{ color: "black" }}>Sự kiện trong đời</span>
+                  <span>Sự kiện trong đời</span>
                 </div>
               </Link>
-              <Link to="/pages" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/pages" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
                   <FiUsers />
-                  <span style={{ color: "black" }}>Trang</span>
+                  <span>Trang</span>
                 </div>
               </Link>
-              <Link to="/ads" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/ads" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
                   <FiPlusSquare />
-                  <span style={{ color: "black" }}>Quảng cáo</span>
+                  <span>Quảng cáo</span>
                 </div>
               </Link>
-              <Link to="/groups" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/groups" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
                   <FiGitPullRequest />
-                  <span style={{ color: "black" }}>Nhóm</span>
+                  <span>Nhóm</span>
                 </div>
               </Link>
-              <Link to="/events" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/events" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
                   <FiUsers />
-                  <span style={{ color: "black" }}>Sự kiện</span>
+                  <span>Sự kiện</span>
                 </div>
               </Link>
-              <Link to="/marketplace" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/marketplace" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
                   <FiHome />
-                  <span style={{ color: "black" }}>
-                    Bài niêm yết trên Marketplace
-                  </span>
+                  <span>Bài niêm yết trên Marketplace</span>
                 </div>
               </Link>
             </PopoverContent>
@@ -384,16 +160,8 @@ const Navbar = () => {
 
           <Popover>
             <PopoverTrigger asChild>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  cursor: "pointer",
-                  marginLeft: "16px",
-                }}
-              >
-                <Avatar style={{ width: "40px", height: "40px" }}>
+              <div className="flex items-center gap-2 cursor-pointer ml-4">
+                <Avatar className="w-10 h-10">
                   <AvatarImage
                     src="https://github.com/shadcn.png"
                     alt="@shadcn"
@@ -402,85 +170,29 @@ const Navbar = () => {
                 </Avatar>
               </div>
             </PopoverTrigger>
-            <PopoverContent
-              style={{
-                width: "200px",
-                padding: "16px",
-                backgroundColor: "white",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "8px",
-              }}
-            >
-              <Link to="/profile" style={{ textDecoration: "none" }}>
-                <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
-                  {/* <Link to="/login">
-                    <Button variant="outline">Sign in</Button>
-                  </Link>
-                  <Link to="/register">
-                    <Button variant="outline">Register</Button>
-                  </Link> */}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+            <PopoverContent className="w-52 p-4 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col gap-2">
+              <Link to="/profile" className="text-decoration-none">
+                <div className="flex items-center gap-2 py-2 text-black">
                   <User2 />
-                  View Profile
+                  <span>View Profile</span>
                 </div>
               </Link>
-              <Link to="/settings" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/settings" className="text-decoration-none">
+                <div className="flex items-center gap-2 py-2 text-black">
                   <Settings />
-                  Settings
+                  <span>Settings</span>
                 </div>
               </Link>
-              <Link to="/support" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/support" className="text-decoration-none">
+                <div className="flex items-center gap-2 py-2 text-black">
                   <HelpCircle />
-                  Support
+                  <span>Support</span>
                 </div>
               </Link>
-              <Link to="/login" style={{ textDecoration: "none" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    cursor: "pointer",
-                    padding: "8px 0",
-                    color: "black",
-                  }}
-                >
+              <Link to="/login" className="text-decoration-none">
+                <div className="flex items-center gap-2 py-2 text-black">
                   <LogOut />
-                  Logout
+                  <span>Logout</span>
                 </div>
               </Link>
             </PopoverContent>
