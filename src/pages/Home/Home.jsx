@@ -9,6 +9,7 @@ import {
   AiOutlineComment,
 } from "react-icons/ai";
 import { FaThumbsUp, FaComment, FaShare } from "react-icons/fa";
+import AddPost from "../AddPost";
 
 const Home = () => {
   return (
@@ -54,46 +55,7 @@ const Home = () => {
           </div>
 
           {/* Create a Post */}
-          <div className="p-6 bg-white shadow-lg rounded-lg">
-            <h2 className="text-2xl font-semibold text-[#B48FD9]">
-              Create a Post
-            </h2>
-            <div className="flex items-start gap-4 mt-4">
-              <div className="w-12 h-12">
-                <img
-                  src="https://github.com/shadcn.png"
-                  alt="User Avatar"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </div>
-              <textarea
-                placeholder="What's on your mind?"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#B48FD9] text-gray-700"
-                rows="3"
-              ></textarea>
-            </div>
-            <div className="mt-4 border-t border-gray-200 pt-4">
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex gap-4">
-                  <button className="text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2">
-                    <AiOutlineCamera className="w-6 h-6" />
-                    <span className="hidden md:inline">Photo</span>
-                  </button>
-                  <button className="text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2">
-                    <AiOutlineVideoCamera className="w-6 h-6" />
-                    <span className="hidden md:inline">Video</span>
-                  </button>
-                  <button className="text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2">
-                    <AiOutlineSmile className="w-6 h-6" />
-                    <span className="hidden md:inline">Feeling</span>
-                  </button>
-                </div>
-              </div>
-              <button className="w-full px-4 py-2 bg-[#BFB26F] text-white rounded-md hover:bg-[#B48FD9] transition-colors">
-                New Post
-              </button>
-            </div>
-          </div>
+          <AddPost/>
           {/* Latest Activity and Active Friends */}
           <div className="space-y-8 md:space-y-0 md:flex md:gap-8">
             {/* Latest Activity */}

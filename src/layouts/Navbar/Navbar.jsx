@@ -8,10 +8,30 @@ import {
   AvatarFallback,
 } from "@/components/ui/avatar.jsx";
 import { LogOut, User2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiBell, FiMessageSquare } from "react-icons/fi";
+import axios from 'axios';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await axios.post( `${apiUrl}/user/logout`,{}, {
+        withCredentials: true, 
+      });
+      if (response.status === 200) {
+        alert(response.data.message);
+        navigate('/login');
+      } else {
+        alert(response.data.message || 'An error occurred');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      alert('An error occurred');
+    }
+  };
+
   return (
     <div className="bg-[#1E3A8A] fixed top-0 left-0 w-full z-10 shadow-md">
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16 px-6">
@@ -129,18 +149,21 @@ const Navbar = () => {
                   <div className="flex flex-col text-gray-600">
                     <div className="flex items-center gap-2 cursor-pointer">
                       <User2 />
-                      <Button
-                        variant="link"
-                        className="text-[#B48FD9] hover:text-[#BFB26F]"
-                      >
-                        View Profile
-                      </Button>
+                      <Link to="/profile">
+                        <Button
+                          variant="link"
+                          className="text-[#B48FD9] hover:text-[#BFB26F]"
+                        >
+                          View Profile
+                        </Button>
+                      </Link>
                     </div>
                     <div className="flex items-center gap-2 cursor-pointer">
                       <LogOut />
                       <Button
                         variant="link"
                         className="text-[#B48FD9] hover:text-[#BFB26F]"
+                        onClick={handleLogout} // Gọi hàm đăng xuất khi nhấn nút
                       >
                         Logout
                       </Button>
