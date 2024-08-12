@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation, Link } from "react-router-dom";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button.jsx";
 import { PopoverContent } from "@radix-ui/react-popover";
@@ -7,172 +8,202 @@ import {
   AvatarImage,
   AvatarFallback,
 } from "@/components/ui/avatar.jsx";
-import { LogOut, User2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { FiBell, FiMessageSquare } from "react-icons/fi";
-import axios from 'axios';
+import { LogOut, User2, Settings, HelpCircle } from "lucide-react";
+import {
+  FiHome,
+  FiUsers,
+  FiPlusSquare,
+  FiVideo,
+  FiGitPullRequest,
+  FiMenu,
+} from "react-icons/fi";
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const handleLogout = async () => {
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL;
-      const response = await axios.post( `${apiUrl}/user/logout`,{}, {
-        withCredentials: true, 
-      });
-      if (response.status === 200) {
-        alert(response.data.message);
-        navigate('/login');
-      } else {
-        alert(response.data.message || 'An error occurred');
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-      alert('An error occurred');
-    }
-  };
+  const location = useLocation();
+
+  // Ẩn navbar khi ở trang đăng nhập hoặc trang đăng ký
+  if (location.pathname === "/login" || location.pathname === "/register") {
+    return null;
+  }
 
   return (
-    <div className="bg-[#1E3A8A] fixed top-0 left-0 w-full z-10 shadow-md">
-      <div className="flex items-center justify-between mx-auto max-w-7xl h-16 px-6">
-        <div className="flex items-center flex-grow">
-          <div className="flex items-center">
-            <h1 className="text-4xl font-bold text-white absolute top-0 left-3 mt-2 ml-6">
-              <Link to="/">
-                Kit<span className="text-[#B48FD9]">Kat</span>
-              </Link>
-            </h1>
-          </div>
-
-          <div className="flex-shrink mx-12">
-            <div className="relative group">
-              <input
-                type="text"
-                placeholder="Search for friends, groups, pages"
-                className="w-80 px-4 py-2 pl-10 rounded-md border border-gray-300 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#B48FD9] transition-transform duration-300 ease-in-out group-hover:scale-100"
+    <div className="bg-gray-800 fixed top-0 left-0 w-full z-10 shadow-lg">
+      <div className="flex items-center justify-between max-w-full h-16 mx-auto px-6">
+        {/* Logo and Search Bar */}
+        <div className="flex items-center flex-1">
+          <h1 className="text-2xl font-bold text-white mr-5">
+            <Link to="/" className="text-inherit no-underline">
+              Kit<span className="text-white">Kat</span>
+            </Link>
+          </h1>
+          <div className="relative w-72">
+            <input
+              type="text"
+              placeholder="Search for friends, groups, pages"
+              className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 bg-white text-gray-800"
+            />
+            <svg
+              className="absolute top-1/2 left-3 transform -translate-y-1/2 w-5 h-5 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-4.35-4.35M14.35 14.35A6.5 6.5 0 0015 10a6.5 6.5 0 10-6.5 6.5 6.5 0 004.85-1.15z"
               />
-              <svg
-                className="absolute top-1/2 left-3 transform -translate-y-1/2 w-5 h-5 text-gray-500 transition-transform duration-300 ease-in-out group-hover:scale-105"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-4.35-4.35M14.35 14.35A6.5 6.5 0 0015 10a6.5 6.5 0 10-6.5 6.5 6.5 6.5 0 004.85-1.15z"
-                />
-              </svg>
-            </div>
+            </svg>
           </div>
         </div>
-        <div className="flex items-center gap-12">
-          <div className="flex items-center gap-6">
-            <Link
-              to="/messages"
-              className="relative text-white hover:text-gray-200 transition-colors flex items-center gap-2 p-2 rounded-md"
-            >
-              <FiMessageSquare className="w-6 h-6 transition-transform transform hover:scale-110" />
-              <span className="hidden md:inline">Messages</span>
-              {/* Optional: Messages Badge */}
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center w-3 h-3 text-xs font-medium text-white bg-blue-500 rounded-full">
-                5
-              </span>
-            </Link>
-            <Link
-              to="/notifications"
-              className="relative text-white hover:text-gray-200 transition-colors flex items-center gap-2 p-2 rounded-md"
-            >
-              <FiBell className="w-6 h-6 transition-transform transform hover:scale-110" />
-              <span className="hidden md:inline">Notifications</span>
-              {/* Optional: Notification Badge */}
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center w-3 h-3 text-xs font-medium text-white bg-red-500 rounded-full">
-                3
-              </span>
-            </Link>
-          </div>
 
-          <ul className="flex font-medium items-center gap-5">
-            <li>
-              <Link to="/">
-                <Button variant="outline">Home</Button>
-              </Link>
-            </li>
-            <li>
-              <Link to="/profile/update">
-                <Button variant="outline">Profile Update</Button>
-              </Link>
-            </li>
-            <li>
-              <Link to="/addPost">
-                <Button variant="outline">Create a new Post</Button>
-              </Link>
-            </li>
-          </ul>
+        {/* Navigation Buttons */}
+        <div className="flex items-center justify-center flex-1">
+          <Link to="/" className="text-decoration-none mx-2">
+            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600 ">
+              <FiHome />
+              Home
+            </Button>
+          </Link>
+          <Link to="/friends" className="text-decoration-none mx-2">
+            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
+              <FiUsers />
+              Friends
+            </Button>
+          </Link>
+          <Link to="/create-post" className="text-decoration-none mx-2">
+            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
+              <FiPlusSquare />
+              Create a Post
+            </Button>
+          </Link>
+          <Link to="/video" className="text-decoration-none mx-2">
+            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
+              <FiVideo />
+              Video
+            </Button>
+          </Link>
+          <Link to="/group" className="text-decoration-none mx-2">
+            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
+              <FiGitPullRequest />
+              Group
+            </Button>
+          </Link>
+        </div>
 
-          <div className="absolute top-0 right-12 mt-3 ml-6">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Avatar className="cursor-pointer">
+        {/* Avatar and Menu */}
+        <div className="flex items-center justify-end flex-1">
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="flex items-center gap-4 cursor-pointer">
+                <FiMenu className="text-white" />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-72 p-4 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col gap-2">
+              <Link to="/create" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
+                  <FiPlusSquare />
+                  <span>Tạo</span>
+                </div>
+              </Link>
+              <Link to="/post" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
+                  <FiGitPullRequest />
+                  <span>Đăng</span>
+                </div>
+              </Link>
+              <Link to="/news" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
+                  <FiUsers />
+                  <span>Tin</span>
+                </div>
+              </Link>
+              <Link to="/reels" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
+                  <FiVideo />
+                  <span>Thước phim</span>
+                </div>
+              </Link>
+              <Link to="/life-events" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
+                  <FiHome />
+                  <span>Sự kiện trong đời</span>
+                </div>
+              </Link>
+              <Link to="/pages" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
+                  <FiUsers />
+                  <span>Trang</span>
+                </div>
+              </Link>
+              <Link to="/ads" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
+                  <FiPlusSquare />
+                  <span>Quảng cáo</span>
+                </div>
+              </Link>
+              <Link to="/groups" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
+                  <FiGitPullRequest />
+                  <span>Nhóm</span>
+                </div>
+              </Link>
+              <Link to="/events" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
+                  <FiUsers />
+                  <span>Sự kiện</span>
+                </div>
+              </Link>
+              <Link to="/marketplace" className="text-decoration-none">
+                <div className="flex items-center gap-2 cursor-pointer py-2 text-black">
+                  <FiHome />
+                  <span>Bài niêm yết trên Marketplace</span>
+                </div>
+              </Link>
+            </PopoverContent>
+          </Popover>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="flex items-center gap-2 cursor-pointer ml-4">
+                <Avatar className="w-10 h-10">
                   <AvatarImage
                     src="https://github.com/shadcn.png"
                     alt="@shadcn"
                   />
-                  <AvatarFallback>U</AvatarFallback>
+                  <AvatarFallback>TT</AvatarFallback>
                 </Avatar>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 p-4 bg-white border border-gray-300 rounded-lg shadow-lg">
-                <div className="space-y-4">
-                  <div className="flex gap-2 items-center">
-                    <Avatar className="cursor-pointer">
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        alt="@shadcn"
-                      />
-                      <AvatarFallback>U</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <h4 className="font-medium">Admin</h4>
-                      <p className="text-sm text-gray-500">Testing text</p>
-                      <div className="flex gap-2 mt-2">
-                        <Link to="/login">
-                          <Button variant="outline">Sign in</Button>
-                        </Link>
-                        <Link to="/register">
-                          <Button variant="outline">Register</Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col text-gray-600">
-                    <div className="flex items-center gap-2 cursor-pointer">
-                      <User2 />
-                      <Link to="/profile">
-                        <Button
-                          variant="link"
-                          className="text-[#B48FD9] hover:text-[#BFB26F]"
-                        >
-                          View Profile
-                        </Button>
-                      </Link>
-                    </div>
-                    <div className="flex items-center gap-2 cursor-pointer">
-                      <LogOut />
-                      <Button
-                        variant="link"
-                        className="text-[#B48FD9] hover:text-[#BFB26F]"
-                        onClick={handleLogout} // Gọi hàm đăng xuất khi nhấn nút
-                      >
-                        Logout
-                      </Button>
-                    </div>
-                  </div>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-52 p-4 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col gap-2">
+              <Link to="/profile" className="text-decoration-none">
+                <div className="flex items-center gap-2 py-2 text-black">
+                  <User2 />
+                  <span>View Profile</span>
                 </div>
-              </PopoverContent>
-            </Popover>
-          </div>
+              </Link>
+              <Link to="/settings" className="text-decoration-none">
+                <div className="flex items-center gap-2 py-2 text-black">
+                  <Settings />
+                  <span>Settings</span>
+                </div>
+              </Link>
+              <Link to="/support" className="text-decoration-none">
+                <div className="flex items-center gap-2 py-2 text-black">
+                  <HelpCircle />
+                  <span>Support</span>
+                </div>
+              </Link>
+              <Link to="/login" className="text-decoration-none">
+                <div className="flex items-center gap-2 py-2 text-black">
+                  <LogOut />
+                  <span>Logout</span>
+                </div>
+              </Link>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </div>
@@ -180,3 +211,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

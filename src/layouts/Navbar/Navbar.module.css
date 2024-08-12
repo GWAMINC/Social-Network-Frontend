@@ -1,0 +1,80 @@
+/* Navbar.module.css */
+.navbar {
+  background-color: #1e3a8a;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  box-shadow: 0 4px 2px -2px gray;
+}
+
+.navbar__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100%;
+  height: 64px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.navbar__section {
+  display: flex;
+  align-items: center;
+}
+
+.navbar__section--left {
+  flex: 1;
+}
+
+.navbar__section--center {
+  flex: 1;
+  justify-content: center;
+}
+
+.navbar__section--right {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.navbar__logo {
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+  margin-right: 20px;
+}
+
+.navbar__search {
+  position: relative;
+  width: 300px;
+}
+
+.navbar__searchInput {
+  width: 100%;
+  padding: 8px 16px 8px 40px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #333;
+}
+
+.navbar__searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: #666;
+}
+
+.navbar__button {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.navbar__avatar {
+  cursor: pointer;
+}

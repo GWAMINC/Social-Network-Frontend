@@ -61,11 +61,9 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply bg-background text-foreground;
+    background-color: #f0f8ff; /* Màu nền mới */
+    color: #333; /* Màu chữ */
     font-family: "Inter", sans-serif;
   }
 }

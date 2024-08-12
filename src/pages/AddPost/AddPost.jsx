@@ -10,12 +10,15 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 
 const AddPost = () => {
+
   const [content, setContent] = useState("");
   const [access, setAccess] = useState("public");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+
   const [success, setSuccess] = useState("");
   const [showPicker, setShowPicker] = useState(false);
+
 
   const accessOptions = ["public", "private"];
 
@@ -27,12 +30,15 @@ const AddPost = () => {
     try {
       const response = await axios.post(
         "http://localhost:9090/api/post/createPost",
+
         { content, access },
         { withCredentials: true }
+
       );
       console.log("Post created:", response.data);
       setContent("");
       setAccess("public");
+
       setError("");
       setSuccess("Post created!");
       setShowPicker(false);
@@ -40,10 +46,12 @@ const AddPost = () => {
       console.error("Error creating post:", error);
       setError("Failed to create post. Please try again.");
       setSuccess("");
+
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   const handlePhoto = () => {
     console.log("Photo");
@@ -112,6 +120,7 @@ const AddPost = () => {
                       value={option}
                     >
                       {({ selected }) => (
+
                         <span
                           className={`${
                             selected ? "font-medium" : "font-normal"
@@ -119,6 +128,7 @@ const AddPost = () => {
                         >
                           {option}
                         </span>
+
                       )}
                     </Listbox.Option>
                   ))}
@@ -178,6 +188,7 @@ const AddPost = () => {
             disabled={isSubmitting}
           >
             {isSubmitting ? "Submitting..." : "New Post"}
+
           </button>
         </div>
       </form>

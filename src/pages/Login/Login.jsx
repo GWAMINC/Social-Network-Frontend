@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ const Login = () => {
 
       const res = await axios.post(
         `${apiUrl}/user/login`,
-        { email, password, role },
+        { email, password },
         {
           withCredentials: true,
         }
@@ -39,6 +38,7 @@ const Login = () => {
   };
 
   return (
+
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
@@ -169,6 +169,7 @@ const Login = () => {
                 <span>Tiếp tục với Google</span>
               </button>
             </div>
+
           </div>
         </div>
       </div>
