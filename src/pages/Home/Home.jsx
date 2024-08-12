@@ -8,8 +8,9 @@ import {
   AiOutlineGroup,
   AiOutlineComment,
 } from "react-icons/ai";
-import { FaThumbsUp, FaComment, FaShare } from "react-icons/fa";
 import AddPost from "../AddPost";
+import Post from "../Post/Post"; 
+import ActiveFr from "../ActiveFr/ActiveFr"; // Import ActiveFr
 
 const Home = () => {
   return (
@@ -55,7 +56,7 @@ const Home = () => {
           </div>
 
           {/* Create a Post */}
-          <AddPost/>
+          <AddPost />
           {/* Latest Activity and Active Friends */}
           <div className="space-y-8 md:space-y-0 md:flex md:gap-8">
             {/* Latest Activity */}
@@ -86,130 +87,7 @@ const Home = () => {
             </div>
 
             {/* Active Friends */}
-            <div className="p-6 bg-white shadow-lg rounded-lg flex-1">
-              <h2 className="text-2xl font-semibold text-[#B48FD9]">
-                Active Friends
-              </h2>
-              <div className="mt-4 space-y-4">
-                <div className="flex items-center gap-2">
-                  <img
-                    src="https://github.com/shadcn.png"
-                    alt="Friend Avatar"
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <p className="text-gray-600">John Doe is online</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <img
-                    src="https://github.com/shadcn.png"
-                    alt="Friend Avatar"
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <p className="text-gray-600">Jane Smith is online</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <img
-                    src="https://github.com/shadcn.png"
-                    alt="Friend Avatar"
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <p className="text-gray-600">Alex Johnson is online</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* Posts */}
-        <section className="mt-8">
-          <div className="space-y-8">
-            {/* Post Example */}
-            <div className="p-6 bg-white shadow-lg rounded-lg">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12">
-                  <img
-                    src="https://github.com/shadcn.png"
-                    alt="User Avatar"
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                </div>
-                <div className="flex flex-col flex-grow">
-                  <div className="text-lg font-semibold text-[#B48FD9]">
-                    John Doe
-                  </div>
-                  <p className="text-gray-600 mt-2">
-                    This is a sample status update. Feel free to add your
-                    thoughts here!
-                  </p>
-                  <div className="mt-4">
-                    <img
-                      src="https://via.placeholder.com/600x400"
-                      alt="Post Media"
-                      className="w-full h-auto rounded-lg"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 border-t border-gray-200 pt-4">
-                <div className="flex gap-4">
-                  <button className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors">
-                    <FaThumbsUp className="w-5 h-5" />
-                    <span>Like</span>
-                  </button>
-                  <button className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors">
-                    <FaComment className="w-5 h-5" />
-                    <span>Comment</span>
-                  </button>
-                  <button className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors">
-                    <FaShare className="w-5 h-5" />
-                    <span>Share</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Another Post Example */}
-            <div className="p-6 bg-white shadow-lg rounded-lg">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12">
-                  <img
-                    src="https://github.com/shadcn.png"
-                    alt="User Avatar"
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                </div>
-                <div className="flex flex-col flex-grow">
-                  <div className="text-lg font-semibold text-[#B48FD9]">
-                    Jane Smith
-                  </div>
-                  <p className="text-gray-600 mt-2">
-                    Had a great day at the beach! 🌴🏖️
-                  </p>
-                  <div className="mt-4">
-                    <img
-                      src="https://via.placeholder.com/600x400"
-                      alt="Post Media"
-                      className="w-full h-auto rounded-lg"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 border-t border-gray-200 pt-4">
-                <div className="flex gap-4">
-                  <button className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors">
-                    <FaThumbsUp className="w-5 h-5" />
-                    <span>Like</span>
-                  </button>
-                  <button className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors">
-                    <FaComment className="w-5 h-5" />
-                    <span>Comment</span>
-                  </button>
-                  <button className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors">
-                    <FaShare className="w-5 h-5" />
-                    <span>Share</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ActiveFr /> {/* Replace the inline Active Friends section */}
           </div>
         </section>
 
@@ -269,9 +147,18 @@ const Home = () => {
           </div>
         </section>
 
+        <section className="mt-8">
+          <div className="p-6 bg-white shadow-lg rounded-lg">
+            <h2 className="text-2xl font-semibold text-[#B48FD9]">Posts</h2>
+            <Post /> 
+            <Post /> 
+          </div>
+        </section>
+
         <footer className="text-center mt-16 py-6 border-t border-gray-300">
           <p className="text-gray-600">
             &copy; 2024 KitKat. All rights reserved.
+
           </p>
         </footer>
       </div>

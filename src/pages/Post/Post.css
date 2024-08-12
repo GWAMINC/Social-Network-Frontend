@@ -1,0 +1,229 @@
+/* Style for the Post component */
+.post-container {
+    position: relative; 
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    max-width: 700px;
+    margin: 0 auto 24px;
+  }
+  
+  .post-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .post-content {
+    flex-grow: 1;
+  }
+  
+  .user-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #B48FD9;
+  }
+  
+  .post-text {
+    margin-top: 8px;
+    color: #4a4a4a;
+    font-size: 0.875rem;
+  }
+  
+  .post-media {
+    margin-top: 12px;
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .post-footer {
+    margin-top: 12px;
+    border-top: 1px solid #5e5656;
+    padding-top: 12px;
+    display: flex;
+    gap: 16px;
+    font-size: 0.875rem;
+  }
+  
+  .like-button,
+  .comment-button,
+  .share-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #B48FD9;
+    transition: color 0.3s, transform 0.3s;
+    position: relative; 
+  }
+  
+  .like-button:hover,
+  .comment-button:hover,
+  .share-button:hover {
+    color: #BFB26F;
+  }
+  
+  .icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s;
+  }
+  
+  .like-button:hover .icon {
+    transform: scale(1.25);
+  }
+  
+
+
+/* CSS for Fireworks Effect */
+.post-container {
+    position: relative;
+  }
+  .comment-input-container {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  
+  .comment-input-container.commenting {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+
+  .fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 10;
+  }
+  
+  .firework {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 1;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(82, 1, 129, 0.8), rgba(0, 0, 0, 0));
+    clip-path: path("M12 4.419c-2.826-5.695-11.999-4.064-11.999 3.27 0 7.27 9.903 10.938 11.999 15.311 2.096-4.373 12-8.041 12-15.311 0-7.327-9.17-8.972-12-3.27z");
+    transform: translate(-50%, -50%);
+    animation: firework-animation 1s forwards;
+  }
+  
+  @keyframes firework-animation {
+    0% {
+      width: 20px;
+      height: 20px;
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+    50% {
+      width: 50px;
+      height: 50px;
+      opacity: 0.6;
+      transform: translate(-50%, -60%);
+    }
+    100% {
+      width: 100px;
+      height: 100px;
+      opacity: 0;
+      transform: translate(-50%, -100%);
+    }
+  }
+
+  .emoji-picker {
+    position: absolute;
+    bottom: 100%; 
+    right: 0;
+    z-index: 20;
+  }
+
+  .share-options {
+    top: 100%;
+    right: 0;
+    width: 200px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .share-options ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .share-options li {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .share-options li:hover {
+    background-color: #f5f5f5;
+  }
+  
+  button {
+    cursor: pointer;
+  }
+  
+  button:hover {
+    opacity: 0.8;
+  }
+  
+  .absolute {
+    position: absolute;
+  }
+  
+  .top-2 {
+    top: 0.5rem;
+  }
+  
+  .right-2 {
+    right: 0.5rem;
+  }
+  
+  .top-10 {
+    top: 2.5rem;
+  }
+  
+  .bg-white {
+    background-color: #fff;
+  }
+  
+  .border {
+    border: 1px solid;
+  }
+  
+  .border-gray-300 {
+    border-color: #d1d5db;
+  }
+  
+  .shadow-md {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+  
+  .z-10 {
+    z-index: 10;
+  }
+  
+  .hover\:bg-gray-100:hover {
+    background-color: #f3f4f6;
+  }
+  
