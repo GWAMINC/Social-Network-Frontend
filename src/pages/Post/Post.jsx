@@ -1,9 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaHeart, FaComment, FaShare, FaEllipsisV, FaSmile } from "react-icons/fa";
-import data from '@emoji-mart/data'
-import Picker from '@emoji-mart/react'
-import './Post.css';
-import ShareModal from '../ShareModal/ShareModal'; 
+import {
+  FaHeart,
+  FaComment,
+  FaShare,
+  FaEllipsisV,
+  FaSmile,
+} from "react-icons/fa";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import "./Post.css";
+import ShareModal from "../ShareModal/ShareModal";
 
 const Post = ({ user, content, media }) => {
   const [fireworks, setFireworks] = useState([]);
@@ -12,7 +18,7 @@ const Post = ({ user, content, media }) => {
   const [commenting, setCommenting] = useState(false);
   const [comment, setComment] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [shareModalOpen, setShareModalOpen] = useState(false); 
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const postRef = useRef(null);
   const menuRef = useRef(null);
 
@@ -20,7 +26,8 @@ const Post = ({ user, content, media }) => {
     setLiked(!liked);
 
     if (postRef.current) {
-      const { left, top, width, height } = postRef.current.getBoundingClientRect();
+      const { left, top, width, height } =
+        postRef.current.getBoundingClientRect();
       const x = e.clientX - left;
       const y = e.clientY - top;
 
@@ -30,13 +37,13 @@ const Post = ({ user, content, media }) => {
       const newFirework = {
         left: `${randomX}px`,
         top: `${randomY}px`,
-        id: Date.now()
+        id: Date.now(),
       };
 
       setFireworks((prev) => [...prev, newFirework]);
 
       setTimeout(() => {
-        setFireworks((prev) => prev.filter(fw => fw.id !== newFirework.id));
+        setFireworks((prev) => prev.filter((fw) => fw.id !== newFirework.id));
       }, 1000);
     }
   };
@@ -60,32 +67,29 @@ const Post = ({ user, content, media }) => {
   };
 
   const handleEmojiClick = (emoji) => {
-    setComment(prev => prev + emoji.native);
+    setComment((prev) => prev + emoji.native);
     setShowEmojiPicker(false);
   };
 
   const handleShareClick = () => {
-    setShareModalOpen(true); 
+    setShareModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setShareModalOpen(false); 
+    setShareModalOpen(false);
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        postRef.current && 
+        postRef.current &&
         !postRef.current.contains(event.target) &&
-        menuRef.current && 
+        menuRef.current &&
         !menuRef.current.contains(event.target)
       ) {
         setMenuOpen(false);
       }
-      if (
-        !showEmojiPicker ||
-        !event.target.closest('.emoji-picker')
-      ) {
+      if (!showEmojiPicker || !event.target.closest(".emoji-picker")) {
         setShowEmojiPicker(false);
       }
     };
@@ -97,24 +101,30 @@ const Post = ({ user, content, media }) => {
   return (
     <div
       ref={postRef}
-      className="post-container p-4 bg-white shadow-md rounded-lg max-w-xl mx-auto mb-6 relative"
+      className="post-container p-4 bg-gray-700 shadow-md rounded-lg max-w-xl mx-auto mb-6 relative"
     >
       <button
-        className="absolute top-2 right-2 p-2 text-gray-600 hover:text-gray-900 transition-colors"
+        className="absolute top-2 right-2 p-2 text-gray-300 hover:text-gray-100 transition-colors"
         onClick={handleMenuToggle}
       >
         <FaEllipsisV />
       </button>
 
       {menuOpen && (
-        <div 
-          ref={menuRef} 
-          className="absolute top-10 right-2 bg-white border border-gray-300 shadow-md rounded-lg z-10"
+        <div
+          ref={menuRef}
+          className="absolute top-10 right-2 bg-gray-800 border border-gray-600 shadow-md rounded-lg z-10"
         >
           <ul>
-            <li className="p-2 hover:bg-gray-100 cursor-pointer">Interested</li>
-            <li className="p-2 hover:bg-gray-100 cursor-pointer">Not Interested</li>
-            <li className="p-2 hover:bg-gray-100 cursor-pointer">Save Post</li>
+            <li className="p-2 hover:bg-gray-700 cursor-pointer text-gray-300">
+              Interested
+            </li>
+            <li className="p-2 hover:bg-gray-700 cursor-pointer text-gray-300">
+              Not Interested
+            </li>
+            <li className="p-2 hover:bg-gray-700 cursor-pointer text-gray-300">
+              Save Post
+            </li>
           </ul>
         </div>
       )}
@@ -128,15 +138,16 @@ const Post = ({ user, content, media }) => {
           />
         </div>
         <div className="flex flex-col flex-grow">
-          <div className="text-lg font-semibold text-[#B48FD9]">
+          <div className="text-lg font-semibold text-white">
             {user?.name || "John Doe"}
           </div>
-          <p className="text-gray-600 mt-1 text-sm">
-            {content || "This is a sample status update. Feel free to add your thoughts here!"}
+          <p className="text-gray-300 mt-1 text-sm">
+            {content ||
+              "This is a sample status update. Feel free to add your thoughts here!"}
           </p>
           <div className="mt-3">
             <img
-              src="https://via.placeholder.com/600x400" 
+              src="https://via.placeholder.com/600x400"
               alt="Post Media"
               className="w-full h-auto rounded-lg"
             />
@@ -144,7 +155,7 @@ const Post = ({ user, content, media }) => {
         </div>
       </div>
       <div className="absolute inset-0 fireworks-container">
-        {fireworks.map(firework => (
+        {fireworks.map((firework) => (
           <div
             key={firework.id}
             className="firework"
@@ -152,24 +163,26 @@ const Post = ({ user, content, media }) => {
           />
         ))}
       </div>
-      <div className="mt-3 border-t border-gray-200 pt-3">
+      <div className="mt-3 border-t border-gray-600 pt-3">
         <div className="flex gap-4 text-sm">
           <button
-            className={`flex items-center gap-2 transition-colors duration-300 transform ${liked ? "text-red-500" : "text-[#B48FD9]"} hover:text-[#BFB26F] relative`}
+            className={`flex items-center gap-2 transition-colors duration-300 transform ${
+              liked ? "text-red-500" : "text-gray-300"
+            } hover:bg-gray-500 transition-colors relative`}
             onClick={handleLikeClick}
           >
             <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
             <span>{liked ? "Đã Thích" : "Thích"}</span>
           </button>
           <button
-            className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+            className="flex items-center gap-2 text-gray-300 hover:bg-gray-500 transition-colors"
             onClick={handleCommentClick}
           >
             <FaComment className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
             <span>Bình Luận</span>
           </button>
           <button
-            className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+            className="flex items-center gap-2 text-gray-300 hover:bg-gray-500 transition-colors"
             onClick={handleShareClick}
           >
             <FaShare className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
@@ -179,30 +192,34 @@ const Post = ({ user, content, media }) => {
 
         <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal} />
 
-        <div className={`comment-input-container ${commenting ? "commenting" : ""} mt-3 border-t border-gray-200 pt-3`}>
+        <div
+          className={`comment-input-container ${
+            commenting ? "commenting" : ""
+          } mt-3 border-t border-gray-600 pt-3`}
+        >
           {commenting && (
             <>
               <div className="flex items-center">
-                <button 
-                  className="text-[#B48FD9] hover:text-[#BFB26F] p-2"
+                <button
+                  className="text-gray-300 hover:bg-gray-500 p-2"
                   onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                 >
                   <FaSmile className="w-4 h-4" />
                 </button>
                 {showEmojiPicker && (
                   <div className="emoji-picker">
-                    <Picker onSelect={handleEmojiClick} />
+                    <Picker data={data} onSelect={handleEmojiClick} />
                   </div>
                 )}
                 <textarea
                   value={comment}
                   onChange={handleCommentChange}
                   placeholder="Bình luận ở đây..."
-                  className="w-full p-2 border rounded-lg comment-input ml-2"
+                  className="w-full p-2 border rounded-lg comment-input ml-2 bg-gray-700 text-white border-gray-600"
                 />
                 <button
                   onClick={handleCommentSubmit}
-                  className="mt-2 px-4 py-2 bg-[#B48FD9] text-white rounded-lg hover:bg-[#BFB26F] ml-2"
+                  className="mt-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-400 transition-colors ml-2"
                 >
                   Đăng
                 </button>

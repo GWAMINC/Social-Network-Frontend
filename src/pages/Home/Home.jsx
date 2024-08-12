@@ -9,7 +9,7 @@ import {
   AiOutlineComment,
 } from "react-icons/ai";
 import AddPost from "../AddPost";
-import Post from "../Post/Post"; 
+import Post from "../Post/Post";
 import ActiveFr from "../ActiveFr/ActiveFr"; // Import ActiveFr
 
 const Home = () => {
@@ -36,7 +36,7 @@ const Home = () => {
     setIsButtonVisible(false); // Hide button after scrolling up
   };
   return (
-    <div className="bg-gray-900 w-full h-screen flex flex-col">
+    <div className="bg-gray-900 w-full h-full flex flex-col">
       <Navbar />
       <div className="flex-grow pt-3 px-4">
         <header className="text-center py-16">
@@ -78,8 +78,9 @@ const Home = () => {
           </div>
 
           {/* Create a Post */}
-
-          <AddPost />
+          <div className="p-6 bg-gray-800 shadow-lg rounded-lg">
+            <AddPost />
+          </div>
 
           {/* Latest Activity and Active Friends */}
           <div className="space-y-8 md:space-y-0 md:flex md:gap-8">
@@ -90,7 +91,7 @@ const Home = () => {
               </h2>
               <div className="mt-4 space-y-4">
                 <div className="flex items-center gap-2">
-                  <AiOutlineUser className="w-6 h-6 text-gray-400" />
+                  <AiOutlineUser className="w-6 h-6 text-gray-400 " />
                   <p className="text-gray-300">
                     You have a new friend request from John Doe.
                   </p>
@@ -111,9 +112,9 @@ const Home = () => {
             </div>
 
             {/* Active Friends */}
-
-            <ActiveFr /> {/* Replace the inline Active Friends section */}
-
+            <div className="p-6 bg-gray-800 shadow-lg rounded-lg">
+              <ActiveFr />
+            </div>
           </div>
         </section>
 
@@ -170,17 +171,16 @@ const Home = () => {
         </section>
 
         <section className="mt-8">
-          <div className="p-6 bg-white shadow-lg rounded-lg">
-            <h2 className="text-2xl font-semibold text-[#B48FD9]">Posts</h2>
-            <Post /> 
-            <Post /> 
+          <div className="p-6 bg-gray-800 shadow-lg rounded-lg">
+            <h2 className="text-2xl font-semibold text-white">Posts</h2>
+            <Post />
+            <Post />
           </div>
         </section>
 
         <footer className="text-center mt-16 py-6 border-t border-gray-300">
           <p className="text-gray-900">
             &copy; 2024 KitKat. All rights reserved.
-
           </p>
         </footer>
       </div>
