@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaHeart, FaComment, FaShare, FaEllipsisV, FaSmile } from "react-icons/fa";
-import data from '@emoji-mart/data'
-import Picker from '@emoji-mart/react'
+import { FaHeart, FaHeartBroken, FaComment, FaShare, FaBookmark, FaEllipsisV, FaSmile } from "react-icons/fa";
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 import './Post.css';
 import ShareModal from '../ShareModal/ShareModal'; 
 
 const Post = ({ user, content, media }) => {
   const [fireworks, setFireworks] = useState([]);
+  const [dislikeFireworks, setDislikeFireworks] = useState([]); 
   const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false); 
   const [menuOpen, setMenuOpen] = useState(false);
   const [commenting, setCommenting] = useState(false);
   const [comment, setComment] = useState("");
@@ -21,9 +23,6 @@ const Post = ({ user, content, media }) => {
 
     if (postRef.current) {
       const { left, top, width, height } = postRef.current.getBoundingClientRect();
-      const x = e.clientX - left;
-      const y = e.clientY - top;
-
       const randomX = Math.random() * width;
       const randomY = Math.random() * height;
 
@@ -37,6 +36,29 @@ const Post = ({ user, content, media }) => {
 
       setTimeout(() => {
         setFireworks((prev) => prev.filter(fw => fw.id !== newFirework.id));
+      }, 1000);
+    }
+  };
+
+  
+  const handleDislikeClick = (e) => {
+    setDisliked(!disliked);
+
+    if (postRef.current) {
+      const { left, top, width, height } = postRef.current.getBoundingClientRect();
+      const randomX = Math.random() * width;
+      const randomY = Math.random() * height;
+
+      const newDislikeFirework = {
+        left: `${randomX}px`,
+        top: `${randomY}px`,
+        id: Date.now()
+      };
+
+      setDislikeFireworks((prev) => [...prev, newDislikeFirework]);
+
+      setTimeout(() => {
+        setDislikeFireworks((prev) => prev.filter(fw => fw.id !== newDislikeFirework.id));
       }, 1000);
     }
   };
@@ -70,6 +92,10 @@ const Post = ({ user, content, media }) => {
 
   const handleCloseModal = () => {
     setShareModalOpen(false); 
+  };
+
+  const handleSavePostClick = () => {
+    console.log("Post saved!");
   };
 
   useEffect(() => {
@@ -114,7 +140,6 @@ const Post = ({ user, content, media }) => {
           <ul>
             <li className="p-2 hover:bg-gray-100 cursor-pointer">Interested</li>
             <li className="p-2 hover:bg-gray-100 cursor-pointer">Not Interested</li>
-            <li className="p-2 hover:bg-gray-100 cursor-pointer">Save Post</li>
           </ul>
         </div>
       )}
@@ -143,6 +168,8 @@ const Post = ({ user, content, media }) => {
           </div>
         </div>
       </div>
+      
+      
       <div className="absolute inset-0 fireworks-container">
         {fireworks.map(firework => (
           <div
@@ -152,6 +179,18 @@ const Post = ({ user, content, media }) => {
           />
         ))}
       </div>
+      
+      
+      <div className="absolute inset-0 fireworkss-container">
+        {dislikeFireworks.map(firework => (
+          <div
+            key={firework.id}
+            className="fireworkk"
+            style={{ left: firework.left, top: firework.top }}
+          />
+        ))}
+      </div>
+
       <div className="mt-3 border-t border-gray-200 pt-3">
         <div className="flex gap-4 text-sm">
           <button
@@ -161,6 +200,15 @@ const Post = ({ user, content, media }) => {
             <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
             <span>{liked ? "Đã Thích" : "Thích"}</span>
           </button>
+
+          <button
+            className={`flex items-center gap-2 transition-colors duration-300 transform ${disliked ? "text-gray-500" : "text-[#B48FD9]"} hover:text-[#BFB26F] relative`}
+            onClick={handleDislikeClick} 
+          >
+            <FaHeartBroken className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+            <span>{disliked ? "Không Thích" : "Không Thích"}</span>
+          </button>
+
           <button
             className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
             onClick={handleCommentClick}
@@ -175,42 +223,46 @@ const Post = ({ user, content, media }) => {
             <FaShare className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
             <span>Chia Sẻ</span>
           </button>
+          <button
+            className="save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2"
+            onClick={handleSavePostClick}
+          >
+            <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+          </button>
+
         </div>
+        
 
-        <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal} />
-
-        <div className={`comment-input-container ${commenting ? "commenting" : ""} mt-3 border-t border-gray-200 pt-3`}>
-          {commenting && (
-            <>
-              <div className="flex items-center">
-                <button 
-                  className="text-[#B48FD9] hover:text-[#BFB26F] p-2"
-                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                >
-                  <FaSmile className="w-4 h-4" />
-                </button>
-                {showEmojiPicker && (
-                  <div className="emoji-picker">
-                    <Picker onSelect={handleEmojiClick} />
-                  </div>
-                )}
-                <textarea
-                  value={comment}
-                  onChange={handleCommentChange}
-                  placeholder="Bình luận ở đây..."
-                  className="w-full p-2 border rounded-lg comment-input ml-2"
-                />
-                <button
-                  onClick={handleCommentSubmit}
-                  className="mt-2 px-4 py-2 bg-[#B48FD9] text-white rounded-lg hover:bg-[#BFB26F] ml-2"
-                >
-                  Đăng
-                </button>
+        {commenting && (
+          <div className="mt-3 flex items-center gap-2">
+            <input
+              className="flex-grow p-2 border border-gray-300 rounded-lg text-sm"
+              placeholder="Viết bình luận..."
+              value={comment}
+              onChange={handleCommentChange}
+            />
+            <button 
+              className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
+              <FaSmile />
+            </button>
+            <button 
+              className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+              onClick={handleCommentSubmit}
+            >
+              Đăng
+            </button>
+            {showEmojiPicker && (
+              <div className="emoji-picker absolute bottom-16 left-4">
+                <Picker data={data} onEmojiSelect={handleEmojiClick} />
               </div>
-            </>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
+
+      <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal} />
     </div>
   );
 };
