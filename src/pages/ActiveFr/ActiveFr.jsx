@@ -151,7 +151,7 @@ const ActiveFr = () => {
           />
           <p className="text-gray-600">Alex Johnson is online</p>
         </div>
-        {/* Thêm nhiều bạn bè ở đây để kiểm tra thanh cuộn */}
+        
       </div>
     </div>
   );

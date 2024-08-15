@@ -112,7 +112,7 @@ const Home = () => {
 
             {/* Active Friends */}
 
-            <ActiveFr /> {/* Replace the inline Active Friends section */}
+            <ActiveFr /> 
 
           </div>
         </section>

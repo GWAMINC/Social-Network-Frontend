@@ -1,15 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
+import axios from 'axios'; 
 import { FaHeart, FaHeartBroken, FaComment, FaShare, FaBookmark, FaEllipsisV, FaSmile } from "react-icons/fa";
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import './Post.css';
 import ShareModal from '../ShareModal/ShareModal'; 
 
-const Post = ({ user, content, media }) => {
+const Post = ({ user, content, media, postId  }) => {
   const [fireworks, setFireworks] = useState([]);
   const [dislikeFireworks, setDislikeFireworks] = useState([]); 
   const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false); 
+  const [disliked, setDisliked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);  
+  const [dislikesCount, setDislikesCount] = useState(0);  
+  const [commentsCount, setCommentsCount] = useState(0);  
   const [menuOpen, setMenuOpen] = useState(false);
   const [commenting, setCommenting] = useState(false);
   const [comment, setComment] = useState("");
@@ -18,11 +22,33 @@ const Post = ({ user, content, media }) => {
   const postRef = useRef(null);
   const menuRef = useRef(null);
 
-  const handleLikeClick = (e) => {
-    setLiked(!liked);
+  useEffect(() => {
+    axios.get(`/api/posts/${postId}`) // API backend
+      .then(response => {
+        setLiked(response.data.liked);
+        setDisliked(response.data.disliked);
+        setLikesCount(response.data.likesCount);  
+        setDislikesCount(response.data.dislikesCount);  
+        setCommentsCount(response.data.commentsCount);  
+      })
+      .catch(error => console.error("Error fetching post status:", error));
+  }, [postId]);
 
-    if (postRef.current) {
-      const { left, top, width, height } = postRef.current.getBoundingClientRect();
+  const handleLikeClick = (e) => {
+    const newLiked = !liked;
+    setLiked(newLiked);
+    setDisliked(false);  
+
+    axios.post(`/api/posts/${postId}/like`, { liked: newLiked }) // API backend
+      .then(response => {
+        console.log("Like status updated:", response.data);
+        setLikesCount(response.data.likesCount);  
+        setDislikesCount(response.data.dislikesCount);  
+      })
+      .catch(error => console.error("Error updating like status:", error));
+
+    if (newLiked && postRef.current) {
+      const { width, height } = postRef.current.getBoundingClientRect();
       const randomX = Math.random() * width;
       const randomY = Math.random() * height;
 
@@ -41,11 +67,21 @@ const Post = ({ user, content, media }) => {
   };
 
   
-  const handleDislikeClick = (e) => {
-    setDisliked(!disliked);
+  const handleDislikeClick = () => {
+    const newDisliked = !disliked;
+    setDisliked(newDisliked);
+    setLiked(false);  
 
-    if (postRef.current) {
-      const { left, top, width, height } = postRef.current.getBoundingClientRect();
+    axios.post(`/api/posts/${postId}/dislike`, { disliked: newDisliked }) // API backend
+      .then(response => {
+        console.log("Dislike status updated:", response.data);
+        setLikesCount(response.data.likesCount);  
+        setDislikesCount(response.data.dislikesCount);  
+      })
+      .catch(error => console.error("Error updating dislike status:", error));
+
+    if (newDisliked && postRef.current) {
+      const { width, height } = postRef.current.getBoundingClientRect();
       const randomX = Math.random() * width;
       const randomY = Math.random() * height;
 
@@ -76,9 +112,14 @@ const Post = ({ user, content, media }) => {
   };
 
   const handleCommentSubmit = () => {
-    console.log("Comment submitted:", comment);
-    setComment("");
-    setCommenting(false);
+    axios.post(`/api/posts/${postId}/comments`, { text: comment }) // API backend
+      .then(response => {
+        console.log("Comment submitted:", response.data);
+        setComment("");
+        setCommenting(false);
+        setCommentsCount(response.data.commentsCount);  
+      })
+      .catch(error => console.error("Error submitting comment:", error));
   };
 
   const handleEmojiClick = (emoji) => {
@@ -198,7 +239,7 @@ const Post = ({ user, content, media }) => {
             onClick={handleLikeClick}
           >
             <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
-            <span>{liked ? "Đã Thích" : "Thích"}</span>
+            <span>{liked ? "Đã Thích" : "Thích"} ({likesCount})</span> 
           </button>
 
           <button
@@ -206,7 +247,7 @@ const Post = ({ user, content, media }) => {
             onClick={handleDislikeClick} 
           >
             <FaHeartBroken className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
-            <span>{disliked ? "Không Thích" : "Không Thích"}</span>
+            <span>{disliked ? "Không Thích" : "Không Thích"} ({dislikesCount})</span> 
           </button>
 
           <button
@@ -214,7 +255,7 @@ const Post = ({ user, content, media }) => {
             onClick={handleCommentClick}
           >
             <FaComment className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
-            <span>Bình Luận</span>
+            <span>Bình Luận ({commentsCount})</span>
           </button>
           <button
             className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
