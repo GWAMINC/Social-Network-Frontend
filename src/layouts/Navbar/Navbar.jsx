@@ -26,6 +26,10 @@ const Navbar = () => {
     return null;
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+  }
+
   return (
     <div className="bg-gray-800 fixed top-0 left-0 w-full z-10 shadow-lg">
       <div className="flex items-center justify-between max-w-full h-16 mx-auto px-6">
@@ -196,7 +200,7 @@ const Navbar = () => {
                   <span>Support</span>
                 </div>
               </Link>
-              <Link to="/login" className="text-decoration-none">
+              <Link to="/login" className="text-decoration-none" onClick={handleLogout}>
                 <div className="flex items-center gap-2 py-2 text-black">
                   <LogOut />
                   <span>Logout</span>

@@ -7,13 +7,15 @@ import AddPost from "@/pages/AddPost";
 import EditProfile from "@/pages/EditProfile";
 
 const publicRoutes = [
-    { path: config.routes.home, component: Home },
     { path: config.routes.login, component: Login },
     { path: config.routes.register, component: Register },
+
+];
+
+const privateRoutes = [
+    { path: config.routes.home, component: Home },
     { path: config.routes.addPost, component: AddPost },
     { path: config.routes.profileUpdate, component: EditProfile },
 ];
-
-const privateRoutes = [];
 
 export { publicRoutes, privateRoutes };
