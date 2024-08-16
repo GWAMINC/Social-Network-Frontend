@@ -3,13 +3,17 @@ import { FaHeart, FaHeartBroken, FaComment, FaShare, FaBookmark, FaEllipsisV, Fa
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import './Post.css';
-import ShareModal from '../ShareModal/ShareModal'; 
+import ShareModal from '../ShareModal/ShareModal';
+import axios from "axios";
+import Cookies from 'js-cookie';
 
-const Post = ({ user, content, media }) => {
+const Post = ({ data }) => {
   const [fireworks, setFireworks] = useState([]);
   const [dislikeFireworks, setDislikeFireworks] = useState([]); 
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false); 
+  const [liked, setLiked] = useState(data.postInfo.isLiked.includes(data.user));
+  const [likeCount , setLikeCount] = useState(data.likeCount);
+  const [disliked, setDisliked] = useState(data.postInfo.isDisliked.includes(data.user));
+  const [dislikeCount, setDislikeCount] = useState(data.dislikeCount);
   const [menuOpen, setMenuOpen] = useState(false);
   const [commenting, setCommenting] = useState(false);
   const [comment, setComment] = useState("");
@@ -17,10 +21,15 @@ const Post = ({ user, content, media }) => {
   const [shareModalOpen, setShareModalOpen] = useState(false); 
   const postRef = useRef(null);
   const menuRef = useRef(null);
-
   const handleLikeClick = (e) => {
+    e.preventDefault();
+    likePost(data.postInfo._id);
     setLiked(!liked);
-
+    setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+    if (disliked) {
+        setDisliked(false);
+        setDislikeCount(dislikeCount - 1);
+    }
     if (postRef.current) {
       const { left, top, width, height } = postRef.current.getBoundingClientRect();
       const randomX = Math.random() * width;
@@ -42,8 +51,13 @@ const Post = ({ user, content, media }) => {
 
   
   const handleDislikeClick = (e) => {
+    dislikePost(data.postInfo._id);
     setDisliked(!disliked);
-
+    setDislikeCount(disliked ? dislikeCount - 1 : dislikeCount + 1);
+    if(liked){
+        setLiked(false);
+        setLikeCount(likeCount - 1);
+    }
     if (postRef.current) {
       const { left, top, width, height } = postRef.current.getBoundingClientRect();
       const randomX = Math.random() * width;
@@ -97,6 +111,32 @@ const Post = ({ user, content, media }) => {
   const handleSavePostClick = () => {
     console.log("Post saved!");
   };
+
+  const likePost = async (postId) => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    try {
+      await axios.post(
+          `${apiUrl}/post/likePost`,
+          { postId },
+          { withCredentials: true }
+      );
+    } catch (error) {
+      console.error('Failed to like post:', error);
+    }
+  };
+
+  const dislikePost = async (postId) => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    try {
+      await axios.post(
+          `${apiUrl}/post/dislikePost`,
+          {postId},
+          {withCredentials: true}
+      );
+    } catch (error) {
+      console.error('Failed to dislike post:', error);
+    }
+  }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -154,18 +194,22 @@ const Post = ({ user, content, media }) => {
         </div>
         <div className="flex flex-col flex-grow">
           <div className="text-lg font-semibold text-[#B48FD9]">
-            {user?.name || "John Doe"}
+            {data.userInfo.name}
           </div>
           <p className="text-gray-600 mt-1 text-sm">
-            {content || "This is a sample status update. Feel free to add your thoughts here!"}
+            {data.postInfo.content}
           </p>
-          <div className="mt-3">
-            <img
-              src="https://via.placeholder.com/600x400" 
-              alt="Post Media"
-              className="w-full h-auto rounded-lg"
-            />
-          </div>
+          {data.postInfo.images.length > 0 && (
+              <div className="mt-3">
+              {data.postInfo.images.map(image => (
+                <img
+                  src= {image}
+                  alt="Post Media"
+                  className="w-full h-auto rounded-lg"
+                />
+              ))}
+              </div>
+          )}
         </div>
       </div>
       
@@ -190,7 +234,6 @@ const Post = ({ user, content, media }) => {
           />
         ))}
       </div>
-
       <div className="mt-3 border-t border-gray-200 pt-3">
         <div className="flex gap-4 text-sm">
           <button
@@ -198,7 +241,7 @@ const Post = ({ user, content, media }) => {
             onClick={handleLikeClick}
           >
             <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
-            <span>{liked ? "Đã Thích" : "Thích"}</span>
+            <span>{liked ? "Đã Thích" : "Thích"} ({ likeCount})</span>
           </button>
 
           <button
@@ -206,7 +249,7 @@ const Post = ({ user, content, media }) => {
             onClick={handleDislikeClick} 
           >
             <FaHeartBroken className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
-            <span>{disliked ? "Không Thích" : "Không Thích"}</span>
+            <span>{disliked ? "Không Thích" : "Không Thích"} ({ dislikeCount})</span>
           </button>
 
           <button
