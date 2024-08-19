@@ -9,13 +9,28 @@ import {
   AiOutlineComment,
 } from "react-icons/ai";
 import AddPost from "../AddPost";
-import Post from "../Post/Post"; 
-import ActiveFr from "../ActiveFr/ActiveFr"; // Import ActiveFr
+import Post from "../Post/Post";
+import ActiveFr from "../ActiveFr/ActiveFr";
+import axios from "axios"; // Import ActiveFr
 
 const Home = () => {
   const [isButtonVisible, setIsButtonVisible] = useState(false);
+  const [posts, setPosts] = useState([]);
+
+  const getPosts = async () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    try {
+      const response = await axios.get(
+          `${apiUrl}/post/getAllPost`,
+          {withCredentials: true});
+      await setPosts(response.data.posts);
+    } catch (error) {
+      console.error('Failed to fetch posts:', error);
+    }
+  };
 
   useEffect(() => {
+    getPosts();
     const handleScroll = () => {
       if (window.scrollY > 100) {
         setIsButtonVisible(true);
@@ -35,6 +50,7 @@ const Home = () => {
     });
     setIsButtonVisible(false); // Hide button after scrolling up
   };
+
   return (
     <div className="bg-gray-900 w-full h-screen flex flex-col">
       <Navbar />
@@ -168,14 +184,16 @@ const Home = () => {
             </div>
           </div>
         </section>
-
+        {posts.length > 0 && (
         <section className="mt-8">
           <div className="p-6 bg-white shadow-lg rounded-lg">
             <h2 className="text-2xl font-semibold text-[#B48FD9]">Posts</h2>
-            <Post /> 
-            <Post /> 
+              {posts.map(post =>(
+                <Post data = {post} />
+            ))}
           </div>
         </section>
+        )}
 
         <footer className="text-center mt-16 py-6 border-t border-gray-300">
           <p className="text-gray-900">

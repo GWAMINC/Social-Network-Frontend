@@ -1,6 +1,7 @@
-import { useState } from "react";
+import {useContext, useState} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../App.jsx";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +10,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const { checkAuth } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,9 +27,10 @@ const Login = () => {
           withCredentials: true,
         }
       );
-
+      localStorage.setItem("token", res.data.token);
       console.log(res.data);
       setMessage("Đăng nhập thành công!");
+      checkAuth();
       navigate("/");
     } catch (error) {
       console.error(
