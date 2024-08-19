@@ -6,6 +6,7 @@ import './Post.css';
 import ShareModal from '../ShareModal/ShareModal';
 import axios from "axios";
 import Cookies from 'js-cookie';
+import Comment from '../Comment/Comment';
 
 const Post = ({ data }) => {
   const [fireworks, setFireworks] = useState([]);
@@ -49,6 +50,22 @@ const Post = ({ data }) => {
     }
   };
 
+  const getComments = async () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    try {
+      const response = await axios.get(
+          `${apiUrl}/post/getAllComments`,
+          { withCredentials: true }
+      );
+      setComment(response.data.comments);
+    } catch (error) {
+      console.error("Failed to fetch comments:", error);
+    }
+  };
+
+  useEffect(() => {
+    getComments(); // Fetch comments when the component mounts
+  });
   
   const handleDislikeClick = (e) => {
     dislikePost(data.postInfo._id);
