@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button.jsx";
@@ -8,7 +8,7 @@ import {
   AvatarImage,
   AvatarFallback,
 } from "@/components/ui/avatar.jsx";
-import { LogOut, User2, Settings, HelpCircle } from "lucide-react";
+import { LogOut, User2, Settings, HelpCircle, MessageCircle, Bell } from "lucide-react";
 import {
   FiHome,
   FiUsers,
@@ -19,9 +19,29 @@ import {
 } from "react-icons/fi";
 import axios from "axios";
 
+import "./Messenger.css";
+import "./Notification.css";
+
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  return (
+    <nav>
+      
+      <NotificationPopover />
+    </nav>
+  );
+}
+
+const NotificationPopover = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleNotifications = () => {
+    setIsOpen(!isOpen);
+  };
+
+  
 
   // Ẩn navbar khi ở trang đăng nhập hoặc trang đăng ký
   if (location.pathname === "/login" || location.pathname === "/register") {
@@ -192,6 +212,200 @@ const Navbar = () => {
             </PopoverContent>
           </Popover>
 
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button className="flex items-center gap-2 text-white ml-4">
+                <MessageCircle />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="messenger-container">
+              {/* Header */}
+              <div className="messenger-header flex items-center justify-between p-3 border-b">
+                <div className="messenger-title font-semibold text-lg">Messenger</div>
+                <div className="flex items-center gap-2">
+                  <Button className="rounded-button flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </Button>
+                  <Button className="rounded-button flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </Button>
+                  <Button className="rounded-button flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4 6h16M4 12h16M4 18h16"
+                      />
+                    </svg>
+                  </Button>
+                  <Button className="rounded-button rounded-full gap-2 text-white opacity-100 hover:bg-slate-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 5v14m7-7H5" />
+                  </svg>
+                </Button>
+                </div>
+              </div>
+              <div className="messenger-search p-3 border-b">
+                <input
+                  type="text"
+                  placeholder="Search Messenger"
+                  className="w-full p-2 border rounded-full focus:outline-none focus:ring focus:border-blue-300"
+                />
+              </div>
+              <div className="messenger-content overflow-y-auto" style={{ height: 'calc(100% - 150px)' }}>
+                {[
+                  { name: "Người A", message: "Tôi", avatar: "https://github.com/shadcn.png" },
+                  { name: "Người B", message: "Yêu", avatar: "https://github.com/shadcn.png" },
+                  { name: "Người C", message: "Việt Nam", avatar: "https://github.com/shadcn.png" },
+                  { name: "Người D", message: "Vãi", avatar: "https://github.com/shadcn.png" },
+                  { name: "Người E", message: "Cả", avatar: "https://github.com/shadcn.png" },
+                  { name: "Người F", message: "Nho!", avatar: "https://github.com/shadcn.png" },
+                  { name: "Người A", message: "Tôi", avatar: "https://github.com/shadcn.png" },
+                  { name: "Người B", message: "Yêu", avatar: "https://github.com/shadcn.png" },
+                  { name: "Người C", message: "Việt Nam", avatar: "https://github.com/shadcn.png" },
+                  { name: "Người D", message: "Vãi", avatar: "https://github.com/shadcn.png" },
+                  { name: "Người E", message: "Cả", avatar: "https://github.com/shadcn.png" },
+                  { name: "Người F", message: "Nho!", avatar: "https://github.com/shadcn.png" },
+                ].map((chat, index) => (
+                  <div key={index} className="messenger-item flex items-center gap-3 px-3 py-2 hover:bg-gray-100 cursor-pointer">
+                    <Avatar className="w-10 h-10">
+                      <AvatarImage src={chat.avatar} alt={chat.name} />
+                      <AvatarFallback>{chat.name[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-black">{chat.name}</span>
+                      <span className="text-gray-500 text-sm truncate">{chat.message}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="messenger-footer">
+                <Button className="footer-button ">See All in Messenger</Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+
+
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button className="flex items-center gap-2 text-white ml-4" onClick={toggleNotifications}>
+                <Bell />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="notification-container">
+              <div className="notification-header flex items-center justify-between p-3 border-b">
+                <div className="notification-title font-semibold text-lg">Notifications</div>
+                <Button className="p-1 text-gray-200 hover:bg-gray-100 rounded-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </Button>
+              </div>
+
+              <div className="notification-filters flex justify-between p-3 border-b">
+                <Button className="filter-button">Unread</Button>
+                <Button className="filter-button">All</Button>
+              </div>
+
+              <div className="notification-content">
+              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
+                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
+                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
+                </div>
+                  <div className="flex flex-col">
+                    <span className="font-semibold">Thông báo 1</span>
+                    <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
+                  </div>
+              </div>
+              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
+                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
+                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-semibold">Thông báo 1</span>
+                  <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
+                </div>
+              </div>
+              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
+                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
+                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-semibold">Thông báo 1</span>
+                  <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
+                </div>
+              </div>
+              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
+                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
+                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-semibold">Thông báo 1</span>
+                  <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
+                </div>
+              </div>
+              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
+                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
+                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-semibold">Thông báo 1</span>
+                  <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
+                </div>
+              </div>
+              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
+                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
+                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-semibold">Thông báo 1</span>
+                  <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
+                </div>
+              </div>
+              </div>
+
+              <div className="notification-footer">
+                <Button className="text-blue-500 hover:text-blue-700">See Previous Notifications</Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          
           <Popover>
             <PopoverTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer ml-4">

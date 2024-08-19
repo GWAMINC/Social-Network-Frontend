@@ -11,7 +11,7 @@ import {
 import AddPost from "../AddPost";
 import Post from "../Post/Post";
 import ActiveFr from "../ActiveFr/ActiveFr";
-import axios from "axios"; // Import ActiveFr
+import axios from "axios"; 
 
 const Home = () => {
   const [isButtonVisible, setIsButtonVisible] = useState(false);
@@ -48,7 +48,7 @@ const Home = () => {
       top: 0,
       behavior: "smooth",
     });
-    setIsButtonVisible(false); // Hide button after scrolling up
+    setIsButtonVisible(false); 
   };
 
   return (
@@ -97,7 +97,6 @@ const Home = () => {
 
           <AddPost />
 
-          {/* Latest Activity and Active Friends */}
           <div className="space-y-8 md:space-y-0 md:flex md:gap-8">
             {/* Latest Activity */}
             <div className="p-6 bg-gray-800 shadow-lg rounded-lg flex-1">
@@ -128,7 +127,7 @@ const Home = () => {
 
             {/* Active Friends */}
 
-            <ActiveFr /> {/* Replace the inline Active Friends section */}
+            <ActiveFr /> 
 
           </div>
         </section>
