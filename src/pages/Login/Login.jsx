@@ -22,7 +22,7 @@ const Login = () => {
 
       const res = await axios.post(
         `${apiUrl}/user/login`,
-        { email, password, role },
+        { email, password, role},
         {
           withCredentials: true,
         }
@@ -91,9 +91,10 @@ const Login = () => {
                         value={role}
                         onChange={(e) => setRole(e.target.value)}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        disabled
+                        
                       >
                         <option value="user">User</option>
+                        <option value="admin">Admin</option>
                       </select>
                     </label>
                   </div>
