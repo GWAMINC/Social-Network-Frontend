@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button.jsx";
 import { PopoverContent } from "@radix-ui/react-popover";
@@ -17,14 +17,37 @@ import {
   FiGitPullRequest,
   FiMenu,
 } from "react-icons/fi";
+import axios from "axios";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const location = useLocation();
 
   // Ẩn navbar khi ở trang đăng nhập hoặc trang đăng ký
   if (location.pathname === "/login" || location.pathname === "/register") {
     return null;
   }
+  const handleLogout = async () => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await axios.post(
+        `${apiUrl}/user/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status === 200) {
+        alert(response.data.message);
+        navigate("/login");
+      } else {
+        alert(response.data.message || "An error occurred");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      alert("An error occurred");
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -200,8 +223,12 @@ const Navbar = () => {
                   <span>Support</span>
                 </div>
               </Link>
-              <Link to="/login" className="text-decoration-none" onClick={handleLogout}>
-                <div className="flex items-center gap-2 py-2 text-black">
+              <Link to="/login" className="text-decoration-none">
+                <div
+                  className="flex items-center gap-2 py-2 text-black"
+                  onClick={handleLogout}
+                >
+
                   <LogOut />
                   <span>Logout</span>
                 </div>
@@ -215,4 +242,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
