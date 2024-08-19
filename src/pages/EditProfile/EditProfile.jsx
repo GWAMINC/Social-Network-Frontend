@@ -41,14 +41,7 @@ const EditProfile = () => {
     fetchProfile();
   
   }, []);
-  // Display login prompt if no user is provided
-  if (!user) {
-    return (
-      <div className="text-center pt-24">
-        <h1 className="text-lg font-semibold">Please log in to edit your profile</h1>
-      </div>
-    );
-  }
+  
 
 
   const handleEditProfile = async (e) => {
