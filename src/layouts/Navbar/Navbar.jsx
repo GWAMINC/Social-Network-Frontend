@@ -69,9 +69,6 @@ const NotificationPopover = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-  }
 
   return (
     <div className="bg-gray-800 fixed top-0 left-0 w-full z-10 shadow-lg">
