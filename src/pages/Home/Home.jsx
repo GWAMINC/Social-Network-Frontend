@@ -17,20 +17,25 @@ const Home = () => {
   const [isButtonVisible, setIsButtonVisible] = useState(false);
   const [posts, setPosts] = useState([]);
 
-  const getPosts = async () => {
-    const apiUrl = import.meta.env.VITE_API_URL;
-    try {
-      const response = await axios.get(
-          `${apiUrl}/post/getAllPost`,
-          {withCredentials: true});
-      await setPosts(response.data.posts);
-    } catch (error) {
-      console.error('Failed to fetch posts:', error);
-    }
-  };
+  // Fetch posts on page load and post created
+  useEffect(() => {
+    const getPosts = async () => {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      try {
+        const response = await axios.get(
+            `${apiUrl}/post/getAllPost`,
+            {withCredentials: true});
+        await setPosts(response.data.posts.reverse());
+      } catch (error) {
+        console.error('Failed to fetch posts:', error);
+      }
+    };
+    getPosts();
+    window.addEventListener("scroll", getPosts);
+    return () => window.removeEventListener("scroll", getPosts);
+  }, []);
 
   useEffect(() => {
-    getPosts();
     const handleScroll = () => {
       if (window.scrollY > 100) {
         setIsButtonVisible(true);
@@ -38,7 +43,6 @@ const Home = () => {
         setIsButtonVisible(false);
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);

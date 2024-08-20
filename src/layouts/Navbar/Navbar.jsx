@@ -23,9 +23,6 @@ import "./Messenger.css";
 import "./Notification.css";
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
   return (
     <nav>
       
@@ -40,8 +37,6 @@ const NotificationPopover = () => {
   const toggleNotifications = () => {
     setIsOpen(!isOpen);
   };
-
-  
 
   // Ẩn navbar khi ở trang đăng nhập hoặc trang đăng ký
   if (location.pathname === "/login" || location.pathname === "/register") {
@@ -58,8 +53,8 @@ const NotificationPopover = () => {
         }
       );
       if (response.status === 200) {
+        localStorage.removeItem("token");
         alert(response.data.message);
-        navigate("/login");
       } else {
         alert(response.data.message || "An error occurred");
       }
@@ -68,10 +63,6 @@ const NotificationPopover = () => {
       alert("An error occurred");
     }
   };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-  }
 
   return (
     <div className="bg-gray-800 fixed top-0 left-0 w-full z-10 shadow-lg">

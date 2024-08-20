@@ -43,6 +43,9 @@ const AddPost = () => {
       setError("");
       setSuccess("Post created!");
       setShowPicker(false);
+
+      const event = new CustomEvent('postCreated');
+      window.dispatchEvent(event);
     } catch (error) {
       console.error("Error creating post:", error);
       setError("Failed to create post. Please try again.");
