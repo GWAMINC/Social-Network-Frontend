@@ -129,6 +129,31 @@ const Post = ({ data }) => {
     console.log("Post saved!");
   };
 
+  const handleDateTime = (createdAt) => {
+    const now = new Date();
+    const createdDate = new Date(createdAt);
+
+    const diffInSeconds = Math.floor((now - createdDate) / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInSeconds < 60) {
+      return 'Vừa xong';
+    } else if(diffInMinutes < 60) {
+      return `${diffInMinutes} phút trước`;
+    } else if (diffInHours < 24) {
+      return `${diffInHours} giờ trước`;
+    } else if (diffInDays < 7) {
+      return `${diffInDays} ngày trước`;
+    } else {
+      const day = createdDate.getDate();
+      const month = createdDate.getMonth() + 1; // getMonth() trả về giá trị từ 0 (tháng 1) đến 11 (tháng 12)
+      const year = createdDate.getFullYear();
+      return `${day} tháng ${month}, ${year}`;
+    }
+  }
+
   const likePost = async (postId) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     try {
@@ -213,7 +238,10 @@ const Post = ({ data }) => {
           <div className="text-lg font-semibold text-[#B48FD9]">
             {data.userInfo.name}
           </div>
-          <p className="text-gray-600 mt-1 text-sm">
+          <p className="text-sm text-gray-600">
+            {handleDateTime(data.postInfo.createdAt)}
+          </p>
+          <p className="mt-1 text-lg">
             {data.postInfo.content}
           </p>
           {data.postInfo.images.length > 0 && (
