@@ -6,7 +6,8 @@ import './Post.css';
 import ShareModal from '../ShareModal/ShareModal';
 import axios from "axios";
 import Cookies from 'js-cookie';
-import Comment from '../Comment/Comment';
+import Comment from "../Comment/Comment";
+
 
 const Post = ({ data }) => {
   const [fireworks, setFireworks] = useState([]);
@@ -17,9 +18,12 @@ const Post = ({ data }) => {
   const [dislikeCount, setDislikeCount] = useState(data.dislikeCount);
   const [menuOpen, setMenuOpen] = useState(false);
   const [commenting, setCommenting] = useState(false);
-  const [comment, setComment] = useState("");
+  const [preComment, setPreComment] = useState([]);
+  const [showComments, setShowComments] = useState(false);
+  const [comment, setComment] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
   const postRef = useRef(null);
   const menuRef = useRef(null);
   const handleLikeClick = (e) => {
@@ -50,22 +54,36 @@ const Post = ({ data }) => {
     }
   };
 
-  const getComments = async () => {
-    const apiUrl = import.meta.env.VITE_API_URL;
+
+
+  const fetchComments = async () => {
     try {
+      const postId = data.postInfo._id;
+      const apiUrl = import.meta.env.VITE_API_URL;
       const response = await axios.get(
-          `${apiUrl}/post/getAllComments`,
-          { withCredentials: true }
-      );
-      setComment(response.data.comments);
-    } catch (error) {
-      console.error("Failed to fetch comments:", error);
+          `${apiUrl}/comment/getAllComment/${postId}`,
+          {withCredentials: true});
+      console.log(response.data.comments);
+      setPreComment(response.data.comments);
+      setShowComments(true);
+    } catch (err) {
+
+      console.error('Failed to fetch comments',err);
     }
   };
 
   useEffect(() => {
-    getComments(); // Fetch comments when the component mounts
-  });
+    if (data) {
+      // console.error('postId provided');
+      console.log(data.postInfo);
+    } else {
+      console.error('No postId provided');
+    }
+  }, []);
+
+
+
+
   
   const handleDislikeClick = (e) => {
     dislikePost(data.postInfo._id);
@@ -99,7 +117,18 @@ const Post = ({ data }) => {
   };
 
   const handleCommentClick = () => {
-    setCommenting(!commenting);
+    setCommenting(true);
+    setIsLoading(true);
+
+    if (!showComments) {
+      fetchComments(); // Fetch comments when button is clicked
+      setIsLoading(false);
+    } else {
+      setShowComments(false); // Hide comments if already shown
+    }
+    if (isLoading){
+      return <div>Loading...</div>;
+    }
   };
 
   const handleCommentChange = (e) => {
@@ -203,156 +232,180 @@ const Post = ({ data }) => {
   }, [showEmojiPicker]);
 
   return (
-    <div
-      ref={postRef}
-      className="post-container p-4 bg-white shadow-md rounded-lg max-w-xl mx-auto mb-6 relative"
-    >
-      <button
-        className="absolute top-2 right-2 p-2 text-gray-600 hover:text-gray-900 transition-colors"
-        onClick={handleMenuToggle}
+      <div
+          ref={postRef}
+          className="post-container p-4 bg-white shadow-md rounded-lg max-w-xl mx-auto mb-6 relative"
       >
-        <FaEllipsisV />
-      </button>
-
-      {menuOpen && (
-        <div 
-          ref={menuRef} 
-          className="absolute top-10 right-2 bg-white border border-gray-300 shadow-md rounded-lg z-10"
+        <button
+            className="absolute top-2 right-2 p-2 text-gray-600 hover:text-gray-900 transition-colors"
+            onClick={handleMenuToggle}
         >
-          <ul>
-            <li className="p-2 hover:bg-gray-100 cursor-pointer">Interested</li>
-            <li className="p-2 hover:bg-gray-100 cursor-pointer">Not Interested</li>
-          </ul>
-        </div>
-      )}
+          <FaEllipsisV/>
+        </button>
 
-      <div className="flex items-start gap-3">
-        <div className="w-11 h-11">
-          <img
-            src="https://github.com/shadcn.png"
-            alt="User Avatar"
-            className="w-full h-full object-cover rounded-full"
-          />
-        </div>
-        <div className="flex flex-col flex-grow">
-          <div className="text-lg font-semibold text-[#B48FD9]">
-            {data.userInfo.name}
+        {menuOpen && (
+            <div
+                ref={menuRef}
+                className="absolute top-10 right-2 bg-white border border-gray-300 shadow-md rounded-lg z-10"
+            >
+              <ul>
+                <li className="p-2 hover:bg-gray-100 cursor-pointer">Interested</li>
+                <li className="p-2 hover:bg-gray-100 cursor-pointer">Not Interested</li>
+              </ul>
+            </div>
+        )}
+
+        <div className="flex items-start gap-3">
+          <div className="w-11 h-11">
+            <img
+                src="https://github.com/shadcn.png"
+                alt="User Avatar"
+                className="w-full h-full object-cover rounded-full"
+            />
           </div>
-          <p className="text-sm text-gray-600">
-            {handleDateTime(data.postInfo.createdAt)}
-          </p>
-          <p className="mt-1 text-lg">
-            {data.postInfo.content}
-          </p>
-          {data.postInfo.images.length > 0 && (
-              <div className="mt-3">
-              {data.postInfo.images.map(image => (
-                <img
-                  src= {image}
-                  alt="Post Media"
-                  className="w-full h-auto rounded-lg"
+          <div className="flex flex-col flex-grow">
+            <div className="text-lg font-semibold text-[#B48FD9]">
+              {data.userInfo.name}
+            </div>
+            <p className="text-sm text-gray-600">
+              {handleDateTime(data.postInfo.createdAt)}
+            </p>
+            <p className="mt-1 text-lg">
+              {data.postInfo.content}
+            </p>
+            {data.postInfo.images.length > 0 && (
+                <div className="mt-3">
+                  {data.postInfo.images.map(image => (
+                      <img
+                          key = {data.postInfo._id}
+                          src={image}
+                          alt="Post Media"
+                          className="w-full h-auto rounded-lg"
+                      />
+                  ))}
+                </div>
+            )}
+          </div>
+        </div>
+
+
+        <div className="absolute inset-0 fireworks-container">
+          {fireworks.map(firework => (
+              <div
+                  key={firework.id}
+                  className="firework"
+                  style={{left: firework.left, top: firework.top}}
+              />
+          ))}
+        </div>
+
+
+        <div className="absolute inset-0 fireworkss-container">
+          {dislikeFireworks.map(firework => (
+              <div
+                  key={firework.id}
+                  className="fireworkk"
+                  style={{left: firework.left, top: firework.top}}
+              />
+          ))}
+        </div>
+        <div className="mt-3 border-t border-gray-200 pt-3">
+          <div className="flex gap-4 text-sm">
+            <button
+                className={`flex items-center gap-2 transition-colors duration-300 transform ${liked ? "text-red-500" : "text-[#B48FD9]"} hover:text-[#BFB26F] relative`}
+                onClick={handleLikeClick}
+            >
+              <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
+              <span>{liked ? "Đã Thích" : "Thích"} ({likeCount})</span>
+            </button>
+
+            <button
+                className={`flex items-center gap-2 transition-colors duration-300 transform ${disliked ? "text-gray-500" : "text-[#B48FD9]"} hover:text-[#BFB26F] relative`}
+                onClick={handleDislikeClick}
+            >
+              <FaHeartBroken
+                  className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
+              <span>{disliked ? "Không Thích" : "Không Thích"} ({dislikeCount})</span>
+            </button>
+
+            <button
+                className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+                onClick={handleCommentClick}
+            >
+              <FaComment className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
+              {commenting}
+              {showComments}
+              <span>Bình Luận</span>
+            </button>
+
+            <button
+                className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+                onClick={handleShareClick}
+            >
+              <FaShare className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
+              <span>Chia Sẻ</span>
+            </button>
+            <button
+                className="save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2"
+                onClick={handleSavePostClick}
+            >
+              <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
+            </button>
+
+          </div>
+
+
+
+
+          {commenting && (
+              <div className="mt-3 flex items-center gap-2">
+                <input
+                    className="flex-grow p-2 border border-gray-300 rounded-lg text-sm"
+                    placeholder="Viết bình luận..."
+                    value={comment}
+                    onChange={handleCommentChange}
                 />
-              ))}
+                <button
+                    className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                >
+                  <FaSmile/>
+                </button>
+                <button
+                    className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+                    onClick={handleCommentSubmit}
+                >
+                  Đăng
+                </button>
+                {showEmojiPicker && (
+                    <div className="emoji-picker absolute bottom-16 left-4">
+                      <Picker data={data} onEmojiSelect={handleEmojiClick}/>
+                    </div>
+                )}
               </div>
           )}
         </div>
-      </div>
-      
-      
-      <div className="absolute inset-0 fireworks-container">
-        {fireworks.map(firework => (
-          <div
-            key={firework.id}
-            className="firework"
-            style={{ left: firework.left, top: firework.top }}
-          />
-        ))}
-      </div>
-      
-      
-      <div className="absolute inset-0 fireworkss-container">
-        {dislikeFireworks.map(firework => (
-          <div
-            key={firework.id}
-            className="fireworkk"
-            style={{ left: firework.left, top: firework.top }}
-          />
-        ))}
-      </div>
-      <div className="mt-3 border-t border-gray-200 pt-3">
-        <div className="flex gap-4 text-sm">
-          <button
-            className={`flex items-center gap-2 transition-colors duration-300 transform ${liked ? "text-red-500" : "text-[#B48FD9]"} hover:text-[#BFB26F] relative`}
-            onClick={handleLikeClick}
-          >
-            <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
-            <span>{liked ? "Đã Thích" : "Thích"} ({ likeCount})</span>
-          </button>
 
-          <button
-            className={`flex items-center gap-2 transition-colors duration-300 transform ${disliked ? "text-gray-500" : "text-[#B48FD9]"} hover:text-[#BFB26F] relative`}
-            onClick={handleDislikeClick} 
-          >
-            <FaHeartBroken className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
-            <span>{disliked ? "Không Thích" : "Không Thích"} ({ dislikeCount})</span>
-          </button>
+        {showComments && (
+            <div className="comments-section">
 
-          <button
-            className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-            onClick={handleCommentClick}
-          >
-            <FaComment className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
-            <span>Bình Luận</span>
-          </button>
-          <button
-            className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-            onClick={handleShareClick}
-          >
-            <FaShare className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
-            <span>Chia Sẻ</span>
-          </button>
-          <button
-            className="save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2"
-            onClick={handleSavePostClick}
-          >
-            <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
-          </button>
-
-        </div>
-        
-
-        {commenting && (
-          <div className="mt-3 flex items-center gap-2">
-            <input
-              className="flex-grow p-2 border border-gray-300 rounded-lg text-sm"
-              placeholder="Viết bình luận..."
-              value={comment}
-              onChange={handleCommentChange}
-            />
-            <button 
-              className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            >
-              <FaSmile />
-            </button>
-            <button 
-              className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-              onClick={handleCommentSubmit}
-            >
-              Đăng
-            </button>
-            {showEmojiPicker && (
-              <div className="emoji-picker absolute bottom-16 left-4">
-                <Picker data={data} onEmojiSelect={handleEmojiClick} />
-              </div>
-            )}
-          </div>
+              <Comment comments={preComment} />
+            </div>
         )}
+
+        <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal}/>
+
+
+
       </div>
 
-      <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal} />
-    </div>
+
   );
+
+
+
+
+
 };
 
 export default Post;

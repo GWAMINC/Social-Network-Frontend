@@ -1,19 +1,25 @@
-import React from "react";
+// Comment.jsx
+import React, {useEffect, useState} from 'react';
+import './Comment.css'; // Import the CSS file
 
 
-const Comment = ({ comment }) => {
+
+const Comment = ({ comments }) => {
+
+
     return (
         <div className="comments-section">
-            <h3>Comment</h3>
-            {comment.length > 0 ? (
-                comment.map((comment) => (
-                    <div key={comment.id} className="comment">
-                        <p><strong>{comment.author}</strong>: {comment.text}</p>
-                        <p className="comment-meta">Posted on: {new Date(comment.createdAt).toLocaleString()}</p>
+
+            {comments.length > 0 ? (
+                comments.map((comment, index) => (
+                    <div key={index} className="comment-item">
+                        <p><strong>{comment.author}</strong> </p>
+                        <p>{comment.content}</p>
+                        <small>{new Date(comment.createdAt).toLocaleString()}</small>
                     </div>
                 ))
             ) : (
-                <p>No comment yet. Be the first to comment!</p>
+                <p>No comments yet.</p>
             )}
         </div>
     );
