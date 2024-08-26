@@ -1,26 +1,37 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import DefaultLayout from "@/layouts/DefaultLayout";
-import {privateRoutes, publicRoutes} from "@/routes";
-import {Navigate} from "react-router-dom";
-import {createContext, useState} from "react";
+import { privateRoutes, publicRoutes } from "@/routes";
+import { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext(null);
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
 
-    // Function to update authentication status
     const checkAuth = () => {
         setIsAuthenticated(!!localStorage.getItem("token"));
     };
+
+    useEffect(() => {
+        window.addEventListener("storage", checkAuth);
+        return () => {
+            window.removeEventListener("storage", checkAuth);
+        };
+    }, []);
+
+    const ProtectedRoute = ({ children }) => {
+        return isAuthenticated ? children : <Navigate to="/login" replace />;
+    };
+
     return (
         <AuthContext.Provider value={{ isAuthenticated, checkAuth }}>
             <Router>
                 <div className="app">
                     <Routes>
+                        {/* Public Routes */}
                         {publicRoutes.map((route, index) => {
                             const Page = route.component;
-                            let Layout = DefaultLayout;
+                            const Layout = route.layout || DefaultLayout;
 
                             return (
                                 <Route
@@ -34,26 +45,27 @@ function App() {
                                 />
                             );
                         })}
+
+                        {/* Private Routes */}
                         {privateRoutes.map((route, index) => {
                             const Page = route.component;
-                            let Layout = DefaultLayout;
+                            const Layout = route.layout || DefaultLayout;
 
                             return (
                                 <Route
                                     key={index}
                                     path={route.path}
                                     element={
-                                        isAuthenticated ? (
+                                        <ProtectedRoute>
                                             <Layout>
                                                 <Page />
                                             </Layout>
-                                        ) : (
-                                            <Navigate to="/login" replace />
-                                        )
+                                        </ProtectedRoute>
                                     }
                                 />
                             );
                         })}
+                        <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </div>
             </Router>
