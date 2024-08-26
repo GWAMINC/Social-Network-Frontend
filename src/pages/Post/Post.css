@@ -110,7 +110,18 @@
     opacity: 1;
     transform: translateY(0);
   }
-  
+.comments-section {
+  margin-top: 12px; /* Đảm bảo có khoảng cách giữa phần bình luận và thanh tương tác */
+  padding: 10px;
+  background-color: #f9f9f9; /* Màu nền nhẹ để phân biệt bình luận */
+  border-radius: 8px;
+
+}
+
+.comments-section > div {
+  margin-bottom: 10px;
+}
+
 
   .fireworks-container {
     position: absolute;
@@ -259,11 +270,11 @@
   }
 
   .save-post-button {
-    position: absolute; 
+    position: absolute;
     bottom: 0;
     right: 0;
-    margin-bottom: 12px; 
-    margin-right: 12px; 
+    margin-bottom: 12px;
+    margin-right: 12px;
     color: #B48FD9;
     transition: color 0.3s, transform 0.3s;
   }
@@ -333,4 +344,6 @@
   .hover\:bg-gray-100:hover {
     background-color: #f3f4f6;
   }
+
+
   

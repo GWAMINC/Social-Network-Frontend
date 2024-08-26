@@ -46,10 +46,11 @@ const ActiveFr = () => {
   }, []);
 
   useEffect(() => {
-    const getAllUser = async () => {
+    const getAllUsers = async () => {
       try {
-        const res = await axios.get(
+        const res = await axios.post(
           "http://localhost:9090/api/user/getallusers",
+          {},
           { withCredentials: true }
         );
         setUsers(res.data);
@@ -57,8 +58,8 @@ const ActiveFr = () => {
         console.log(error);
       }
     };
-    getAllUser();
-  }, []);
+    getAllUsers();
+  }, [friends]); // Update users whenever friends list changes
 
   const toggleSearch = () => {
     setSearchVisible(!searchVisible);
@@ -72,7 +73,7 @@ const ActiveFr = () => {
     setStatusActive(!statusActive);
   };
 
-  const addfriend = async (friendId) => {
+  const addFriend = async (friendId) => {
     try {
       await axios.post(
         "http://localhost:9090/api/user/addfriend",
@@ -84,8 +85,9 @@ const ActiveFr = () => {
         {},
         { withCredentials: true }
       );
+      
       setFriends(res.data);
-      alert("Thêm bạn thành công");
+      alert("Added friend successfully");
     } catch (error) {
       console.log(error);
       alert(error.response?.data?.message);
@@ -94,7 +96,6 @@ const ActiveFr = () => {
 
   const deleteFriend = async (unFriendId) => {
     try {
-      console.log(unFriendId);
       await axios.post(
         "http://localhost:9090/api/user/unfriend",
         { unFriendId },
@@ -106,12 +107,13 @@ const ActiveFr = () => {
         { withCredentials: true }
       );
       setFriends(res.data);
-      alert("Xóa bạn thành công");
+      alert("Deleted friend successfully");
     } catch (error) {
       console.log(error);
       alert(error.response?.data?.message);
     }
   };
+
   return (
     <div className="p-6 bg-white shadow-lg rounded-lg flex-1">
       <div className="flex items-center justify-between mb-4">
@@ -131,7 +133,7 @@ const ActiveFr = () => {
                 List Blocked
               </button>
               <div className="flex items-center justify-between mt-2">
-                <span className="text-gray-700">Trạng thái hoạt động</span>
+                <span className="text-gray-700">Activity Status</span>
                 <div
                   onClick={toggleStatus}
                   className={`relative w-16 h-8 flex items-center cursor-pointer rounded-full transition-colors ${
@@ -194,7 +196,7 @@ const ActiveFr = () => {
               <p className="text-gray-600">{user.name}</p>
             </div>
 
-            <button onClick={() => addfriend(user._id)}>Add Friend</button>
+            <button onClick={() => addFriend(user._id)}>Add Friend</button>
           </div>
         ))}
       </div>

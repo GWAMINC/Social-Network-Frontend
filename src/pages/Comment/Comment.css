@@ -1,0 +1,33 @@
+/* Comment container under the post */
+
+
+/* Individual comment styling */
+
+
+/* Comment author styling */
+.comment-author {
+    font-weight: bold; /* Bold text for the author's name */
+    color: #B48FD9; /* Color for the author's name */
+}
+
+/* Comment content styling */
+.comment-content {
+    margin-top: 5px; /* Space between author and content */
+    color: #4a4a4a; /* Text color for the comment content */
+}
+
+/* Comment timestamp styling */
+.comment-timestamp {
+    display: block; /* Display timestamp as a block element */
+    margin-top: 5px; /* Space above the timestamp */
+    font-size: 0.875rem; /* Slightly smaller text for the timestamp */
+    color: #888; /* Gray color for the timestamp */
+}
+.comment-item {
+    margin-bottom: 15px; /* Adds space between each comment */
+    padding: 10px; /* Adds some padding inside each comment block */
+    border: 1px solid transparent; /* Adds a light border around each comment */
+    border-radius: 8px; /* Rounds the corners of each comment block */
+    background-color: rgb(255, 255, 255); /* Adds a subtle background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

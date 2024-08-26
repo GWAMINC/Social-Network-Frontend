@@ -3,9 +3,14 @@ const routes = {
     login: '/login',
     register: '/register',
     addPost: '/addPost',
-    profileUpdate: '/profile/update',
+
     chats: '/chats',
-    chatRoom: '/chats/:chatId'
+    chatRoom: '/chats/:chatId',
+
+    profileUpdate: '/profile/edit',
+    groups: '/groups',
+    profile: '/profile',
+
 }
 
 export default routes;

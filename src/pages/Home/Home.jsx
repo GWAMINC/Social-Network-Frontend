@@ -12,25 +12,33 @@ import AddPost from "../AddPost";
 import Post from "../Post/Post";
 import ActiveFr from "../ActiveFr/ActiveFr";
 import axios from "axios"; 
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [isButtonVisible, setIsButtonVisible] = useState(false);
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
 
-  const getPosts = async () => {
-    const apiUrl = import.meta.env.VITE_API_URL;
-    try {
-      const response = await axios.get(
-          `${apiUrl}/post/getAllPost`,
-          {withCredentials: true});
-      await setPosts(response.data.posts);
-    } catch (error) {
-      console.error('Failed to fetch posts:', error);
-    }
-  };
+  // Fetch posts on page load and post created
+  useEffect(() => {
+    const getPosts = async () => {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      try {
+        const response = await axios.get(
+            `${apiUrl}/post/getAllPost`,
+            {withCredentials: true});
+        // console.log(response.data);
+        await setPosts(response.data.posts.reverse());
+      } catch (error) {
+        console.error('Failed to fetch posts:', error);
+      }
+    };
+    getPosts();
+    window.addEventListener("postCreated", getPosts);
+    return () => window.removeEventListener("postCreated", getPosts);
+  }, []);
 
   useEffect(() => {
-    getPosts();
     const handleScroll = () => {
       if (window.scrollY > 100) {
         setIsButtonVisible(true);
@@ -38,7 +46,6 @@ const Home = () => {
         setIsButtonVisible(false);
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -81,7 +88,10 @@ const Home = () => {
               <button className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-colors">
                 Friends
               </button>
-              <button className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-colors">
+              <button
+                className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-colors"
+                onClick={() => navigate("/groups")} 
+              >
                 Groups
               </button>
               <button className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-colors">
@@ -133,30 +143,6 @@ const Home = () => {
         </section>
 
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-          {/* Groups Section */}
-          <div className="p-6 bg-gray-800 shadow-lg rounded-lg">
-            <h2 className="text-2xl font-semibold text-white">Your Groups</h2>
-            <div className="mt-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Group 1</span>
-                <button className="text-[#a3a3a3] hover:text-white">
-                  View
-                </button>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Group 2</span>
-                <button className="text-[#a3a3a3] hover:text-white">
-                  View
-                </button>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Group 3</span>
-                <button className="text-[#a3a3a3] hover:text-white">
-                  View
-                </button>
-              </div>
-            </div>
-          </div>
 
           {/* Pages Section */}
           <div className="p-6  bg-gray-800 shadow-lg rounded-lg">
@@ -188,7 +174,9 @@ const Home = () => {
           <div className="p-6 bg-white shadow-lg rounded-lg">
             <h2 className="text-2xl font-semibold text-[#B48FD9]">Posts</h2>
               {posts.map(post =>(
+                  <div key = {post.postInfo._id}>
                 <Post data = {post} />
+                  </div>
             ))}
           </div>
         </section>
