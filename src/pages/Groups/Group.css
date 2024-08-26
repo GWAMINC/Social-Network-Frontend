@@ -1,0 +1,202 @@
+/* Setting Button */
+.setting-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #4a5568;
+    color: #edf2f7;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+.setting-button:hover {
+    background-color: #2d3748;
+    transform: scale(1.1);
+}
+
+/* Search Group */
+.search-group {
+    display: flex;
+    align-items: center;
+    background-color: #2d3748;
+    padding: 8px;
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease;
+    position: relative; 
+}
+
+.search-group:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.search-icon {
+    color: #edf2f7;
+    margin-right: 8px; /* Khoảng cách giữa icon và input */
+}
+
+.search-input {
+    flex-grow: 1;
+    background-color: #2d3748;
+    border: none;
+    color: #edf2f7;
+    padding: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+/* Create Group Button */
+.create-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin-top: 16px;
+    background-color: #4a5568;
+    border-radius: 8px;
+    color: #edf2f7;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.create-group:hover {
+    background-color: #2d3748;
+    transform: scale(1.05);
+}
+
+.create-group-icon {
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+/* Divider Line */
+.divider {
+    margin: 20px 0;
+    border-top: 1px solid #4a5568;
+}
+
+/* Groups Joined Section */
+.groups-joined {
+    flex-grow: 1;
+    max-height: calc(100vh - 300px); /* Adjust the height */
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4a5568 #2d3748;
+    padding-right: 8px;
+}
+
+.groups-joined::-webkit-scrollbar {
+    width: 8px;
+}
+
+.groups-joined::-webkit-scrollbar-track {
+    background: #2d3748;
+}
+
+.groups-joined::-webkit-scrollbar-thumb {
+    background-color: #4a5568;
+    border-radius: 4px;
+}
+
+.groups-joined-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.groups-joined h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #e2e8f0;
+}
+
+.see-all-button {
+    font-size: 0.875rem;
+    color: #63b3ed;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.see-all-button:hover {
+    color: #3182ce;
+}
+
+.groups-joined-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Group Item */
+.group-item {
+    display: flex;
+    align-items: center;
+    background-color: #2d3748;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.group-item:hover {
+    background-color: #4a5568;
+}
+
+.group-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.group-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.group-name {
+    font-weight: bold;
+    color: #edf2f7;
+}
+
+.group-description {
+    font-size: 0.875rem;
+    color: #a0aec0;
+}
+
+/* Task List */
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    color: #e2e8f0;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+.task-item:hover {
+    background-color: #4a5568;
+    transform: translateX(5px);
+}
+
+.task-icon {
+    margin-right: 10px;
+    color: #cbd5e0;
+    transition: color 0.3s ease;
+}
+
+.task-item:hover .task-icon {
+    color: #edf2f7;
+}

@@ -3,7 +3,9 @@ const routes = {
     login: '/login',
     register: '/register',
     addPost: '/addPost',
-    profileUpdate: '/profile/update',
+    profileUpdate: '/profile/edit',
+    groups: '/groups',
+    profile: '/profile',
 }
 
 export default routes;

@@ -1,0 +1,25 @@
+.profile {
+    margin-top: 80px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #dbe4ec;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    margin-bottom: 20px; 
+}
+
+.profile-content {
+    margin-bottom: 20px; 
+}
+
+@media (max-width: 768px) {
+    .profile {
+        padding: 15px;
+    }
+}

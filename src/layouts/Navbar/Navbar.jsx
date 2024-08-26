@@ -23,6 +23,9 @@ import "./Messenger.css";
 import "./Notification.css";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   return (
     <nav>
       
@@ -30,7 +33,13 @@ const Navbar = () => {
     </nav>
   );
 }
-
+const handleViewProfile = () => {
+    const userId = localStorage.getItem("userId"); 
+    if (userId) {
+      navigate(`/profile/${userId}`);
+    }
+  };
+  
 const NotificationPopover = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -410,12 +419,12 @@ const NotificationPopover = () => {
               </div>
             </PopoverTrigger>
             <PopoverContent className="w-52 p-4 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col gap-2">
-              <Link to="/profile" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black">
-                  <User2 />
-                  <span>View Profile</span>
-                </div>
-              </Link>
+            <Link to="/profile" className="text-decoration-none">
+              <div className="flex items-center gap-2 py-2 text-black">
+                <User2 />
+                <span>View Profile</span>
+              </div>
+            </Link>
               <Link to="/settings" className="text-decoration-none">
                 <div className="flex items-center gap-2 py-2 text-black">
                   <Settings />
