@@ -31,8 +31,8 @@ const Home = () => {
       }
     };
     getPosts();
-    window.addEventListener("scroll", getPosts);
-    return () => window.removeEventListener("scroll", getPosts);
+    window.addEventListener("postCreated", getPosts);
+    return () => window.removeEventListener("postCreated", getPosts);
   }, []);
 
   useEffect(() => {
