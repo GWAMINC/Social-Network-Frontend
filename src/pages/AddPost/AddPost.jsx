@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Listbox } from "@headlessui/react";
 import { AiOutlineCamera, AiOutlineSmile, AiOutlineVideoCamera } from "react-icons/ai";
@@ -12,11 +12,23 @@ const AddPost = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
   const [showPicker, setShowPicker] = useState(false);
-  const [photos, setPhotos] = useState([]);  // Change to array
+  const [photos, setPhotos] = useState([]); 
   const [video, setVideo] = useState(null);
-
+  const pickerRef = useRef(null); 
   const accessOptions = ["public", "private"];
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (pickerRef.current && !pickerRef.current.contains(event.target)) {
+        setShowPicker(false);
+      }
+    };
 
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -25,7 +37,7 @@ const AddPost = () => {
     const formData = new FormData();
     formData.append("content", content);
     formData.append("access", access);
-    photos.forEach(photo => formData.append("photos", photo));  // Append all photos
+    photos.forEach(photo => formData.append("images", photo));  // Append all photos
     if (video) formData.append("video", video);
 
     try {
@@ -172,7 +184,7 @@ const AddPost = () => {
                 <span className="hidden md:inline">Emoji</span>
               </button>
               {showPicker && (
-                <div className="absolute top-0 right-20 p-4">
+                <div className="absolute top-0 right-20 p-4" ref={pickerRef}>
                   <Picker
                     data={data}
                     onEmojiSelect={handleEmoji}
