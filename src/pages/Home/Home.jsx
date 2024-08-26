@@ -25,6 +25,7 @@ const Home = () => {
         const response = await axios.get(
             `${apiUrl}/post/getAllPost`,
             {withCredentials: true});
+        // console.log(response.data);
         await setPosts(response.data.posts.reverse());
       } catch (error) {
         console.error('Failed to fetch posts:', error);
@@ -192,7 +193,9 @@ const Home = () => {
           <div className="p-6 bg-white shadow-lg rounded-lg">
             <h2 className="text-2xl font-semibold text-[#B48FD9]">Posts</h2>
               {posts.map(post =>(
+                  <div key = {post.postInfo._id}>
                 <Post data = {post} />
+                  </div>
             ))}
           </div>
         </section>
