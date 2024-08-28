@@ -17,10 +17,16 @@ const Post = ({ data }) => {
   const [disliked, setDisliked] = useState(data.postInfo.isDisliked.includes(data.user));
   const [dislikeCount, setDislikeCount] = useState(data.dislikeCount);
   const [menuOpen, setMenuOpen] = useState(false);
+
   const [commenting, setCommenting] = useState(false);
   const [preComment, setPreComment] = useState([]);
   const [showComments, setShowComments] = useState(false);
   const [comment, setComment] = useState([]);
+  const [showPicker, setShowPicker] = useState(false);
+  const pickerRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false); 
   const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +58,76 @@ const Post = ({ data }) => {
         setFireworks((prev) => prev.filter(fw => fw.id !== newFirework.id));
       }, 1000);
     }
+  };
+
+  const AddComment=()=> {
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (pickerRef.current && !pickerRef.current.contains(event.target)) {
+          setShowPicker(false);
+        }
+      };
+
+      document.addEventListener("mousedown", handleClickOutside);
+
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      }
+
+    }, []);
+
+
+
+  }
+
+  const handleCommentChange = (e) => {
+    setCommenting(true);
+    setComment(e.target.value);
+  };
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+
+    const postId = data.postInfo._id
+
+    const payload = {
+      postId: postId,
+      content: comment,
+    };
+
+    console.log(postId, comment);
+
+    try{
+      console.log(payload);
+      const response = await axios.post(
+          "http://localhost:9090/api/comment/createComment",
+          payload,
+          { withCredentials: true, headers: { "Content-Type": "application/json" } }
+      );
+      console.log("Comment created:",response.data);
+      setComment("");
+      setCommenting(false);
+      setSuccess("Comment created!");
+      setShowPicker(false);
+      setShowComments(true);
+
+      const event = new CustomEvent('CommentCreated');
+      window.dispatchEvent(event);
+    }
+    catch(err){
+      console.error("Error creating post:", err);
+      setError("Failed to create post. Please try again.");
+      setSuccess("");
+
+    }
+    finally {
+      setIsSubmitting(false);
+    }
+
+
+
   };
 
 
@@ -131,15 +207,7 @@ const Post = ({ data }) => {
     }
   };
 
-  const handleCommentChange = (e) => {
-    setComment(e.target.value);
-  };
 
-  const handleCommentSubmit = () => {
-    console.log("Comment submitted:", comment);
-    setComment("");
-    setCommenting(false);
-  };
 
   const handleEmojiClick = (emoji) => {
     setComment(prev => prev + emoji.native);

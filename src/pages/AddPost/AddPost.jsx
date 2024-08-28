@@ -5,6 +5,7 @@ import { AiOutlineCamera, AiOutlineSmile, AiOutlineVideoCamera } from "react-ico
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 
+
 const AddPost = () => {
   const [content, setContent] = useState("");
   const [access, setAccess] = useState("public");

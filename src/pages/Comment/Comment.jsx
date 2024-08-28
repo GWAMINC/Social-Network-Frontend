@@ -1,10 +1,14 @@
 // Comment.jsx
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './Comment.css'; // Import the CSS file
+import Post from "@/pages/Post/index.jsx";
+
+import axios from "axios";
 
 
 
 const Comment = ({ comments }) => {
+
 
 
     return (
