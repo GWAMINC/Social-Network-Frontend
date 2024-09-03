@@ -8,7 +8,14 @@ import {
   AvatarImage,
   AvatarFallback,
 } from "@/components/ui/avatar.jsx";
-import { LogOut, User2, Settings, HelpCircle, MessageCircle, Bell } from "lucide-react";
+import {
+  LogOut,
+  User2,
+  Settings,
+  HelpCircle,
+  MessageCircle,
+  Bell,
+} from "lucide-react";
 import {
   FiHome,
   FiUsers,
@@ -28,25 +35,60 @@ const Navbar = () => {
 
   return (
     <nav>
-      
       <NotificationPopover />
     </nav>
   );
-}
+};
 const handleViewProfile = () => {
-    const userId = localStorage.getItem("userId"); 
-    if (userId) {
-      navigate(`/profile/${userId}`);
-    }
-  };
-  
+  const userId = localStorage.getItem("userId");
+  if (userId) {
+    navigate(`/profile/${userId}`);
+  }
+};
+
 const NotificationPopover = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const [notifications, setNotifications] = useState(null);
   const toggleNotifications = () => {
     setIsOpen(!isOpen);
+    const fetchnoti = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:9090/api/notification/getNotificationByUser",
+          { withCredentials: true }
+        );
+        setNotifications(res.data.notifications.reverse());
+        console.log("data", res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchnoti();
   };
+  const handleDateTime = (createdAt) => {
+    const now = new Date();
+    const createdDate = new Date(createdAt);
 
+    const diffInSeconds = Math.floor((now - createdDate) / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInSeconds < 60) {
+      return "Vừa xong";
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes} phút trước`;
+    } else if (diffInHours < 24) {
+      return `${diffInHours} giờ trước`;
+    } else if (diffInDays < 7) {
+      return `${diffInDays} ngày trước`;
+    } else {
+      const day = createdDate.getDate();
+      const month = createdDate.getMonth() + 1; // getMonth() trả về giá trị từ 0 (tháng 1) đến 11 (tháng 12)
+      const year = createdDate.getFullYear();
+      return `${day} tháng ${month}, ${year}`;
+    }
+  };
   // Ẩn navbar khi ở trang đăng nhập hoặc trang đăng ký
   if (location.pathname === "/login" || location.pathname === "/register") {
     return null;
@@ -221,7 +263,9 @@ const NotificationPopover = () => {
             <PopoverContent className="messenger-container">
               {/* Header */}
               <div className="messenger-header flex items-center justify-between p-3 border-b">
-                <div className="messenger-title font-semibold text-lg">Messenger</div>
+                <div className="messenger-title font-semibold text-lg">
+                  Messenger
+                </div>
                 <div className="flex items-center gap-2">
                   <Button className="rounded-button flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
                     <svg
@@ -272,10 +316,17 @@ const NotificationPopover = () => {
                     </svg>
                   </Button>
                   <Button className="rounded-button rounded-full gap-2 text-white opacity-100 hover:bg-slate-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 5v14m7-7H5" />
-                  </svg>
-                </Button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M12 5v14m7-7H5" />
+                    </svg>
+                  </Button>
                 </div>
               </div>
               <div className="messenger-search p-3 border-b">
@@ -285,29 +336,87 @@ const NotificationPopover = () => {
                   className="w-full p-2 border rounded-full focus:outline-none focus:ring focus:border-blue-300"
                 />
               </div>
-              <div className="messenger-content overflow-y-auto" style={{ height: 'calc(100% - 150px)' }}>
+              <div
+                className="messenger-content overflow-y-auto"
+                style={{ height: "calc(100% - 150px)" }}
+              >
                 {[
-                  { name: "Người A", message: "Tôi", avatar: "https://github.com/shadcn.png" },
-                  { name: "Người B", message: "Yêu", avatar: "https://github.com/shadcn.png" },
-                  { name: "Người C", message: "Việt Nam", avatar: "https://github.com/shadcn.png" },
-                  { name: "Người D", message: "Vãi", avatar: "https://github.com/shadcn.png" },
-                  { name: "Người E", message: "Cả", avatar: "https://github.com/shadcn.png" },
-                  { name: "Người F", message: "Nho!", avatar: "https://github.com/shadcn.png" },
-                  { name: "Người A", message: "Tôi", avatar: "https://github.com/shadcn.png" },
-                  { name: "Người B", message: "Yêu", avatar: "https://github.com/shadcn.png" },
-                  { name: "Người C", message: "Việt Nam", avatar: "https://github.com/shadcn.png" },
-                  { name: "Người D", message: "Vãi", avatar: "https://github.com/shadcn.png" },
-                  { name: "Người E", message: "Cả", avatar: "https://github.com/shadcn.png" },
-                  { name: "Người F", message: "Nho!", avatar: "https://github.com/shadcn.png" },
+                  {
+                    name: "Người A",
+                    message: "Tôi",
+                    avatar: "https://github.com/shadcn.png",
+                  },
+                  {
+                    name: "Người B",
+                    message: "Yêu",
+                    avatar: "https://github.com/shadcn.png",
+                  },
+                  {
+                    name: "Người C",
+                    message: "Việt Nam",
+                    avatar: "https://github.com/shadcn.png",
+                  },
+                  {
+                    name: "Người D",
+                    message: "Vãi",
+                    avatar: "https://github.com/shadcn.png",
+                  },
+                  {
+                    name: "Người E",
+                    message: "Cả",
+                    avatar: "https://github.com/shadcn.png",
+                  },
+                  {
+                    name: "Người F",
+                    message: "Nho!",
+                    avatar: "https://github.com/shadcn.png",
+                  },
+                  {
+                    name: "Người A",
+                    message: "Tôi",
+                    avatar: "https://github.com/shadcn.png",
+                  },
+                  {
+                    name: "Người B",
+                    message: "Yêu",
+                    avatar: "https://github.com/shadcn.png",
+                  },
+                  {
+                    name: "Người C",
+                    message: "Việt Nam",
+                    avatar: "https://github.com/shadcn.png",
+                  },
+                  {
+                    name: "Người D",
+                    message: "Vãi",
+                    avatar: "https://github.com/shadcn.png",
+                  },
+                  {
+                    name: "Người E",
+                    message: "Cả",
+                    avatar: "https://github.com/shadcn.png",
+                  },
+                  {
+                    name: "Người F",
+                    message: "Nho!",
+                    avatar: "https://github.com/shadcn.png",
+                  },
                 ].map((chat, index) => (
-                  <div key={index} className="messenger-item flex items-center gap-3 px-3 py-2 hover:bg-gray-100 cursor-pointer">
+                  <div
+                    key={index}
+                    className="messenger-item flex items-center gap-3 px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
                     <Avatar className="w-10 h-10">
                       <AvatarImage src={chat.avatar} alt={chat.name} />
                       <AvatarFallback>{chat.name[0]}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <span className="font-semibold text-black">{chat.name}</span>
-                      <span className="text-gray-500 text-sm truncate">{chat.message}</span>
+                      <span className="font-semibold text-black">
+                        {chat.name}
+                      </span>
+                      <span className="text-gray-500 text-sm truncate">
+                        {chat.message}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -318,21 +427,34 @@ const NotificationPopover = () => {
             </PopoverContent>
           </Popover>
 
-
-
-
           <Popover>
             <PopoverTrigger asChild>
-              <Button className="flex items-center gap-2 text-white ml-4" onClick={toggleNotifications}>
+              <Button
+                className="flex items-center gap-2 text-white ml-4"
+                onClick={toggleNotifications}
+              >
                 <Bell />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="notification-container">
               <div className="notification-header flex items-center justify-between p-3 border-b">
-                <div className="notification-title font-semibold text-lg">Notifications</div>
+                <div className="notification-title font-semibold text-lg">
+                  Notifications
+                </div>
                 <Button className="p-1 text-gray-200 hover:bg-gray-100 rounded-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
                   </svg>
                 </Button>
               </div>
@@ -343,69 +465,44 @@ const NotificationPopover = () => {
               </div>
 
               <div className="notification-content">
-              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
-                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
-                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
-                </div>
-                  <div className="flex flex-col">
-                    <span className="font-semibold">Thông báo 1</span>
-                    <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
-                  </div>
-              </div>
-              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
-                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
-                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold">Thông báo 1</span>
-                  <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
-                </div>
-              </div>
-              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
-                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
-                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold">Thông báo 1</span>
-                  <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
-                </div>
-              </div>
-              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
-                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
-                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold">Thông báo 1</span>
-                  <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
-                </div>
-              </div>
-              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
-                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
-                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold">Thông báo 1</span>
-                  <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
-                </div>
-              </div>
-              <div className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer">
-                <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
-                  <img src="https://github.com/shadcn.png" alt="Avatar" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold">Thông báo 1</span>
-                  <span className="text-gray-500 text-sm">Chi tiết thông báo 1</span>
-                </div>
-              </div>
+                {notifications &&
+                  notifications.map((notification) => (
+                    <div
+                      key={notification._id}
+                      className="notification-item flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
+                    >
+                      <div className="notification-avatar w-10 h-10 rounded-full overflow-hidden">
+                        <img
+                          src={notification.author.avatar}
+                          alt="Avatar"
+                          className="w-full h-full object-cover"
+                        />
+                        <div>{handleDateTime(notification.createdAt)}</div>
+                      </div>
+                      <div className="flex flex-col">
+                        <div className="flex justify-between pr-5">
+                          <span className="font-semibold">
+                            {notification.author.name}
+                          </span>
+                          <div>{handleDateTime(notification.createdAt)}</div>
+                        </div>
+
+                        <span className="text-gray-500 text-sm">
+                          {notification.content}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
               </div>
 
               <div className="notification-footer">
-                <Button className="text-blue-500 hover:text-blue-700">See Previous Notifications</Button>
+                <Button className="text-blue-500 hover:text-blue-700">
+                  See Previous Notifications
+                </Button>
               </div>
             </PopoverContent>
           </Popover>
 
-          
           <Popover>
             <PopoverTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer ml-4">
@@ -419,12 +516,12 @@ const NotificationPopover = () => {
               </div>
             </PopoverTrigger>
             <PopoverContent className="w-52 p-4 bg-white border border-gray-300 rounded-lg shadow-lg flex flex-col gap-2">
-            <Link to="/profile" className="text-decoration-none">
-              <div className="flex items-center gap-2 py-2 text-black">
-                <User2 />
-                <span>View Profile</span>
-              </div>
-            </Link>
+              <Link to="/profile" className="text-decoration-none">
+                <div className="flex items-center gap-2 py-2 text-black">
+                  <User2 />
+                  <span>View Profile</span>
+                </div>
+              </Link>
               <Link to="/settings" className="text-decoration-none">
                 <div className="flex items-center gap-2 py-2 text-black">
                   <Settings />
@@ -442,7 +539,6 @@ const NotificationPopover = () => {
                   className="flex items-center gap-2 py-2 text-black"
                   onClick={handleLogout}
                 >
-
                   <LogOut />
                   <span>Logout</span>
                 </div>

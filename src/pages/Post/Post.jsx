@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaHeart, FaHeartBroken, FaComment, FaShare, FaBookmark, FaEllipsisV, FaSmile } from "react-icons/fa";
-import data from '@emoji-mart/data';
+import Data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import './Post.css';
 import ShareModal from '../ShareModal/ShareModal';
@@ -447,7 +447,7 @@ const Post = ({ data }) => {
                 </button>
                 {showEmojiPicker && (
                     <div className="emoji-picker absolute bottom-16 left-4">
-                      <Picker data={data} onEmojiSelect={handleEmojiClick}/>
+                      <Picker data={Data} onEmojiSelect={handleEmojiClick}/>
                     </div>
                 )}
               </div>
