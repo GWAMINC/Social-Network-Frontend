@@ -60,7 +60,7 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-gray-900 w-full h-screen flex flex-col">
+    <div className="bg-gray-900 w-full flex flex-col">
       <Navbar />
       <div className="flex-grow pt-3 px-4">
         <header className="text-center py-16">
@@ -109,32 +109,6 @@ const Home = () => {
           <AddPost />
 
           <div className="space-y-8 md:space-y-0 md:flex md:gap-8">
-            {/* Latest Activity */}
-            <div className="p-6 bg-gray-800 shadow-lg rounded-lg flex-1">
-              <h2 className="text-2xl font-semibold text-white">
-                Latest Activity
-              </h2>
-              <div className="mt-4 space-y-4">
-                <div className="flex items-center gap-2">
-                  <AiOutlineUser className="w-6 h-6 text-gray-400" />
-                  <p className="text-gray-300">
-                    You have a new friend request from John Doe.
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <AiOutlineGroup className="w-6 h-6 text-gray-400" />
-                  <p className="text-gray-300">
-                    Group invitation from the 'Developers' group.
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <AiOutlineComment className="w-6 h-6 text-gray-400" />
-                  <p className="text-gray-300">
-                    New comment on your post by Jane Smith.
-                  </p>
-                </div>
-              </div>
-            </div>
 
             {/* Active Friends */}
 
@@ -184,9 +158,8 @@ const Home = () => {
         )}
 
         <footer className="text-center mt-16 py-6 border-t border-gray-300">
-          <p className="text-gray-900">
+          <p className="text-gray-300">
             &copy; 2024 KitKat. All rights reserved.
-
           </p>
         </footer>
       </div>
