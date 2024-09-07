@@ -115,25 +115,25 @@ const ActiveFr = () => {
   };
 
   return (
-    <div className="p-6 bg-white shadow-lg rounded-lg flex-1">
+    <div className="p-6 bg-background-lighter shadow-lg rounded-lg flex-1">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-semibold text-[#B48FD9]">
+        <h2 className="text-2xl font-semibold text-foreground">
           Active Friends
         </h2>
         <div className="relative" ref={settingsRef}>
           <button
             onClick={toggleSettings}
-            className="text-[#B48FD9] w-10 h-10 flex items-center justify-center text-xl"
+            className="text-foreground-lighter w-10 h-10 flex items-center justify-center text-2xl"
           >
             <AiOutlineMore />
           </button>
           {settingsVisible && (
-            <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg p-2 w-48">
-              <button className="block w-full text-gray-700 text-left hover:bg-gray-100 px-2 py-1 rounded-md">
+            <div className="absolute right-0 mt-2 bg-input text-foreground-lighter shadow-lg rounded-lg p-2 w-48">
+              <button className="block w-full text-left hover:bg-gray-100 px-2 py-1 rounded-md">
                 List Blocked
               </button>
               <div className="flex items-center justify-between mt-2">
-                <span className="text-gray-700">Activity Status</span>
+                <span>Activity Status</span>
                 <div
                   onClick={toggleStatus}
                   className={`relative w-16 h-8 flex items-center cursor-pointer rounded-full transition-colors ${
@@ -152,17 +152,17 @@ const ActiveFr = () => {
         </div>
       </div>
       <div className="relative flex items-center mb-4" ref={searchRef}>
-        <button onClick={toggleSearch} className="text-[#B48FD9] w-6 h-6 mr-2">
+        <button onClick={toggleSearch} className="text-foreground-lighter w-6 h-6 mr-2">
           <AiOutlineSearch />
         </button>
         <input
           type="text"
           placeholder="Search Contacts..."
-          className={`search-input ${searchVisible ? "visible" : ""}`}
+          className={`search-input bg-input text-foreground ${searchVisible ? "visible" : ""}`}
         />
       </div>
 
-      <div className="active-friends-list mt-4 space-y-4 border-4 border-black-500">
+      <div className="active-friends-list mt-4 space-y-4">
         {friends.map((friend) => (
           <div
             key={friend._id}
@@ -174,17 +174,20 @@ const ActiveFr = () => {
                 alt="Friend Avatar"
                 className="w-8 h-8 rounded-full"
               />
-              <p className="text-gray-600">{friend.name} is online</p>
+              <p className="text-foreground">{friend.name} is online</p>
             </div>
 
-            <button onClick={() => deleteFriend(friend._id)}>
+            <button
+              className="bg-button hover:bg-button/60 text-foreground-lighter p-2 rounded-sm"
+              onClick={() => deleteFriend(friend._id)}
+            >
               Delete Friend
             </button>
           </div>
         ))}
       </div>
 
-      <div className="active-friends-list mt-4 space-y-4 border-4 border-black-500">
+      <div className="active-friends-list mt-4 pt-4 space-y-4 border-t border-border">
         {users.map((user, index) => (
           <div key={index} className="flex items-center gap-2 justify-between">
             <div className="flex items-center gap-2">
@@ -193,10 +196,15 @@ const ActiveFr = () => {
                 alt="Friend Avatar"
                 className="w-8 h-8 rounded-full"
               />
-              <p className="text-gray-600">{user.name}</p>
+              <p className="text-foreground">{user.name}</p>
             </div>
 
-            <button onClick={() => addFriend(user._id)}>Add Friend</button>
+            <button
+              className="bg-button hover:bg-button/60 text-foreground-lighter p-2 rounded-sm"
+              onClick={() => addFriend(user._id)}
+            >
+              Add Friend
+            </button>
           </div>
         ))}
       </div>
