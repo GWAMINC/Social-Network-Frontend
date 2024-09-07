@@ -5,6 +5,13 @@
 
 @layer base {
   :root {
+    --darker-blue: 211deg 53% 11%;
+    --dark-blue: 219deg 37% 17%;
+    --light-blue: 215deg 25% 27%;
+    --lighter-blue: 214deg 23% 56%;
+    --white-blue: 75deg 6% 87%;
+    --white: 0deg 0% 100%;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -33,30 +40,13 @@
   }
 
   .dark {
-    --background: 222.2 84% 20%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --background: var(--darker-blue);
+    --background-lighter: var(--dark-blue);
+    --input: var(--light-blue);
+    --border: var(--light-blue);
+    --button: var(--light-blue);
+    --foreground: var(--white);
+    --foreground-lighter: var(--white-blue);
   }
 }
 

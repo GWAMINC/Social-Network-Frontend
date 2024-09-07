@@ -24,6 +24,7 @@ import {
   FiGitPullRequest,
   FiMenu,
 } from "react-icons/fi";
+import { GrGroup } from "react-icons/gr";
 import axios from "axios";
 
 import "./Messenger.css";
@@ -120,6 +121,14 @@ const NotificationPopover = () => {
     }
   };
 
+  const navButtons = [
+    { name: "Home", icon: FiHome, linkTo: "/" },
+    { name: "Friends", icon: FiUsers, linkTo: "/friends" },
+    { name: "Create a post", icon: FiPlusSquare, linkTo: "/create-post" },
+    { name: "Video", icon: FiVideo, linkTo: "/video" },
+    { name: "Groups", icon: GrGroup, linkTo: "/groups" },
+  ];
+
   return (
     <div className="fixed top-0 left-0 z-10 w-full bg-gray-800 shadow-lg">
       <div className="flex items-center justify-between h-16 max-w-full px-6 mx-auto">
@@ -154,37 +163,20 @@ const NotificationPopover = () => {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex items-center justify-center flex-1">
-          <Link to="/" className="mx-2 text-decoration-none">
-            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600 ">
-              <FiHome />
-              Home
-            </Button>
-          </Link>
-          <Link to="/friends" className="mx-2 text-decoration-none">
-            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
-              <FiUsers />
-              Friends
-            </Button>
-          </Link>
-          <Link to="/create-post" className="mx-2 text-decoration-none">
-            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
-              <FiPlusSquare />
-              Create a Post
-            </Button>
-          </Link>
-          <Link to="/video" className="mx-2 text-decoration-none">
-            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
-              <FiVideo />
-              Video
-            </Button>
-          </Link>
-          <Link to="/group" className="mx-2 text-decoration-none">
-            <Button className="flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
-              <FiGitPullRequest />
-              Group
-            </Button>
-          </Link>
+        <div className="flex items-center justify-evenly flex-1">
+          {navButtons.map((btn) => {
+            return (
+              <Link
+                key={btn.name}
+                to={btn.linkTo}
+                className="text-decoration-none"
+              >
+                <Button className="text-xl flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
+                  {btn.icon()}
+                </Button>
+              </Link>
+            );
+          })}
         </div>
 
         {/* Avatar and Menu */}

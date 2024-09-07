@@ -60,7 +60,7 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-gray-900 w-full flex flex-col">
+    <div className="bg-background w-full flex flex-col">
       <Navbar />
       <div className="flex-grow pt-3 px-4">
         <header className="text-center py-16">
