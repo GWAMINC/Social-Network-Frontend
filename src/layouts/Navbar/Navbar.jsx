@@ -15,6 +15,9 @@ import {
   HelpCircle,
   MessageCircle,
   Bell,
+  Moon,
+  Sun,
+  Monitor,
 } from "lucide-react";
 import {
   FiHome,
@@ -189,7 +192,7 @@ const NotificationPopover = () => {
         <div className="flex items-center flex-1 justify-evenly">
           {navButtons.map((btn) => (
             <Link key={btn.name} to={btn.linkTo}>
-              <button className="flex items-center gap-2 px-8 py-4 text-xl rounded-md opacity-100 text-foreground hover:bg-secondary-hover">
+              <button className="flex items-center gap-2 px-8 py-4 text-2xl rounded-md opacity-100 text-foreground hover:bg-secondary-hover">
                 {btn.icon()}
               </button>
             </Link>
@@ -219,6 +222,46 @@ const NotificationPopover = () => {
                   </div>
                 </Link>
               ))}
+            </PopoverContent>
+          </Popover>
+
+          {/* Theme */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="secondary"
+                className="flex items-center gap-2 ml-4"
+              >
+                <Moon />
+              </Button>
+            </PopoverTrigger>
+
+            <PopoverContent className="flex flex-col gap-2 overflow-hidden rounded-lg shadow-md focus:outline-none text-foreground bg-background-lighter shadow-black w-36">
+              <div
+                className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
+                onClick={() => {}}
+              >
+                <Sun />
+                <span>Light</span>
+              </div>
+
+
+              <div
+                className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
+                onClick={() => {}}
+              >
+                <Moon />
+                <span>Dark</span>
+              </div>
+
+
+              <div
+                className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
+                onClick={() => {}}
+              >
+                <Monitor />
+                <span>System</span>
+              </div>
             </PopoverContent>
           </Popover>
 
@@ -511,7 +554,7 @@ const NotificationPopover = () => {
               </div>
             </PopoverTrigger>
 
-            <PopoverContent className="flex flex-col gap-2 overflow-hidden rounded-lg shadow-md text-foreground bg-background-lighter shadow-black w-52">
+            <PopoverContent className="flex flex-col gap-2 overflow-hidden rounded-lg shadow-md focus:outline-none text-foreground bg-background-lighter shadow-black w-52">
               {accountMenuButtons.map((btn) => (
                 <Link key={btn.name} to={btn.linkTo}>
                   <div
