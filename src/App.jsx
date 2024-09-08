@@ -11,6 +11,8 @@ function App() {
     const checkAuth = () => {
         setIsAuthenticated(!!localStorage.getItem("token"));
     };
+    
+    
 
     useEffect(() => {
         window.addEventListener("storage", checkAuth);

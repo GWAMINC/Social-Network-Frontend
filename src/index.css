@@ -13,9 +13,16 @@
     --violet: 216 23% 37%;
     --light-violet: 214 23% 56%;
     --white-blue: 0 6% 87%;
-    --white: 0 0% 100%;
 
-    
+    /* Light color scheme */
+    --gray1: 216 20% 95%;
+    --gray2: 220 7% 82%;
+    --gray3: 0 0% 51%;
+    --blue1: 211 100% 56%;
+    --blue2: 211 100% 50%;
+
+    --white: 0 0% 100%;
+    --black: 0 0% 0%;
 
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -23,10 +30,10 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    /* --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary-foreground: 222.2 47.4% 11.2%; */
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 210 40% 96.1%;
@@ -43,20 +50,47 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
   }
+  
+  .light {
+    --background: var(--gray1);
+    --background-lighter: var(--white);
+    --input: var(--gray1);
+    --border: var(--gray2);
+    --comment: var(--gray1);
+    --dropdown: var(--white);
+    --dropdown-hover: var(--gray1);
+    --dropdown-selected: var(--gray2);
+    --foreground: var(--black);
+    --foreground-lighter: var(--gray3);
+
+    --primary: var(--blue2);
+    --primary-foreground: var(--white);
+    --primary-hover: var(--blue1);
+
+    --secondary: var(--gray1);
+    --secondary-foreground: var(--black);
+    --secondary-hover: var(--gray2);
+  }
 
   .dark {
     --background: var(--darker-blue);
     --background-lighter: var(--dark-blue);
     --input: var(--light-purple);
     --border: var(--lighter-purple);
-    --button: var(--light-purple);
-    --button-hover: var(--lighter-purple);
     --comment: var(--light-purple);
     --dropdown: var(--light-purple);
     --dropdown-hover: var(--lighter-purple);
     --dropdown-selected: var(--violet);
     --foreground: var(--white);
     --foreground-lighter: var(--white-blue);
+
+    --primary: var(--light-purple);
+    --primary-foreground: var(--white);
+    --primary-hover: var(--lighter-purple);
+
+    --secondary: var(--light-purple);
+    --secondary-foreground: var(--white);
+    --secondary-hover: var(--lighter-purple);
   }
 }
 

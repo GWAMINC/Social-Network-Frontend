@@ -314,11 +314,11 @@ const Post = ({ data }) => {
         {menuOpen && (
             <div
                 ref={menuRef}
-                className="absolute top-10 right-2 bg-input text-foreground-lighter shadow-md rounded-lg z-10 overflow-hidden"
+                className="absolute top-10 right-2 bg-dropdown text-foreground-lighter shadow-md rounded-lg z-10 overflow-hidden"
             >
               <ul>
-                <li className="p-2 hover:bg-background-lighter/70 cursor-pointer">Interested</li>
-                <li className="p-2 hover:bg-background-lighter/70 cursor-pointer">Not Interested</li>
+                <li className="p-2 hover:bg-dropdown-hover cursor-pointer">Interested</li>
+                <li className="p-2 hover:bg-dropdown-hover cursor-pointer">Not Interested</li>
               </ul>
             </div>
         )}

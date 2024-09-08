@@ -166,10 +166,10 @@ const NotificationPopover = () => {
             <input
               type="text"
               placeholder="Search for friends, groups, pages"
-              className="w-full px-4 py-2 pl-10 text-foreground-lighter bg-input rounded-lg"
+              className="w-full px-4 py-2 pl-10 rounded-lg text-foreground-lighter bg-input"
             />
             <svg
-              className="absolute w-5 h-5 text-foreground-lighter transform -translate-y-1/2 top-1/2 left-3"
+              className="absolute w-5 h-5 transform -translate-y-1/2 text-foreground-lighter top-1/2 left-3"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -189,7 +189,7 @@ const NotificationPopover = () => {
         <div className="flex items-center flex-1 justify-evenly">
           {navButtons.map((btn) => (
             <Link key={btn.name} to={btn.linkTo}>
-              <button className="flex items-center gap-2 px-8 py-4 text-xl rounded-md opacity-100 text-foreground hover:bg-button">
+              <button className="flex items-center gap-2 px-8 py-4 text-xl rounded-md opacity-100 text-foreground hover:bg-secondary-hover">
                 {btn.icon()}
               </button>
             </Link>
@@ -225,10 +225,14 @@ const NotificationPopover = () => {
           {/* Messages */}
           <Popover>
             <PopoverTrigger asChild>
-              <Button className="flex items-center gap-2 ml-4">
+              <Button
+                variant="secondary"
+                className="flex items-center gap-2 ml-4"
+              >
                 <MessageCircle />
               </Button>
             </PopoverTrigger>
+
             <PopoverContent className="shadow-md shadow-black messenger-container bg-background-lighter">
               {/* Messages Header */}
               <div className="flex items-center justify-between p-3 border-b border-border messenger-header">
@@ -236,7 +240,10 @@ const NotificationPopover = () => {
                   Messenger
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button className="flex items-center gap-2 opacity-100">
+                  <Button
+                    variant="secondary"
+                    className="flex items-center gap-2 opacity-100"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-6 h-6"
@@ -252,7 +259,10 @@ const NotificationPopover = () => {
                       />
                     </svg>
                   </Button>
-                  <Button className="flex items-center gap-2 opacity-100">
+                  <Button
+                    variant="secondary"
+                    className="flex items-center gap-2 opacity-100"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-6 h-6"
@@ -268,7 +278,10 @@ const NotificationPopover = () => {
                       />
                     </svg>
                   </Button>
-                  <Button className="flex items-center gap-2 opacity-100">
+                  <Button
+                    variant="secondary"
+                    className="flex items-center gap-2 opacity-100"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-6 h-6"
@@ -284,7 +297,10 @@ const NotificationPopover = () => {
                       />
                     </svg>
                   </Button>
-                  <Button className="gap-2 rounded-full opacity-100">
+                  <Button
+                    variant="secondary"
+                    className="gap-2 rounded-full opacity-100"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-5 h-5"
@@ -406,18 +422,20 @@ const NotificationPopover = () => {
           <Popover>
             <PopoverTrigger asChild>
               <Button
-                className="flex items-center gap-2 ml-4 text-foreground"
+                variant="secondary"
+                className="flex items-center gap-2 ml-4"
                 onClick={toggleNotifications}
               >
                 <Bell />
               </Button>
             </PopoverTrigger>
+
             <PopoverContent className="shadow-md notification-container bg-background-lighter shadow-black">
               <div className="flex items-center justify-between p-3 border-b border-border notification-header">
                 <div className="text-lg font-semibold text-foreground notification-title">
                   Notifications
                 </div>
-                <Button className="p-1 rounded-full">
+                <Button variant="secondary" className="p-1 rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="w-5 h-5"
@@ -436,8 +454,8 @@ const NotificationPopover = () => {
               </div>
 
               <div className="flex justify-between p-3 border-b border-border notification-filters">
-                <Button>Unread</Button>
-                <Button>All</Button>
+                <Button variant="secondary">Unread</Button>
+                <Button variant="secondary">All</Button>
               </div>
 
               <div className="notification-content">
@@ -497,7 +515,7 @@ const NotificationPopover = () => {
               {accountMenuButtons.map((btn) => (
                 <Link key={btn.name} to={btn.linkTo}>
                   <div
-                    className="flex items-center gap-2 py-2 px-4 hover:bg-dropdown-hover"
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-dropdown-hover"
                     onClick={btn.onClick}
                   >
                     <btn.icon />

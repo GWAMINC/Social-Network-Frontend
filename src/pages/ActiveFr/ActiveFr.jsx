@@ -178,7 +178,7 @@ const ActiveFr = () => {
               <p className="text-foreground">{friend.name} is online</p>
             </div>
 
-            <Button onClick={() => deleteFriend(friend._id)}>
+            <Button variant="secondary" onClick={() => deleteFriend(friend._id)}>
               Delete Friend
             </Button>
           </div>

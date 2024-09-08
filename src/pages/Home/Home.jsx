@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "@/layouts/Navbar";
+import { Button } from "@/components/ui/button";
 import {
   AiOutlineCamera,
   AiOutlineVideoCamera,
@@ -126,13 +127,13 @@ const Home = () => {
       </div>
       {/* Scroll to Top Button */}
       {isButtonVisible && (
-        <button
+        <Button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 bg-background-lighter text-foreground-lighter p-4 rounded-full shadow-md hover:bg-button transition-colors flex items-center justify-center text-2xl"
+          className="fixed bottom-6 right-6 rounded-full shadow-md transition-colors flex items-center justify-center text-2xl"
           aria-label="Scroll to top"
         >
           ↑
-        </button>
+        </Button>
       )}
     </div>
   );

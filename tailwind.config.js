@@ -21,10 +21,6 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        button: {
-          DEFAULT:  "hsl(var(--button))",
-          hover: "hsl(var(--button-hover))"
-        },
         comment: "hsl(var(--comment))",
         dropdown: {
           DEFAULT: "hsl(var(--dropdown))",
@@ -42,10 +38,12 @@ module.exports = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))"
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          hover: "hsl(var(--secondary-hover))"
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

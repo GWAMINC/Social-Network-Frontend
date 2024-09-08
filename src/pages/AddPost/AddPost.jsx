@@ -4,7 +4,7 @@ import { Listbox } from "@headlessui/react";
 import { AiOutlineCamera, AiOutlineSmile, AiOutlineVideoCamera } from "react-icons/ai";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-
+import { Button } from "@/components/ui/button";
 
 const AddPost = () => {
   const [content, setContent] = useState("");
@@ -181,7 +181,7 @@ const AddPost = () => {
                 className="transition-colors flex items-center gap-2"
                 onClick={() => setShowPicker(!showPicker)}
               >
-                <AiOutlineSmile className="w-6 h-6" />
+                <AiOutlineSmile className="w-6 h-6"/>
                 <span className="hidden md:inline">Emoji</span>
               </button>
               {showPicker && (
@@ -195,13 +195,13 @@ const AddPost = () => {
               )}
             </div>
           </div>
-          <button
-            className={`w-full px-4 py-2 rounded-md transition-colors ${isSubmitting ? "bg-button" : "bg-button hover:bg-button-hover"} text-foreground`}
+          <Button
+            className={`w-full transition-colors ${isSubmitting ? "bg-secondary text-secondary-foreground" : ""}`}
             type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Submitting..." : "New Post"}
-          </button>
+          </Button>
         </div>
       </form>
 
