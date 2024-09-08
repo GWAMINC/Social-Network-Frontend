@@ -16,14 +16,14 @@ const Comment = ({ comments }) => {
 
             {comments.length > 0 ? (
                 comments.map((comment, index) => (
-                    <div key={index} className="comment-item">
-                        <p><strong>{comment.author}</strong> </p>
-                        <p>{comment.content}</p>
-                        <small>{new Date(comment.createdAt).toLocaleString()}</small>
+                    <div key={index} className="comment-item bg-comment">
+                        <p className='text-foreground'><strong>{comment.author}</strong> </p>
+                        <p className='text-foreground'>{comment.content}</p>
+                        <small className='text-foreground-lighter'>{new Date(comment.createdAt).toLocaleString()}</small>
                     </div>
                 ))
             ) : (
-                <p>No comments yet.</p>
+                <p className='text-foreground-lighter'>No comments yet.</p>
             )}
         </div>
     );

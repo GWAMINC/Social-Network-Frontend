@@ -60,94 +60,55 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-background w-full flex flex-col">
+    <div className="w-full flex flex-col">
       <Navbar />
       <div className="flex-grow pt-3 px-4">
         <header className="text-center py-16">
-          <h1 className="text-4xl font-bold text-white">
-            Welcome to <span className="text-white">KitKat</span>
+          <h1 className="text-4xl font-bold text-foreground">
+            Welcome to Kit<span className="text-foreground-lighter">Kat</span>
           </h1>
-          <p className="text-lg text-gray-600 mt-4">Àn nhoong</p>
+          <p className="text-lg text-foreground-lighter mt-4">Àn nhoong</p>
         </header>
 
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-          <div className="p-6 bg-gray-800 shadow-lg rounded-lg">
+          {/* Pages */}
+          <div className="p-6  bg-background-lighter shadow-lg rounded-lg">
+            <h2 className="text-2xl font-semibold text-foreground">Your Pages</h2>
             <div className="mt-4 space-y-4">
-              {/* Latest Posts moved inside Shortcuts */}
-              <div className="p-6 bg-gray-700 shadow-lg rounded-lg">
-                <h2 className="text-2xl font-semibold text-white">
-                  Latest Posts
-                </h2>
-                <p className="text-gray-100 mt-4">
-                  Check out the latest posts from your friends and stay updated
-                  with what's happening.
-                </p>
+              <div className="flex items-center justify-between">
+                <span className="text-foreground-lighter">Page 1</span>
+                <button className="text-foreground-lighter hover:text-foreground">
+                  View
+                </button>
               </div>
-              <button className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-colors">
-                Home
-              </button>
-              <button className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-colors">
-                Friends
-              </button>
-              <button
-                className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-colors"
-                onClick={() => navigate("/groups")} 
-              >
-                Groups
-              </button>
-              <button className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-colors">
-                Favourites
-              </button>
-              <button className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition-colors">
-                Saved
-              </button>
+              <div className="flex items-center justify-between">
+                <span className="text-foreground-lighter">Page 2</span>
+                <button className="text-foreground-lighter hover:text-foreground">
+                  View
+                </button>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-foreground-lighter">Page 3</span>
+                <button className="text-foreground-lighter hover:text-foreground">
+                  View
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Create a Post */}
-
           <AddPost />
 
           <div className="space-y-8 md:space-y-0 md:flex md:gap-8">
-
             {/* Active Friends */}
-
             <ActiveFr /> 
-
           </div>
         </section>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-
-          {/* Pages Section */}
-          <div className="p-6  bg-gray-800 shadow-lg rounded-lg">
-            <h2 className="text-2xl font-semibold text-white">Your Pages</h2>
-            <div className="mt-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Page 1</span>
-                <button className="text-[#a3a3a3] hover:text-white">
-                  View
-                </button>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Page 2</span>
-                <button className="text-[#a3a3a3] hover:text-white">
-                  View
-                </button>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Page 3</span>
-                <button className="text-[#a3a3a3] hover:text-white">
-                  View
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
         {posts.length > 0 && (
         <section className="mt-8">
-          <div className="p-6 bg-white shadow-lg rounded-lg">
-            <h2 className="text-2xl font-semibold text-[#B48FD9]">Posts</h2>
+          <div className="bg-transparent">
+            {/* <h2 className="text-2xl font-semibold text-foreground">Posts</h2> */}
               {posts.map(post =>(
                   <div key = {post.postInfo._id}>
                 <Post data = {post} />
@@ -157,8 +118,8 @@ const Home = () => {
         </section>
         )}
 
-        <footer className="text-center mt-16 py-6 border-t border-gray-300">
-          <p className="text-gray-300">
+        <footer className="text-center mt-16 py-6 border-t border-border">
+          <p className="text-foreground-lighter">
             &copy; 2024 KitKat. All rights reserved.
           </p>
         </footer>
@@ -167,7 +128,7 @@ const Home = () => {
       {isButtonVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-500 transition-colors flex items-center justify-center text-2xl"
+          className="fixed bottom-6 right-6 bg-background-lighter text-foreground-lighter p-4 rounded-full shadow-md hover:bg-button transition-colors flex items-center justify-center text-2xl"
           aria-label="Scroll to top"
         >
           ↑

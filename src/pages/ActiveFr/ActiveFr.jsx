@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { AiOutlineSearch, AiOutlineMore } from "react-icons/ai";
+import { Button } from "@/components/ui/button";
 import "./ActiveFr.css";
 import axios from "axios";
 
@@ -177,12 +178,9 @@ const ActiveFr = () => {
               <p className="text-foreground">{friend.name} is online</p>
             </div>
 
-            <button
-              className="bg-button hover:bg-button/60 text-foreground-lighter p-2 rounded-sm"
-              onClick={() => deleteFriend(friend._id)}
-            >
+            <Button onClick={() => deleteFriend(friend._id)}>
               Delete Friend
-            </button>
+            </Button>
           </div>
         ))}
       </div>
@@ -199,12 +197,9 @@ const ActiveFr = () => {
               <p className="text-foreground">{user.name}</p>
             </div>
 
-            <button
-              className="bg-button hover:bg-button/60 text-foreground-lighter p-2 rounded-sm"
-              onClick={() => addFriend(user._id)}
-            >
+            <Button onClick={() => addFriend(user._id)}>
               Add Friend
-            </button>
+            </Button>
           </div>
         ))}
       </div>

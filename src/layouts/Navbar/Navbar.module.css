@@ -1,6 +1,5 @@
 /* Navbar.module.css */
 .navbar {
-  background-color: #1e3a8a;
   position: fixed;
   top: 0;
   left: 0;
@@ -41,7 +40,6 @@
 .navbar__logo {
   font-size: 32px;
   font-weight: bold;
-  color: white;
   margin-right: 20px;
 }
 

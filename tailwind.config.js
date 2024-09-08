@@ -21,7 +21,16 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        button: "hsl(var(--button))",
+        button: {
+          DEFAULT:  "hsl(var(--button))",
+          hover: "hsl(var(--button-hover))"
+        },
+        comment: "hsl(var(--comment))",
+        dropdown: {
+          DEFAULT: "hsl(var(--dropdown))",
+          hover: "hsl(var(--dropdown-hover))",
+          selected: "hsl(var(--dropdown-selected))"
+        },
         background: {
           DEFAULT: "hsl(var(--background))",
           lighter: "hsl(var(--background-lighter))"

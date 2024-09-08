@@ -302,10 +302,10 @@ const Post = ({ data }) => {
   return (
       <div
           ref={postRef}
-          className="post-container p-4 bg-white shadow-md rounded-lg max-w-xl mx-auto mb-6 relative"
+          className="post-container p-4 bg-background-lighter shadow-md rounded-lg max-w-xl mx-auto mb-6 relative"
       >
         <button
-            className="absolute top-2 right-2 p-2 text-gray-600 hover:text-gray-900 transition-colors"
+            className="absolute top-2 right-2 p-2 text-foreground-lighter hover:text-foreground transition-colors"
             onClick={handleMenuToggle}
         >
           <FaEllipsisV/>
@@ -314,11 +314,11 @@ const Post = ({ data }) => {
         {menuOpen && (
             <div
                 ref={menuRef}
-                className="absolute top-10 right-2 bg-white border border-gray-300 shadow-md rounded-lg z-10"
+                className="absolute top-10 right-2 bg-input text-foreground-lighter shadow-md rounded-lg z-10 overflow-hidden"
             >
               <ul>
-                <li className="p-2 hover:bg-gray-100 cursor-pointer">Interested</li>
-                <li className="p-2 hover:bg-gray-100 cursor-pointer">Not Interested</li>
+                <li className="p-2 hover:bg-background-lighter/70 cursor-pointer">Interested</li>
+                <li className="p-2 hover:bg-background-lighter/70 cursor-pointer">Not Interested</li>
               </ul>
             </div>
         )}
@@ -332,13 +332,13 @@ const Post = ({ data }) => {
             />
           </div>
           <div className="flex flex-col flex-grow">
-            <div className="text-lg font-semibold text-[#B48FD9]">
+            <div className="text-lg font-semibold text-foreground">
               {data.userInfo.name}
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-foreground-lighter">
               {handleDateTime(data.postInfo.createdAt)}
             </p>
-            <p className="mt-1 text-lg">
+            <p className="mt-1 text-lg text-foreground">
               {data.postInfo.content}
             </p>
             {data.postInfo.images.length > 0 && (
@@ -377,7 +377,7 @@ const Post = ({ data }) => {
               />
           ))}
         </div>
-        <div className="mt-3 border-t border-gray-200 pt-3">
+        <div className="mt-3 border-t border-border pt-3">
           <div className="flex gap-4 text-sm">
             <button
                 className={`flex items-center gap-2 transition-colors duration-300 transform ${liked ? "text-red-500" : "text-[#B48FD9]"} hover:text-[#BFB26F] relative`}
@@ -428,7 +428,7 @@ const Post = ({ data }) => {
           {commenting && (
               <div className="mt-3 flex items-center gap-2">
                 <input
-                    className="flex-grow p-2 border border-gray-300 rounded-lg text-sm"
+                    className="flex-grow p-2 bg-input text-foreground focus:outline-none rounded-lg text-sm"
                     placeholder="Viết bình luận..."
                     value={comment}
                     onChange={handleCommentChange}

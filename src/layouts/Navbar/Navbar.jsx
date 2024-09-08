@@ -129,24 +129,47 @@ const NotificationPopover = () => {
     { name: "Groups", icon: GrGroup, linkTo: "/groups" },
   ];
 
+  const menuButtons = [
+    { name: "Tạo", icon: FiPlusSquare, linkTo: "/create" },
+    { name: "Đăng", icon: FiGitPullRequest, linkTo: "/create" },
+    { name: "Tin", icon: FiUsers, linkTo: "/news" },
+    { name: "Thước phim", icon: FiVideo, linkTo: "/reels" },
+    { name: "Sự kiện trong đời", icon: FiHome, linkTo: "/life-events" },
+    { name: "Trang", icon: FiUsers, linkTo: "/pages" },
+    { name: "Quảng cáo", icon: FiPlusSquare, linkTo: "/ads" },
+    { name: "Sự kiện", icon: FiUsers, linkTo: "/events" },
+    {
+      name: "Bài niêm yết trên Marketplace",
+      icon: FiHome,
+      linkTo: "/marketplace",
+    },
+  ];
+
+  const accountMenuButtons = [
+    { name: "View profile", icon: User2, linkTo: "/profile" },
+    { name: "Settings", icon: Settings, linkTo: "/settings" },
+    { name: "Support", icon: HelpCircle, linkTo: "/support" },
+    { name: "Logout", icon: LogOut, linkTo: "/login", onClick: handleLogout },
+  ];
+
   return (
-    <div className="fixed top-0 left-0 z-10 w-full bg-gray-800 shadow-lg">
+    <div className="fixed top-0 left-0 z-10 w-full shadow-lg bg-background-lighter">
       <div className="flex items-center justify-between h-16 max-w-full px-6 mx-auto">
         {/* Logo and Search Bar */}
         <div className="flex items-center flex-1">
-          <h1 className="mr-5 text-2xl font-bold text-white">
+          <h1 className="mr-5 text-2xl font-bold text-foreground">
             <Link to="/" className="no-underline text-inherit">
-              Kit<span className="text-white">Kat</span>
+              Kit<span className="text-foreground-lighter">Kat</span>
             </Link>
           </h1>
           <div className="relative w-72">
             <input
               type="text"
               placeholder="Search for friends, groups, pages"
-              className="w-full px-4 py-2 pl-10 text-gray-800 bg-white border border-gray-300 rounded-lg"
+              className="w-full px-4 py-2 pl-10 text-foreground-lighter bg-input rounded-lg"
             />
             <svg
-              className="absolute w-5 h-5 text-gray-600 transform -translate-y-1/2 top-1/2 left-3"
+              className="absolute w-5 h-5 text-foreground-lighter transform -translate-y-1/2 top-1/2 left-3"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -163,108 +186,57 @@ const NotificationPopover = () => {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex items-center justify-evenly flex-1">
-          {navButtons.map((btn) => {
-            return (
-              <Link
-                key={btn.name}
-                to={btn.linkTo}
-                className="text-decoration-none"
-              >
-                <Button className="text-xl flex items-center gap-2 text-white opacity-100 hover:bg-slate-600">
-                  {btn.icon()}
-                </Button>
-              </Link>
-            );
-          })}
+        <div className="flex items-center flex-1 justify-evenly">
+          {navButtons.map((btn) => (
+            <Link key={btn.name} to={btn.linkTo}>
+              <button className="flex items-center gap-2 px-8 py-4 text-xl rounded-md opacity-100 text-foreground hover:bg-button">
+                {btn.icon()}
+              </button>
+            </Link>
+          ))}
         </div>
 
         {/* Avatar and Menu */}
         <div className="flex items-center justify-end flex-1">
+          {/* Menu */}
           <Popover>
             <PopoverTrigger asChild>
               <div className="flex items-center gap-4 cursor-pointer">
-                <FiMenu className="text-white" />
+                <FiMenu className="text-foreground" />
               </div>
             </PopoverTrigger>
-            <PopoverContent className="flex flex-col gap-2 p-4 bg-white border border-gray-300 rounded-lg shadow-lg w-72">
-              <Link to="/create" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black cursor-pointer">
-                  <FiPlusSquare />
-                  <span>Tạo</span>
-                </div>
-              </Link>
-              <Link to="/post" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black cursor-pointer">
-                  <FiGitPullRequest />
-                  <span>Đăng</span>
-                </div>
-              </Link>
-              <Link to="/news" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black cursor-pointer">
-                  <FiUsers />
-                  <span>Tin</span>
-                </div>
-              </Link>
-              <Link to="/reels" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black cursor-pointer">
-                  <FiVideo />
-                  <span>Thước phim</span>
-                </div>
-              </Link>
-              <Link to="/life-events" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black cursor-pointer">
-                  <FiHome />
-                  <span>Sự kiện trong đời</span>
-                </div>
-              </Link>
-              <Link to="/pages" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black cursor-pointer">
-                  <FiUsers />
-                  <span>Trang</span>
-                </div>
-              </Link>
-              <Link to="/ads" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black cursor-pointer">
-                  <FiPlusSquare />
-                  <span>Quảng cáo</span>
-                </div>
-              </Link>
-              <Link to="/groups" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black cursor-pointer">
-                  <FiGitPullRequest />
-                  <span>Nhóm</span>
-                </div>
-              </Link>
-              <Link to="/events" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black cursor-pointer">
-                  <FiUsers />
-                  <span>Sự kiện</span>
-                </div>
-              </Link>
-              <Link to="/marketplace" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black cursor-pointer">
-                  <FiHome />
-                  <span>Bài niêm yết trên Marketplace</span>
-                </div>
-              </Link>
+
+            <PopoverContent className="flex flex-col gap-2 overflow-hidden rounded-lg shadow-sm shadow-black text-foreground-lighter focus:outline-none bg-dropdown w-72">
+              {menuButtons.map((btn) => (
+                <Link
+                  key={btn.name}
+                  to={btn.linkTo}
+                  className="hover:bg-dropdown-hover"
+                >
+                  <div className="flex items-center gap-2 px-3 py-2 cursor-pointer">
+                    {btn.icon()}
+                    <span>{btn.name}</span>
+                  </div>
+                </Link>
+              ))}
             </PopoverContent>
           </Popover>
 
+          {/* Messages */}
           <Popover>
             <PopoverTrigger asChild>
-              <Button className="flex items-center gap-2 ml-4 text-white">
+              <Button className="flex items-center gap-2 ml-4">
                 <MessageCircle />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="messenger-container">
-              {/* Header */}
-              <div className="flex items-center justify-between p-3 border-b messenger-header">
-                <div className="text-lg font-semibold messenger-title">
+            <PopoverContent className="shadow-md shadow-black messenger-container bg-background-lighter">
+              {/* Messages Header */}
+              <div className="flex items-center justify-between p-3 border-b border-border messenger-header">
+                <div className="text-lg font-semibold text-foreground messenger-title">
                   Messenger
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button className="flex items-center gap-2 text-white opacity-100 rounded-button hover:bg-slate-600">
+                  <Button className="flex items-center gap-2 opacity-100">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-6 h-6"
@@ -280,7 +252,7 @@ const NotificationPopover = () => {
                       />
                     </svg>
                   </Button>
-                  <Button className="flex items-center gap-2 text-white opacity-100 rounded-button hover:bg-slate-600">
+                  <Button className="flex items-center gap-2 opacity-100">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-6 h-6"
@@ -296,7 +268,7 @@ const NotificationPopover = () => {
                       />
                     </svg>
                   </Button>
-                  <Button className="flex items-center gap-2 text-white opacity-100 rounded-button hover:bg-slate-600">
+                  <Button className="flex items-center gap-2 opacity-100">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-6 h-6"
@@ -312,7 +284,7 @@ const NotificationPopover = () => {
                       />
                     </svg>
                   </Button>
-                  <Button className="gap-2 text-white rounded-full opacity-100 rounded-button hover:bg-slate-600">
+                  <Button className="gap-2 rounded-full opacity-100">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-5 h-5"
@@ -326,13 +298,17 @@ const NotificationPopover = () => {
                   </Button>
                 </div>
               </div>
-              <div className="p-3 border-b messenger-search">
+
+              {/* Messages search */}
+              <div className="p-3 border-b messenger-search border-border">
                 <input
                   type="text"
                   placeholder="Search Messenger"
-                  className="w-full p-2 border rounded-full focus:outline-none focus:ring focus:border-blue-300"
+                  className="w-full px-4 py-2 border-none rounded-full bg-input text-foreground focus:outline-none"
                 />
               </div>
+
+              {/* Messages */}
               <div
                 className="overflow-y-auto messenger-content"
                 style={{ height: "calc(100% - 150px)" }}
@@ -401,44 +377,47 @@ const NotificationPopover = () => {
                 ].map((chat, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-3 px-3 py-2 cursor-pointer messenger-item hover:bg-gray-100"
+                    className="flex items-center gap-3 px-3 py-2 cursor-pointer messenger-item hover:bg-dropdown-hover"
                   >
                     <Avatar className="w-10 h-10">
                       <AvatarImage src={chat.avatar} alt={chat.name} />
                       <AvatarFallback>{chat.name[0]}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <span className="font-semibold text-black">
+                      <span className="font-semibold text-foreground">
                         {chat.name}
                       </span>
-                      <span className="text-sm text-gray-500 truncate">
+                      <span className="text-sm truncate text-foreground-lighter">
                         {chat.message}
                       </span>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="messenger-footer">
-                <Button className="footer-button ">See All in Messenger</Button>
+
+              {/* Messages footer */}
+              <div className="border-t messenger-footer border-border bg-background">
+                <Button>See All in Messenger</Button>
               </div>
             </PopoverContent>
           </Popover>
 
+          {/* Notifications */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
-                className="flex items-center gap-2 ml-4 text-white"
+                className="flex items-center gap-2 ml-4 text-foreground"
                 onClick={toggleNotifications}
               >
                 <Bell />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="notification-container">
-              <div className="flex items-center justify-between p-3 border-b notification-header">
-                <div className="text-lg font-semibold notification-title">
+            <PopoverContent className="shadow-md notification-container bg-background-lighter shadow-black">
+              <div className="flex items-center justify-between p-3 border-b border-border notification-header">
+                <div className="text-lg font-semibold text-foreground notification-title">
                   Notifications
                 </div>
-                <Button className="p-1 text-gray-200 rounded-full hover:bg-gray-100">
+                <Button className="p-1 rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="w-5 h-5"
@@ -456,9 +435,9 @@ const NotificationPopover = () => {
                 </Button>
               </div>
 
-              <div className="flex justify-between p-3 border-b notification-filters">
-                <Button className="filter-button">Unread</Button>
-                <Button className="filter-button">All</Button>
+              <div className="flex justify-between p-3 border-b border-border notification-filters">
+                <Button>Unread</Button>
+                <Button>All</Button>
               </div>
 
               <div className="notification-content">
@@ -466,7 +445,7 @@ const NotificationPopover = () => {
                   notifications.map((notification) => (
                     <div
                       key={notification._id}
-                      className="flex items-center gap-3 p-3 cursor-pointer notification-item hover:bg-gray-100"
+                      className="flex items-center gap-3 p-3 cursor-pointer notification-item hover:bg-dropdown-hover"
                     >
                       <div className="w-10 h-10 overflow-hidden rounded-full notification-avatar">
                         <img
@@ -478,13 +457,15 @@ const NotificationPopover = () => {
                       </div>
                       <div className="flex flex-col">
                         <div className="flex justify-between pr-5">
-                          <span className="font-semibold">
+                          <span className="font-semibold text-foreground">
                             {notification.author.name}
                           </span>
-                          <div>{handleDateTime(notification.createdAt)}</div>
+                          <div className="text-foreground-lighter">
+                            {handleDateTime(notification.createdAt)}
+                          </div>
                         </div>
 
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-foreground-lighter">
                           {notification.content}
                         </span>
                       </div>
@@ -492,14 +473,13 @@ const NotificationPopover = () => {
                   ))}
               </div>
 
-              <div className="notification-footer">
-                <Button className="text-blue-500 hover:text-blue-700">
-                  See Previous Notifications
-                </Button>
+              <div className="border-t notification-footer bg-background border-border">
+                <Button>See Previous Notifications</Button>
               </div>
             </PopoverContent>
           </Popover>
 
+          {/* Account */}
           <Popover>
             <PopoverTrigger asChild>
               <div className="flex items-center gap-2 ml-4 cursor-pointer">
@@ -512,34 +492,19 @@ const NotificationPopover = () => {
                 </Avatar>
               </div>
             </PopoverTrigger>
-            <PopoverContent className="flex flex-col gap-2 p-4 bg-white border border-gray-300 rounded-lg shadow-lg w-52">
-              <Link to="/profile" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black">
-                  <User2 />
-                  <span>View Profile</span>
-                </div>
-              </Link>
-              <Link to="/settings" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black">
-                  <Settings />
-                  <span>Settings</span>
-                </div>
-              </Link>
-              <Link to="/support" className="text-decoration-none">
-                <div className="flex items-center gap-2 py-2 text-black">
-                  <HelpCircle />
-                  <span>Support</span>
-                </div>
-              </Link>
-              <Link to="/login" className="text-decoration-none">
-                <div
-                  className="flex items-center gap-2 py-2 text-black"
-                  onClick={handleLogout}
-                >
-                  <LogOut />
-                  <span>Logout</span>
-                </div>
-              </Link>
+
+            <PopoverContent className="flex flex-col gap-2 overflow-hidden rounded-lg shadow-md text-foreground bg-background-lighter shadow-black w-52">
+              {accountMenuButtons.map((btn) => (
+                <Link key={btn.name} to={btn.linkTo}>
+                  <div
+                    className="flex items-center gap-2 py-2 px-4 hover:bg-dropdown-hover"
+                    onClick={btn.onClick}
+                  >
+                    <btn.icon />
+                    <span>{btn.name}</span>
+                  </div>
+                </Link>
+              ))}
             </PopoverContent>
           </Popover>
         </div>

@@ -5,12 +5,17 @@
 
 @layer base {
   :root {
-    --darker-blue: 211deg 53% 11%;
-    --dark-blue: 219deg 37% 17%;
-    --light-blue: 215deg 25% 27%;
-    --lighter-blue: 214deg 23% 56%;
-    --white-blue: 75deg 6% 87%;
-    --white: 0deg 0% 100%;
+    /* Dark color scheme */
+    --darker-blue: 211 53% 11%;
+    --dark-blue: 219 37% 17%;
+    --light-purple: 215 25% 27%;
+    --lighter-purple: 215 23% 34%;
+    --violet: 216 23% 37%;
+    --light-violet: 214 23% 56%;
+    --white-blue: 0 6% 87%;
+    --white: 0 0% 100%;
+
+    
 
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -42,9 +47,14 @@
   .dark {
     --background: var(--darker-blue);
     --background-lighter: var(--dark-blue);
-    --input: var(--light-blue);
-    --border: var(--light-blue);
-    --button: var(--light-blue);
+    --input: var(--light-purple);
+    --border: var(--lighter-purple);
+    --button: var(--light-purple);
+    --button-hover: var(--lighter-purple);
+    --comment: var(--light-purple);
+    --dropdown: var(--light-purple);
+    --dropdown-hover: var(--lighter-purple);
+    --dropdown-selected: var(--violet);
     --foreground: var(--white);
     --foreground-lighter: var(--white-blue);
   }

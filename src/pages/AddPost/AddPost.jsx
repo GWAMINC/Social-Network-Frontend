@@ -111,7 +111,7 @@ const AddPost = () => {
             <label htmlFor="access" className="block text-sm font-medium text-foreground-lighter">Access</label>
             <Listbox value={access} onChange={setAccess}>
               <div className="relative mt-1">
-                <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left hover:bg-input/60 bg-input text-foreground-lighter rounded-lg shadow-md cursor-default focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                <Listbox.Button className="cursor-pointer relative w-full py-2 pl-3 pr-10 text-left hover:text-foreground hover:bg-dropdown-hover bg-dropdown text-foreground-lighter rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                   <span className="block truncate">{access}</span>
                 </Listbox.Button>
                 <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto bg-input text-foreground-lighter rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
@@ -119,7 +119,7 @@ const AddPost = () => {
                     <Listbox.Option
                       key={idx}
                       className={({ selected }) =>
-                        `${selected ? "bg-background-lighter/70" : "bg-input"} cursor-default select-none relative py-2 pl-10 pr-4`
+                        `${selected ? "bg-dropdown-selected" : "bg-dropdown"} hover:bg-dropdown-hover cursor-pointer select-none relative py-2 pl-10 pr-4`
                       }
                       value={option}
                     >
@@ -196,7 +196,7 @@ const AddPost = () => {
             </div>
           </div>
           <button
-            className={`w-full px-4 py-2 rounded-md transition-colors ${isSubmitting ? "bg-background-lighter" : "bg-button hover:bg-button/60"} text-white`}
+            className={`w-full px-4 py-2 rounded-md transition-colors ${isSubmitting ? "bg-button" : "bg-button hover:bg-button-hover"} text-foreground`}
             type="submit"
             disabled={isSubmitting}
           >
