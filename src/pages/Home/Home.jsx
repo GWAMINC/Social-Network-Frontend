@@ -29,7 +29,6 @@ const Home = () => {
             {withCredentials: true});
         // console.log(response.data);
         await setPosts(response.data.posts.reverse());
-        console.log(response.data.posts);
       } catch (error) {
         console.error('Failed to fetch posts:', error);
       }

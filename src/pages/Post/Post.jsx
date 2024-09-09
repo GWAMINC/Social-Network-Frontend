@@ -148,19 +148,6 @@ const Post = ({ data }) => {
     }
   };
 
-  useEffect(() => {
-    if (data) {
-      // console.error('postId provided');
-      console.log(data.postInfo);
-    } else {
-      console.error('No postId provided');
-    }
-  }, []);
-
-
-
-
-  
   const handleDislikeClick = (e) => {
     dislikePost(data.postInfo._id);
     setDisliked(!disliked);

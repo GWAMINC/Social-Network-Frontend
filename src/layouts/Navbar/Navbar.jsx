@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button.jsx";
@@ -49,6 +49,10 @@ const handleViewProfile = () => {
 const NotificationPopover = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState(null);
+  const [chats, setChats] = useState([]);
+  const [userChatDatas, setUserChatDatas] = useState({});
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const userId = localStorage.getItem('token');
   const toggleNotifications = () => {
     setIsOpen(!isOpen);
     const fetchnoti = async () => {
@@ -65,6 +69,41 @@ const NotificationPopover = () => {
     };
     fetchnoti();
   };
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/chat/all/${userId}`, {
+          withCredentials: true,
+        });
+        setChats(response.data.chats);
+      } catch (error) {
+        console.error("Failed to fetch chats:", error);
+      }
+    };
+    fetchChats();
+  }, [userId]);
+  const toggleChats = () => {
+    const setUserDatas = async () => {
+      const userDatas = {};
+      for (const chat of chats) {
+        const otherUserId = chat.participants.find(id => id !== userId);
+        const response = await fetchUser(otherUserId);
+        userDatas[otherUserId] = response;
+      }
+      setUserChatDatas(userDatas);
+    };
+    const fetchUser = async (userId) => {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      try {
+        const response = await axios.get(`${apiUrl}/user/getUser/${userId}`, { withCredentials: true });
+        return response.data;
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+      }
+    };
+    setUserDatas();
+  }
   const handleDateTime = (createdAt) => {
     const now = new Date();
     const createdDate = new Date(createdAt);
@@ -256,7 +295,10 @@ const NotificationPopover = () => {
 
           <Popover>
             <PopoverTrigger asChild>
-              <Button className="flex items-center gap-2 text-white ml-4">
+              <Button
+                  className="flex items-center gap-2 text-white ml-4"
+                  onClick={toggleChats}
+              >
                 <MessageCircle />
               </Button>
             </PopoverTrigger>
@@ -340,89 +382,31 @@ const NotificationPopover = () => {
                 className="messenger-content overflow-y-auto"
                 style={{ height: "calc(100% - 150px)" }}
               >
-                {[
-                  {
-                    name: "Người A",
-                    message: "Tôi",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                  {
-                    name: "Người B",
-                    message: "Yêu",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                  {
-                    name: "Người C",
-                    message: "Việt Nam",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                  {
-                    name: "Người D",
-                    message: "Vãi",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                  {
-                    name: "Người E",
-                    message: "Cả",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                  {
-                    name: "Người F",
-                    message: "Nho!",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                  {
-                    name: "Người A",
-                    message: "Tôi",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                  {
-                    name: "Người B",
-                    message: "Yêu",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                  {
-                    name: "Người C",
-                    message: "Việt Nam",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                  {
-                    name: "Người D",
-                    message: "Vãi",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                  {
-                    name: "Người E",
-                    message: "Cả",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                  {
-                    name: "Người F",
-                    message: "Nho!",
-                    avatar: "https://github.com/shadcn.png",
-                  },
-                ].map((chat, index) => (
+                {chats.map((chat, index) => (
                   <div
                     key={index}
-                    className="messenger-item flex items-center gap-3 px-3 py-2 hover:bg-gray-100 cursor-pointer"
                   >
+                    <Link to={`/chats/${chat._id}`} className="messenger-item flex items-center gap-3 px-3 py-2 hover:bg-gray-100 cursor-pointer">
                     <Avatar className="w-10 h-10">
-                      <AvatarImage src={chat.avatar} alt={chat.name} />
-                      <AvatarFallback>{chat.name[0]}</AvatarFallback>
+                      <AvatarImage src={userChatDatas[chat.participants[1]]?.avatar || ""} alt={userChatDatas[chat.participants[1]]?.name || ""} />
+                      <AvatarFallback>Avatar</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <span className="font-semibold text-black">
-                        {chat.name}
+                        {userChatDatas[chat.participants[1]]?.name || "User Name"}
                       </span>
                       <span className="text-gray-500 text-sm truncate">
-                        {chat.message}
+                        Message content
                       </span>
                     </div>
+                    </Link>
                   </div>
                 ))}
               </div>
               <div className="messenger-footer">
-                <Button className="footer-button ">See All in Messenger</Button>
+                <Link to = {"/chats"}>
+                  <Button className="footer-button ">See All in Messenger</Button>
+                </Link>
               </div>
             </PopoverContent>
           </Popover>
