@@ -5,7 +5,7 @@ function DefaultLayout({ children }) {
     return (
         <div className='wrapper'>
             <Navbar />
-            <div className='body'>{children}</div>
+            <div className='body bg-background'>{children}</div>
         </div>
     );
 }

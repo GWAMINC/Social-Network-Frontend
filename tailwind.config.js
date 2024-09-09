@@ -21,15 +21,29 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        comment: "hsl(var(--comment))",
+        dropdown: {
+          DEFAULT: "hsl(var(--dropdown))",
+          hover: "hsl(var(--dropdown-hover))",
+          selected: "hsl(var(--dropdown-selected))"
+        },
+        background: {
+          DEFAULT: "hsl(var(--background))",
+          lighter: "hsl(var(--background-lighter))"
+        },
+        foreground: {
+          DEFAULT: "hsl(var(--foreground))",
+          lighter: "hsl(var(--foreground-lighter))",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))"
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          hover: "hsl(var(--secondary-hover))"
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

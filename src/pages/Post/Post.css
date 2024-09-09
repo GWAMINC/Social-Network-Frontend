@@ -114,6 +114,7 @@
   margin-top: 12px; /* Đảm bảo có khoảng cách giữa phần bình luận và thanh tương tác */
   padding: 10px;
   background-color: #f9f9f9; /* Màu nền nhẹ để phân biệt bình luận */
+  background-color: transparent;
   border-radius: 8px;
 
 }

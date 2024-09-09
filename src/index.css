@@ -5,16 +5,37 @@
 
 @layer base {
   :root {
+    /* Dark color scheme */
+    --darker-blue: 211 53% 11%;
+    --dark-blue: 219 37% 17%;
+    --blue: 211 100% 31%;
+    --light-blue: 211 100% 39%;
+    --light-purple: 215 25% 27%;
+    --lighter-purple: 215 23% 34%;
+    --violet: 216 23% 37%;
+    --light-violet: 214 23% 56%;
+    --white-blue: 0 6% 87%;
+
+    /* Light color scheme */
+    --gray1: 216 20% 95%;
+    --gray2: 220 7% 82%;
+    --gray3: 0 0% 51%;
+    --blue1: 211 100% 56%;
+    --blue2: 211 100% 50%;
+
+    --white: 0 0% 100%;
+    --black: 0 0% 0%;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    /* --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary-foreground: 222.2 47.4% 11.2%; */
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 210 40% 96.1%;
@@ -32,31 +53,46 @@
     --chart-5: 27 87% 67%;
   }
 
+  .light {
+    --background: var(--gray1);
+    --background-lighter: var(--white);
+    --input: var(--gray1);
+    --border: var(--gray2);
+    --comment: var(--gray1);
+    --dropdown: var(--white);
+    --dropdown-hover: var(--gray1);
+    --dropdown-selected: var(--gray2);
+    --foreground: var(--black);
+    --foreground-lighter: var(--gray3);
+
+    --primary: var(--blue2);
+    --primary-foreground: var(--white);
+    --primary-hover: var(--blue1);
+
+    --secondary: var(--gray1);
+    --secondary-foreground: var(--black);
+    --secondary-hover: var(--gray2);
+  }
+
   .dark {
-    --background: 222.2 84% 20%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --background: var(--darker-blue);
+    --background-lighter: var(--dark-blue);
+    --input: var(--light-purple);
+    --border: var(--lighter-purple);
+    --comment: var(--light-purple);
+    --dropdown: var(--light-purple);
+    --dropdown-hover: var(--lighter-purple);
+    --dropdown-selected: var(--violet);
+    --foreground: var(--white);
+    --foreground-lighter: var(--white-blue);
+
+    --primary: var(--blue);
+    --primary-foreground: var(--white);
+    --primary-hover: var(--light-blue);
+
+    --secondary: var(--light-purple);
+    --secondary-foreground: var(--white-blue);
+    --secondary-hover: var(--lighter-purple);
   }
 }
 
