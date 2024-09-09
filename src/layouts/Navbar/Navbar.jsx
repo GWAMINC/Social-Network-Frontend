@@ -18,6 +18,11 @@ import {
   Moon,
   Sun,
   Monitor,
+  House,
+  Users,
+  SquarePlus,
+  Video,
+  Group,
 } from "lucide-react";
 import {
   FiHome,
@@ -27,7 +32,6 @@ import {
   FiGitPullRequest,
   FiMenu,
 } from "react-icons/fi";
-import { GrGroup } from "react-icons/gr";
 import axios from "axios";
 
 import "./Messenger.css";
@@ -54,6 +58,7 @@ const handleViewProfile = () => {
 const NotificationPopover = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState(null);
+  const [activeNav, setActiveNav] = useState(0);
 
   const toggleNotifications = () => {
     setIsOpen(!isOpen);
@@ -125,11 +130,11 @@ const NotificationPopover = () => {
   };
 
   const navButtons = [
-    { name: "Home", icon: FiHome, linkTo: "/" },
-    { name: "Friends", icon: FiUsers, linkTo: "/friends" },
-    { name: "Create a post", icon: FiPlusSquare, linkTo: "/create-post" },
-    { name: "Video", icon: FiVideo, linkTo: "/video" },
-    { name: "Groups", icon: GrGroup, linkTo: "/groups" },
+    { name: "Home", icon: House, linkTo: "/" },
+    { name: "Friends", icon: Users, linkTo: "/friends" },
+    { name: "Create a post", icon: SquarePlus, linkTo: "/create-post" },
+    { name: "Video", icon: Video, linkTo: "/video" },
+    { name: "Groups", icon: Group, linkTo: "/groups" },
   ];
 
   const menuButtons = [
@@ -189,14 +194,27 @@ const NotificationPopover = () => {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex items-center flex-1 justify-evenly">
-          {navButtons.map((btn) => (
+        <div className="relative flex items-center justify-around flex-1 h-full">
+          {navButtons.map((btn, index) => (
             <Link key={btn.name} to={btn.linkTo}>
-              <button className="flex items-center gap-2 px-8 py-4 text-2xl rounded-md opacity-100 text-foreground hover:bg-secondary-hover">
-                {btn.icon()}
+              <button
+                onClick={() => {
+                  setActiveNav(index);
+                }}
+                className={`${
+                  activeNav === index ? "text-primary" : "text-foreground"
+                } transition-colors gap-2 px-8 py-3 rounded-md opacity-100 hover:bg-primary-hover`}
+              >
+                <btn.icon />
               </button>
             </Link>
           ))}
+
+          <div
+            className={`absolute left-${
+              activeNav === 0 ? "0" : `[${(activeNav / 5) * 100}%]`
+            } transition-all bottom-0 w-1/5 h-1 rounded-t-full bg-primary`}
+          ></div>
         </div>
 
         {/* Avatar and Menu */}
@@ -245,7 +263,6 @@ const NotificationPopover = () => {
                 <span>Light</span>
               </div>
 
-
               <div
                 className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
                 onClick={() => {}}
@@ -253,7 +270,6 @@ const NotificationPopover = () => {
                 <Moon />
                 <span>Dark</span>
               </div>
-
 
               <div
                 className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"

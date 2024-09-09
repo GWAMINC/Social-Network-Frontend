@@ -196,7 +196,7 @@ const AddPost = () => {
             </div>
           </div>
           <Button
-            className={`w-full transition-colors ${isSubmitting ? "bg-secondary text-secondary-foreground" : ""}`}
+            className={`w-full transition-colors ${isSubmitting ? "hover:bg-secondary" : ""}`}
             type="submit"
             disabled={isSubmitting}
           >

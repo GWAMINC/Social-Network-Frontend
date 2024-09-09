@@ -8,6 +8,8 @@
     /* Dark color scheme */
     --darker-blue: 211 53% 11%;
     --dark-blue: 219 37% 17%;
+    --blue: 211 100% 31%;
+    --light-blue: 211 100% 39%;
     --light-purple: 215 25% 27%;
     --lighter-purple: 215 23% 34%;
     --violet: 216 23% 37%;
@@ -50,7 +52,7 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
   }
-  
+
   .light {
     --background: var(--gray1);
     --background-lighter: var(--white);
@@ -84,12 +86,12 @@
     --foreground: var(--white);
     --foreground-lighter: var(--white-blue);
 
-    --primary: var(--light-purple);
+    --primary: var(--blue);
     --primary-foreground: var(--white);
-    --primary-hover: var(--lighter-purple);
+    --primary-hover: var(--light-blue);
 
     --secondary: var(--light-purple);
-    --secondary-foreground: var(--white);
+    --secondary-foreground: var(--white-blue);
     --secondary-hover: var(--lighter-purple);
   }
 }
