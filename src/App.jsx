@@ -26,7 +26,7 @@ function App() {
     return (
         <AuthContext.Provider value={{ isAuthenticated, checkAuth }}>
             <Router>
-                <div className="app">
+                <div className="app dark">
                     <Routes>
                         {/* Public Routes */}
                         {publicRoutes.map((route, index) => {

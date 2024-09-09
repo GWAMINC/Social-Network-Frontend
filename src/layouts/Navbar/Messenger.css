@@ -2,12 +2,10 @@
   width: 100%;
   max-width: 600px;
   height: 90vh;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(194, 181, 181, 0.1);
   border-radius: 16px; 
   display: flex;
   flex-direction: column;
-  overflow: hidden; 
+  /* overflow: hidden;  */
 }
 
 .messenger-header {
@@ -15,27 +13,18 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px;
-  border-bottom: 1px solid #e5e7eb;
   border-top-left-radius: 16px; 
   border-top-right-radius: 16px; 
 }
 
 .messenger-search {
   padding: 12px;
-  border-bottom: 1px solid #e5e7eb;
 }
 
 .messenger-search input {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #e5e7eb;
   border-radius: 9999px; 
   outline: none;
-  transition: border-color 0.3s;
-}
-
-.messenger-search input:focus {
-  border-color: #3b82f6;
 }
 
 .messenger-content {
@@ -52,10 +41,6 @@
   cursor: pointer;
   transition: background-color 0.3s;
   border-radius: 8px; 
-}
-
-.messenger-item:hover {
-  background-color: #f3f4f6;
 }
 
 .messenger-item .font-semibold {
@@ -75,24 +60,11 @@
   display: flex;
   justify-content: center;
   padding: 12px;
-  border-top: 1px solid #e5e7eb;
-  background-color: #111827;
   border-bottom-left-radius: 16px; 
   border-bottom-right-radius: 16px; 
 }
 
-.messenger-footer .footer-button {
-  font-size: 14px;
-  color: #e8ebee;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.messenger-footer .footer-button:hover {
-  color: #eef1f3;
-}
-
-.rounded-button {
+/* .rounded-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,4 +79,4 @@
 
 .rounded-button:hover {
   background-color: #374151;
-}
+} */
