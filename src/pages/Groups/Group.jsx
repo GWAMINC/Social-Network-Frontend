@@ -60,64 +60,123 @@ const Groups = () => {
             </div>
           </div>
         );
-      case "suggestions":
-        return (
-          <div className="w-1/2">
-            <h1 className="text-4xl font-bold mb-4">Suggestions</h1>
-            <div className="groups-joined-list-container">
-              {listgroup.map((group) => (
-                <ul key={group._id} className="groups-joined-list">
-                  <li className="group-item">
-                    <img
-                      src={group.profile.profilePhoto}
-                      alt="Group Avatar"
-                      className="group-avatar"
-                    />
-                    <div className="group-info">
-                      <span className="group-name">{group.name}</span>
-                      <span className="group-description">
-                        {group.profile.bio}
-                      </span>
+        case "suggestions":
+    return (
+        <div className="suggestions-container w-full max-w-screen-lg mx-auto px-4 py-6">
+            <h1 className="text-4xl font-bold mb-6 text-center">Suggestions</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {listgroup.map((group) => (
+                    <div key={group._id} className="group-card bg-white shadow-lg rounded-lg overflow-hidden relative flex flex-col">
+                        {/* Exclude button */}
+                        <button
+                            onClick={() => handleExclude(group._id)}
+                            className="absolute top-2 right-2 bg-gray-200 rounded-full p-2 text-gray-600 hover:bg-gray-300 transition-colors duration-300"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+
+                        <img
+                            src={group.profile.profilePhoto}
+                            alt="Group Avatar"
+                            className="w-full h-32 object-cover"
+                        />
+                        <div className="p-4 flex flex-col flex-grow">
+                            <h3 className="text-xl font-semibold mb-2">{group.name}</h3>
+                            <p className="text-gray-600 mb-4 flex-grow">{group.profile.bio}</p>
+                            <button className="w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-300">
+                                Join Group
+                            </button>
+                        </div>
                     </div>
-                  </li>
-                </ul>
-              ))}
+                ))}
             </div>
-          </div>
-        );
-      case "joins":
-        return (
-          <div className="w-1/2">
-            <h1 className="text-4xl font-bold mb-4">Your Joined Groups</h1>
-            <div className="groups-joined-list-container">
-              {mygroup.map((group) => (
-                <ul key={group._id} className="groups-joined-list">
-                  <li
-                    className="group-item"
-                    onClick={() => {
-                      setGroupId(group._id);
-                      setTimeout(() => {
-                        handleNavigation("group");
-                      }, 200);
-                    }}
-                  >
-                    <img
-                      src={group.profile.profilePhoto}
-                      alt="Group Avatar"
-                      className="group-avatar"
-                    />
-                    <div className="group-info">
-                      <span className="group-name">{group.name}</span>
-                      <span className="group-description">
-                        {group.profile.bio}
-                      </span>
+        </div>
+    );
+
+const handleExclude = (groupId) => {
+};
+
+
+
+      
+case "joins":
+    // Fake data
+    const mygroup = [
+        {
+            _id: '1',
+            name: 'Group Alpha',
+            profile: {
+                profilePhoto: 'https://via.placeholder.com/150',
+                bio: 'A great group for tech enthusiasts.'
+            }
+        },
+        {
+            _id: '2',
+            name: 'Group Beta',
+            profile: {
+                profilePhoto: 'https://via.placeholder.com/150',
+                bio: 'Join us to discuss the latest trends in gaming.'
+            }
+        },
+        {
+            _id: '3',
+            name: 'Group Gamma',
+            profile: {
+                profilePhoto: 'https://via.placeholder.com/150',
+                bio: 'A community for people who love reading books.'
+            }
+        },
+        {
+            _id: '4',
+            name: 'Group Delta',
+            profile: {
+                profilePhoto: 'https://via.placeholder.com/150',
+                bio: 'Connect with others who are passionate about travel.'
+            }
+        }
+    ];
+
+    return (
+        <div className="w-full max-w-screen-lg mx-auto px-4 py-6">
+            <h1 className="text-4xl font-bold mb-4">
+                All groups you've joined ({mygroup.length})
+            </h1>
+            <div className="joined-groups-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mygroup.map((group) => (
+                    <div key={group._id} className="joined-group-card bg-white shadow-lg rounded-lg overflow-hidden flex flex-col">
+                        <img
+                            src={group.profile.profilePhoto}
+                            alt="Group Avatar"
+                            className="joined-group-avatar w-full h-32 object-cover"
+                        />
+                        <div className="p-4 flex flex-col flex-grow">
+                            <h3 className="joined-group-name text-xl font-semibold mb-2">{group.name}</h3>
+                            <p className="joined-group-description text-gray-600 mb-4 flex-grow">{group.profile.bio}</p>
+                            <div className="flex justify-between items-center mt-auto">
+                                <button
+                                    onClick={() => {
+                                        setGroupId(group._id);
+                                        setTimeout(() => {
+                                            handleNavigation("group");
+                                        }, 200);
+                                    }}
+                                    className="joined-group-view-button px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                                >
+                                    View Group
+                                </button>
+                                <button className="joined-group-custom-button px-4 py-2 bg-gray-200 text-gray-600 font-semibold rounded-lg hover:bg-gray-300 transition-colors duration-300">
+                                    Tùy chỉnh
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                  </li>
-                </ul>
-              ))}
+                ))}
             </div>
-          </div>
-        );
+        </div>
+    );
+
       case "create-group":
         return (
           <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
