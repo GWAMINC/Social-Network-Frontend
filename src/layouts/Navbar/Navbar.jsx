@@ -142,7 +142,7 @@ const NotificationPopover = () => {
   };
 
   // Ẩn navbar khi ở trang đăng nhập hoặc trang đăng ký
-  if (location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/recover") {
+  if (location.pathname === "/login" || location.pathname === "/register") {
     return null;
   }
 
