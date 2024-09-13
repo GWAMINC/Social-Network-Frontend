@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button.jsx";
 import { PopoverContent } from "@radix-ui/react-popover";
+import { ThemeContext } from "@/App";
 import {
   Avatar,
   AvatarImage,
@@ -58,11 +59,13 @@ const handleViewProfile = () => {
 const NotificationPopover = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState(null);
-
   const [chats, setChats] = useState([]);
   const [userChatDatas, setUserChatDatas] = useState({});
+
+  const [theme, setTheme] = useContext(ThemeContext);
+
   const apiUrl = import.meta.env.VITE_API_URL;
-  const userId = localStorage.getItem('token');
+  const userId = localStorage.getItem("token");
   const [activeNav, setActiveNav] = useState(0);
   const toggleNotifications = () => {
     setIsOpen(!isOpen);
@@ -98,7 +101,7 @@ const NotificationPopover = () => {
     const setUserDatas = async () => {
       const userDatas = {};
       for (const chat of chats) {
-        const otherUserId = chat.participants.find(id => id !== userId);
+        const otherUserId = chat.participants.find((id) => id !== userId);
         const response = await fetchUser(otherUserId);
         userDatas[otherUserId] = response;
       }
@@ -107,14 +110,16 @@ const NotificationPopover = () => {
     const fetchUser = async (userId) => {
       const apiUrl = import.meta.env.VITE_API_URL;
       try {
-        const response = await axios.get(`${apiUrl}/user/getUser/${userId}`, { withCredentials: true });
+        const response = await axios.get(`${apiUrl}/user/getUser/${userId}`, {
+          withCredentials: true,
+        });
         return response.data;
       } catch (error) {
-        console.error('Failed to fetch user:', error);
+        console.error("Failed to fetch user:", error);
       }
     };
     setUserDatas();
-  }
+  };
 
   const handleDateTime = (createdAt) => {
     const now = new Date();
@@ -170,10 +175,25 @@ const NotificationPopover = () => {
 
   const navButtons = [
     { name: "Home", icon: House, linkTo: "/" },
-    { name: "Friends", icon: Users, linkTo: "/friends" },
-    { name: "Create a post", icon: SquarePlus, linkTo: "/create-post" },
-    { name: "Video", icon: Video, linkTo: "/video" },
-    { name: "Groups", icon: Group, linkTo: "/groups" },
+    {
+      name: "Friends",
+      icon: Users,
+      linkTo: "/friends",
+      dis: "translate-x-[100%]",
+    },
+    {
+      name: "Create a post",
+      icon: SquarePlus,
+      linkTo: "/create-post",
+      dis: "translate-x-[200%]",
+    },
+    { name: "Video", icon: Video, linkTo: "/video", dis: "translate-x-[300%]" },
+    {
+      name: "Groups",
+      icon: Group,
+      linkTo: "/groups",
+      dis: "translate-x-[400%]",
+    },
   ];
 
   const menuButtons = [
@@ -197,6 +217,11 @@ const NotificationPopover = () => {
     { name: "Settings", icon: Settings, linkTo: "/settings" },
     { name: "Support", icon: HelpCircle, linkTo: "/support" },
     { name: "Logout", icon: LogOut, linkTo: "/login", onClick: handleLogout },
+  ];
+
+  const themeButtons = [
+    { name: "Dark", icon: Moon, value: "dark" },
+    { name: "Light", icon: Sun, value: "light" },
   ];
 
   return (
@@ -241,8 +266,10 @@ const NotificationPopover = () => {
                   setActiveNav(index);
                 }}
                 className={`${
-                  activeNav === index ? "text-primary" : "text-foreground"
-                } transition-colors gap-2 px-8 py-3 rounded-md opacity-100 hover:bg-primary-hover`}
+                  activeNav === index
+                    ? "text-primary"
+                    : "text-secondary-foreground"
+                } transition-colors gap-2 px-8 py-3 rounded-md opacity-100 hover:bg-secondary-hover`}
               >
                 <btn.icon />
               </button>
@@ -250,9 +277,7 @@ const NotificationPopover = () => {
           ))}
 
           <div
-            className={`absolute left-${
-              activeNav === 0 ? "0" : `[${(activeNav / 5) * 100}%]`
-            } transition-all bottom-0 w-1/5 h-1 rounded-t-full bg-primary`}
+            className={`${navButtons[activeNav].dis} absolute bottom-0 left-0 w-1/5 h-1 transition-all rounded-t-full bg-primary`}
           ></div>
         </div>
 
@@ -289,34 +314,23 @@ const NotificationPopover = () => {
                 variant="secondary"
                 className="flex items-center gap-2 ml-4"
               >
-                <Moon />
+                {theme === "dark" ? <Moon /> : <Sun />}
               </Button>
             </PopoverTrigger>
 
             <PopoverContent className="flex flex-col gap-2 overflow-hidden rounded-lg shadow-md focus:outline-none text-foreground bg-background-lighter shadow-black w-36">
-              <div
-                className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
-                onClick={() => {}}
-              >
-                <Sun />
-                <span>Light</span>
-              </div>
-
-              <div
-                className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
-                onClick={() => {}}
-              >
-                <Moon />
-                <span>Dark</span>
-              </div>
-
-              <div
-                className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
-                onClick={() => {}}
-              >
-                <Monitor />
-                <span>System</span>
-              </div>
+              {themeButtons.map((btn) => (
+                <div
+                  onClick={() => {
+                    localStorage.theme = btn.value;
+                    setTheme(btn.value);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
+                >
+                  <btn.icon />
+                  <span>{btn.name}</span>
+                </div>
+              ))}
             </PopoverContent>
           </Popover>
 
@@ -429,31 +443,37 @@ const NotificationPopover = () => {
                 style={{ height: "calc(100% - 150px)" }}
               >
                 {chats.map((chat, index) => (
-                  <div
-                    key={index}
-                  >
-                    <Link to={`/chats/${chat._id}`} className="messenger-item flex items-center gap-3 px-3 py-2 hover:bg-gray-100 cursor-pointer">
-                    <Avatar className="w-10 h-10">
-                      <AvatarImage src={userChatDatas[chat.participants[1]]?.avatar || ""} alt={userChatDatas[chat.participants[1]]?.name || ""} />
-                      <AvatarFallback>Avatar</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-foreground">
-                        {userChatDatas[chat.participants[1]]?.name || "User Name"}
-                      </span>
-                      <span className="text-sm truncate text-foreground-lighter">
-                        Message content
-                      </span>
-                    </div>
+                  <div key={index}>
+                    <Link
+                      to={`/chats/${chat._id}`}
+                      className="flex items-center gap-3 px-3 py-2 cursor-pointer messenger-item hover:bg-gray-100"
+                    >
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage
+                          src={
+                            userChatDatas[chat.participants[1]]?.avatar || ""
+                          }
+                          alt={userChatDatas[chat.participants[1]]?.name || ""}
+                        />
+                        <AvatarFallback>Avatar</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-foreground">
+                          {userChatDatas[chat.participants[1]]?.name ||
+                            "User Name"}
+                        </span>
+                        <span className="text-sm truncate text-foreground-lighter">
+                          Message content
+                        </span>
+                      </div>
                     </Link>
                   </div>
                 ))}
               </div>
               <div className="border-t messenger-footer border-border bg-background">
-                <Link to = {"/chats"}>
+                <Link to={"/chats"}>
                   <Button>See All in Messenger</Button>
                 </Link>
-
               </div>
             </PopoverContent>
           </Popover>
