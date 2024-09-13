@@ -238,7 +238,7 @@ const NotificationPopover = () => {
             <input
               type="text"
               placeholder="Search for friends, groups, pages"
-              className="w-full px-4 py-2 pl-10 rounded-lg text-foreground-lighter bg-input"
+              className="w-full px-4 py-2 pl-10 rounded-lg text-foreground bg-input"
             />
             <svg
               className="absolute w-5 h-5 transform -translate-y-1/2 text-foreground-lighter top-1/2 left-3"

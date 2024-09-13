@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "@/layouts/Navbar";
+import { Button } from "@/components/ui/button.jsx";
 import {
   FaCog,
   FaSearch,
@@ -48,7 +49,7 @@ const Groups = () => {
       case "feed":
         return (
           <div>
-            <h1 className="text-4xl font-bold mb-4">Your Feed</h1>
+            <h1 className="mb-4 text-4xl font-bold">Your Feed</h1>
             {/* Nội dung bài post sẽ được hiển thị ở đây */}
             <div className="post-list">
               {/* Ví dụ nội dung bài post */}
@@ -63,7 +64,7 @@ const Groups = () => {
       case "suggestions":
         return (
           <div className="w-1/2">
-            <h1 className="text-4xl font-bold mb-4">Suggestions</h1>
+            <h1 className="mb-4 text-4xl font-bold">Suggestions</h1>
             <div className="groups-joined-list-container">
               {listgroup.map((group) => (
                 <ul key={group._id} className="groups-joined-list">
@@ -88,7 +89,7 @@ const Groups = () => {
       case "joins":
         return (
           <div className="w-1/2">
-            <h1 className="text-4xl font-bold mb-4">Your Joined Groups</h1>
+            <h1 className="mb-4 text-4xl font-bold">Your Joined Groups</h1>
             <div className="groups-joined-list-container">
               {mygroup.map((group) => (
                 <ul key={group._id} className="groups-joined-list">
@@ -120,8 +121,8 @@ const Groups = () => {
         );
       case "create-group":
         return (
-          <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h1 className="text-4xl font-bold mb-6 text-center text-white">
+          <div className="flex flex-col items-center justify-center w-full max-w-md p-6 mx-auto bg-gray-800 rounded-lg shadow-lg">
+            <h1 className="mb-6 text-4xl font-bold text-center text-white">
               Create Group
             </h1>
             <form onSubmit={createGroup} className="space-y-4">
@@ -138,7 +139,7 @@ const Groups = () => {
                   required
                   value={group.name}
                   onChange={(e) => setGroup({ ...group, name: e.target.value })}
-                  className="mt-1 block w-full p-3  border border-gray-600 rounded-md bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full p-3 mt-1 text-white bg-gray-900 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -153,7 +154,7 @@ const Groups = () => {
                   id="bio"
                   value={group.bio}
                   onChange={(e) => setGroup({ ...group, bio: e.target.value })}
-                  className="mt-1 block w-full p-3  border border-gray-600 rounded-md bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full p-3 mt-1 text-white bg-gray-900 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 ></textarea>
               </div>
               <div>
@@ -169,7 +170,7 @@ const Groups = () => {
                   onChange={(e) =>
                     setGroup({ ...group, profilePhoto: e.target.files })
                   }
-                  className="mt-1 block w-full text-sm text-gray-300 file:border file:border-gray-600 file:bg-gray-900 file:text-white file:py-2 file:px-4 file:rounded-md hover:file:bg-gray-800"
+                  className="block w-full mt-1 text-sm text-gray-300 file:border file:border-gray-600 file:bg-gray-900 file:text-white file:py-2 file:px-4 file:rounded-md hover:file:bg-gray-800"
                 />
               </div>
               <div>
@@ -185,7 +186,7 @@ const Groups = () => {
                   onChange={(e) =>
                     setGroup({ ...group, privacy: e.target.value })
                   }
-                  className="mt-1 block w-full p-3 border border-gray-600 rounded-md bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full p-3 mt-1 text-white bg-gray-900 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="public">Public</option>
                   <option value="private">Private</option>
@@ -193,7 +194,7 @@ const Groups = () => {
               </div>
               <button
                 type="submit"
-                className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 Create Group
               </button>
@@ -202,80 +203,91 @@ const Groups = () => {
             {success && <p className="mt-4 text-green-400">{success}</p>}
           </div>
         );
-        case "group":
-          if (!inforgroup) {
-            return <div>Loading...</div>; // or some loading indicator
-          }
-        
-          return (
-            <div className="group-details w-1/2">
-              <h2 className="text-2xl font-bold mb-4">{inforgroup.group.name}</h2>
-              <div className="group-profile flex items-center mb-4">
-                <img
-                  src={inforgroup.group.profile.profilePhoto || "default-photo.jpg"}
-                  alt="Group Avatar"
-                  className="w-20 h-20 rounded-full object-cover mr-4"
-                />
-                <div className="group-info">
-                  <p className="mb-1">Bio: {inforgroup.group.profile.bio}</p>
-                  <p className="mb-1">Privacy: {inforgroup.group.privacy}</p>
-                  <p className="mb-1">
-                    Created At: {new Date(inforgroup.group.createdAt).toLocaleString()}
-                  </p>
-                  <p className="mb-1">
-                    Updated At: {new Date(inforgroup.group.updatedAt).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-              <div className="group-admin mb-4">
-                <h3 className="text-lg font-semibold mb-2">Admin:</h3>
-                {inforgroup.group.admin &&
-                  inforgroup.group.admin.length > 0 &&
-                  inforgroup.group.admin.map((admin) => (
-                    <div key={admin._id} className="flex items-center mb-2">
-                      <img
-                        src={admin.profile.profilePhoto || "default-photo.jpg"}
-                        alt="Admin Avatar"
-                        className="w-10 h-10 rounded-full object-cover mr-2"
-                      />
-                      <p>{admin.name}</p>
-                    </div>
-                  ))}
-              </div>
-              <div className="group-members">
-                <h3 className="text-lg font-semibold mb-2">Members:</h3>
-                {inforgroup.group.members &&
-                  inforgroup.group.members.length > 0 &&
-                  inforgroup.group.members.map((member) => (
-                    <div key={member._id} className="flex items-center mb-2">
-                      <img
-                        src={member.profile.profilePhoto || "default-photo.jpg"}
-                        alt="Member Avatar"
-                        className="w-10 h-10 rounded-full object-cover mr-2"
-                      />
-                      <p>{member.name}</p>
-                    </div>
-                  ))}
-              </div>
-              <div className="group-posts mt-8 text-gray-800">
-                <h3 className="text-lg font-semibold mb-2 text-gray-50">Posts:</h3>
-                {inforgroup.data && inforgroup.data.length > 0 ? (
-                  inforgroup.data.map((post) => (
-                    <div key={post.postInfo._id} className="mb-4 p-4 border rounded">
-                      <Post data={post} />
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-50">There are no posts in this group.</p>
-                )}
+      case "group":
+        if (!inforgroup) {
+          return <div>Loading...</div>; // or some loading indicator
+        }
+
+        return (
+          <div className="w-1/2 group-details">
+            <h2 className="mb-4 text-2xl font-bold">{inforgroup.group.name}</h2>
+            <div className="flex items-center mb-4 group-profile">
+              <img
+                src={
+                  inforgroup.group.profile.profilePhoto || "default-photo.jpg"
+                }
+                alt="Group Avatar"
+                className="object-cover w-20 h-20 mr-4 rounded-full"
+              />
+              <div className="group-info">
+                <p className="mb-1">Bio: {inforgroup.group.profile.bio}</p>
+                <p className="mb-1">Privacy: {inforgroup.group.privacy}</p>
+                <p className="mb-1">
+                  Created At:{" "}
+                  {new Date(inforgroup.group.createdAt).toLocaleString()}
+                </p>
+                <p className="mb-1">
+                  Updated At:{" "}
+                  {new Date(inforgroup.group.updatedAt).toLocaleString()}
+                </p>
               </div>
             </div>
-          );
-        
+            <div className="mb-4 group-admin">
+              <h3 className="mb-2 text-lg font-semibold">Admin:</h3>
+              {inforgroup.group.admin &&
+                inforgroup.group.admin.length > 0 &&
+                inforgroup.group.admin.map((admin) => (
+                  <div key={admin._id} className="flex items-center mb-2">
+                    <img
+                      src={admin.profile.profilePhoto || "default-photo.jpg"}
+                      alt="Admin Avatar"
+                      className="object-cover w-10 h-10 mr-2 rounded-full"
+                    />
+                    <p>{admin.name}</p>
+                  </div>
+                ))}
+            </div>
+            <div className="group-members">
+              <h3 className="mb-2 text-lg font-semibold">Members:</h3>
+              {inforgroup.group.members &&
+                inforgroup.group.members.length > 0 &&
+                inforgroup.group.members.map((member) => (
+                  <div key={member._id} className="flex items-center mb-2">
+                    <img
+                      src={member.profile.profilePhoto || "default-photo.jpg"}
+                      alt="Member Avatar"
+                      className="object-cover w-10 h-10 mr-2 rounded-full"
+                    />
+                    <p>{member.name}</p>
+                  </div>
+                ))}
+            </div>
+            <div className="mt-8 text-gray-800 group-posts">
+              <h3 className="mb-2 text-lg font-semibold text-gray-50">
+                Posts:
+              </h3>
+              {inforgroup.data && inforgroup.data.length > 0 ? (
+                inforgroup.data.map((post) => (
+                  <div
+                    key={post.postInfo._id}
+                    className="p-4 mb-4 border rounded"
+                  >
+                    <Post data={post} />
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-50">
+                  There are no posts in this group.
+                </p>
+              )}
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div>
-            <h1 className="text-4xl font-bold mb-4">Groups</h1>
+            <h1 className="mb-4 text-4xl font-bold">Groups</h1>
           </div>
         );
     }
@@ -368,22 +380,22 @@ const Groups = () => {
   }, [groupId]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="flex-shrink-0">
         <Navbar />
       </header>
-      <main className="flex-grow flex pt-16">
+      <main className="flex flex-grow pt-16">
         {/* Sidebar for tasks */}
-        <aside className="w-1/4 bg-gray-800 p-4 flex flex-col space-y-2">
-          <div className="flex justify-between items-center">
-            <h2 className="text-4xl font-bold mb-4">Groups</h2>
-            <button className="setting-button mb-4 self-end">
+        <aside className="flex flex-col w-1/4 p-4 space-y-2 bg-background-lighter">
+          <div className="flex items-center justify-between">
+            <h2 className="mb-4 text-4xl font-bold">Groups</h2>
+            <button className="self-end mb-4 setting-button">
               <FaCog className="text-xl" />
             </button>
           </div>
 
           {/* Search Group */}
-          <div className="search-group mb-4">
+          <div className="mb-4 search-group">
             <FaSearch className="search-icon" />
             <input
               type="text"
@@ -396,7 +408,7 @@ const Groups = () => {
 
           {/* Task List */}
           <div>
-            <h2 className="text-xl font-bold mb-4">Tasks</h2>
+            <h2 className="mb-4 text-xl font-bold">Tasks</h2>
             <ul className="task-list">
               <li>
                 <a
@@ -456,7 +468,7 @@ const Groups = () => {
                     className="group-item"
                     onClick={() => {
                       setGroupId(group._id);
-                      saveGroupIdToLocalStorage(group._id)
+                      saveGroupIdToLocalStorage(group._id);
                       setTimeout(() => {
                         handleNavigation("group");
                       }, 200);
@@ -481,7 +493,7 @@ const Groups = () => {
         </aside>
 
         {/* Main content */}
-        <section className="w-full flex justify-center p-6">
+        <section className="flex justify-center w-full p-6">
           {getMainContent()}
         </section>
       </main>
