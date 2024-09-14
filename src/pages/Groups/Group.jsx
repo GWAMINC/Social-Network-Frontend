@@ -121,15 +121,15 @@ const Groups = () => {
         );
       case "create-group":
         return (
-          <div className="flex flex-col items-center justify-center w-full max-w-md p-6 mx-auto bg-gray-800 rounded-lg shadow-lg">
-            <h1 className="mb-6 text-4xl font-bold text-center text-white">
+          <div className="flex flex-col items-center justify-center w-full max-w-md p-6 mx-auto rounded-lg shadow-lg bg-background-lighter">
+            <h1 className="mb-6 text-4xl font-bold text-center text-foreground">
               Create Group
             </h1>
             <form onSubmit={createGroup} className="space-y-4">
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-lg font-semibold text-white"
+                  className="block text-lg font-semibold text-foreground"
                 >
                   Group Name:
                 </label>
@@ -139,13 +139,13 @@ const Groups = () => {
                   required
                   value={group.name}
                   onChange={(e) => setGroup({ ...group, name: e.target.value })}
-                  className="block w-full p-3 mt-1 text-white bg-gray-900 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full p-3 mt-1 border rounded-md text-foreground bg-input border-border focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
               <div>
                 <label
                   htmlFor="bio"
-                  className="block text-lg font-semibold text-white"
+                  className="block text-lg font-semibold text-foreground"
                 >
                   Bio:
                 </label>
@@ -154,13 +154,13 @@ const Groups = () => {
                   id="bio"
                   value={group.bio}
                   onChange={(e) => setGroup({ ...group, bio: e.target.value })}
-                  className="block w-full p-3 mt-1 text-white bg-gray-900 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full p-3 mt-1 border rounded-md text-foreground bg-input border-border focus:outline-none focus:ring-2 focus:ring-primary"
                 ></textarea>
               </div>
               <div>
                 <label
                   htmlFor="profilePhoto"
-                  className="block text-lg font-semibold text-white"
+                  className="block text-lg font-semibold text-foreground"
                 >
                   Profile Photo:
                 </label>
@@ -170,13 +170,13 @@ const Groups = () => {
                   onChange={(e) =>
                     setGroup({ ...group, profilePhoto: e.target.files })
                   }
-                  className="block w-full mt-1 text-sm text-gray-300 file:border file:border-gray-600 file:bg-gray-900 file:text-white file:py-2 file:px-4 file:rounded-md hover:file:bg-gray-800"
+                  className="block w-full mt-1 text-sm text-foreground-lighter file:border file:border-border file:bg-secondary file:text-secondary-foreground file:py-2 file:px-4 file:rounded-md hover:file:bg-secondary-hover"
                 />
               </div>
               <div>
                 <label
                   htmlFor="privacy"
-                  className="block text-lg font-semibold text-white"
+                  className="block text-lg font-semibold text-foreground"
                 >
                   Privacy:
                 </label>
@@ -186,18 +186,19 @@ const Groups = () => {
                   onChange={(e) =>
                     setGroup({ ...group, privacy: e.target.value })
                   }
-                  className="block w-full p-3 mt-1 text-white bg-gray-900 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full p-3 mt-1 text-foreground bg-dropdown border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="public">Public</option>
                   <option value="private">Private</option>
                 </select>
               </div>
-              <button
+
+              <Button
+                className="w-full py-3 rounded-md focus:outline-none"
                 type="submit"
-                className="w-full py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 Create Group
-              </button>
+              </Button>
             </form>
             {error && <p className="mt-4 text-red-400">{error}</p>}
             {success && <p className="mt-4 text-green-400">{success}</p>}
