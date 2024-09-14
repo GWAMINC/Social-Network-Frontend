@@ -112,6 +112,7 @@ const Post = ({ data }) => {
       setSuccess("Comment created!");
       setShowPicker(false);
       setShowComments(true);
+      fetchComments();
 
       const event = new CustomEvent('CommentCreated');
       window.dispatchEvent(event);
@@ -140,7 +141,7 @@ const Post = ({ data }) => {
           `${apiUrl}/comment/getAllComment/${postId}`,
           {withCredentials: true});
       console.log(response.data.comments);
-      setPreComment(response.data.comments);
+      await setPreComment(response.data.comments.reverse());
       setShowComments(true);
     } catch (err) {
 
