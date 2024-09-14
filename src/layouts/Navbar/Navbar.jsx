@@ -219,11 +219,6 @@ const NotificationPopover = () => {
     { name: "Logout", icon: LogOut, linkTo: "/login", onClick: handleLogout },
   ];
 
-  const themeButtons = [
-    { name: "Dark", icon: Moon, value: "dark" },
-    { name: "Light", icon: Sun, value: "light" },
-  ];
-
   return (
     <div className="fixed top-0 left-0 z-10 w-full shadow-lg bg-background-lighter">
       <div className="flex items-center justify-between h-16 max-w-full px-6 mx-auto">
@@ -308,31 +303,17 @@ const NotificationPopover = () => {
           </Popover>
 
           {/* Theme */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="secondary"
-                className="flex items-center gap-2 ml-4"
-              >
-                {theme === "dark" ? <Moon /> : <Sun />}
-              </Button>
-            </PopoverTrigger>
-
-            <PopoverContent className="flex flex-col gap-2 overflow-hidden rounded-lg shadow-md focus:outline-none text-foreground bg-background-lighter shadow-black w-36">
-              {themeButtons.map((btn) => (
-                <div
-                  onClick={() => {
-                    localStorage.theme = btn.value;
-                    setTheme(btn.value);
-                  }}
-                  className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
-                >
-                  <btn.icon />
-                  <span>{btn.name}</span>
-                </div>
-              ))}
-            </PopoverContent>
-          </Popover>
+          <Button
+            variant="secondary"
+            className="flex items-center gap-2 ml-4"
+            onClick={() => {
+              const nextTheme = theme === "dark" ? "light" : "dark";
+              localStorage.theme = nextTheme;
+              setTheme(nextTheme);
+            }}
+          >
+            {theme === "dark" ? <Moon /> : <Sun />}
+          </Button>
 
           {/* Messages */}
           <Popover>
