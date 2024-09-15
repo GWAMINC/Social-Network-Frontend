@@ -11,6 +11,7 @@ const Profile = () => {
   const userData = location.state?.userData;
   const [activeTab, setActiveTab] = useState("Posts");
   const [profile, setProfile] = useState();
+  const [currentUserId,setCurrentUserId]=useState();
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -18,7 +19,12 @@ const Profile = () => {
         const response = await axios.get(`${apiUrl}/user/profile`, {
           withCredentials: true,
         });
-        setProfile(response.data.user);
+        if (userData) {
+          setProfile(userData.user);
+        } else {
+          setProfile(response.data.user);
+        }
+        setCurrentUserId(response.data.user._id);
       } catch (error) {
         console.error("Failed to fetch profile:", error);
       }
@@ -31,7 +37,7 @@ const Profile = () => {
   }, [userData]);
   return (
     <div className="profile">
-      <ProfileHeader profile={profile} />
+      <ProfileHeader user ={profile} currentUserId={currentUserId}/>
       <ProfileContent activeTab={activeTab} profile={profile} />
       <ProfileTabs
         activeTab={activeTab}
