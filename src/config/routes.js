@@ -3,7 +3,8 @@ const routes = {
     login: '/login',
     register: '/register',
     addPost: '/addPost',
-
+    forgotPassword: '/forgot-password',
+    
     chats: '/chats',
     chatRoom: '/chats/:chatId',
 
