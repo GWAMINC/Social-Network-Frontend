@@ -46,7 +46,7 @@ const ChatRoomPage = () => {
                 <div className="mb-4 h-64 overflow-y-auto">
                     {messages.map((msg, index) => (
                         <div key={index}>
-                            <strong>{msg.sender.name}: </strong>{msg.content}
+                            <strong>{msg.sender?.name}: </strong>{msg.content}
                         </div>
                     ))}
                 </div>
