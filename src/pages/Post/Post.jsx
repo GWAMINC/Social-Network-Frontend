@@ -398,7 +398,7 @@ const Post = ({ data }) => {
           >
             <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
             <span>
-              {liked ? "Đã Thích" : "Thích"} ({likeCount})
+              {liked ? "Đã Thích" : "Thích"} {likeCount}
             </span>
           </button>
 
@@ -410,7 +410,7 @@ const Post = ({ data }) => {
           >
             <FaHeartBroken className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
             <span>
-              {disliked ? "Không Thích" : "Không Thích"} ({dislikeCount})
+              {disliked ? "Không Thích" : "Không Thích"} {dislikeCount}
             </span>
           </button>
 
