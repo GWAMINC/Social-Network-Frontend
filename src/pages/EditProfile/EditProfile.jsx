@@ -26,7 +26,9 @@ const EditProfile = () => {
     const fetchProfile = async () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
-        const response = await axios.get(`${apiUrl}/user/profile`, { withCredentials: true });
+        const response = await axios.get(`${apiUrl}/user/profile`, {
+          withCredentials: true,
+        });
         setProfile({
           name: response.data.user.name,
           email: response.data.user.email,
@@ -39,10 +41,7 @@ const EditProfile = () => {
       }
     };
     fetchProfile();
-  
   }, []);
-  
-
 
   const handleEditProfile = async (e) => {
     e.preventDefault();
@@ -63,19 +62,23 @@ const EditProfile = () => {
       setError("");
     } catch (error) {
       console.error(error);
-      setError(error.response?.data?.message || "An error occurred. Please try again.");
+      setError(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
       setMessage("");
     }
   };
 
   return (
-    <div className="max-w-lg mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Profile Edit</h1>
-      {message && <div className="text-green-500 text-center mb-4">{message}</div>}
+    <div className="max-w-lg mx-auto py-20">
+      <h1 className="text-2xl font-bold mb-2 text-gray-50">Profile Edit</h1>
+      {message && (
+        <div className="text-green-500 text-center mb-4">{message}</div>
+      )}
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
       <form onSubmit={handleEditProfile} className="space-y-4">
         <label className="block">
-          <span className="text-gray-700">Name:</span>
+          <span className="text-gray-50">Name:</span>
           <input
             type="text"
             value={profile.name}
@@ -84,7 +87,7 @@ const EditProfile = () => {
           />
         </label>
         <label className="block">
-          <span className="text-gray-700">Email:</span>
+          <span className="text-gray-50">Email:</span>
           <input
             type="email"
             value={profile.email}
@@ -93,16 +96,18 @@ const EditProfile = () => {
           />
         </label>
         <label className="block">
-          <span className="text-gray-700">Phone Number:</span>
+          <span className="text-gray-50">Phone Number:</span>
           <input
             type="tel"
             value={profile.phoneNumber}
-            onChange={(e) => setProfile({ ...profile, phoneNumber: e.target.value })}
+            onChange={(e) =>
+              setProfile({ ...profile, phoneNumber: e.target.value })
+            }
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-500 focus:border-indigo-500"
           />
         </label>
         <label className="block">
-          <span className="text-gray-700">Bio:</span>
+          <span className="text-gray-50">Bio:</span>
           <input
             type="text"
             value={profile.bio}
@@ -111,11 +116,13 @@ const EditProfile = () => {
           />
         </label>
         <label className="block">
-          <span className="text-gray-700">Birth Date:</span>
+          <span className="text-gray-50">Birth Date:</span>
           <input
             type="date"
             value={profile.birthDate}
-            onChange={(e) => setProfile({ ...profile, birthDate: e.target.value })}
+            onChange={(e) =>
+              setProfile({ ...profile, birthDate: e.target.value })
+            }
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-500 focus:border-indigo-500"
           />
         </label>
