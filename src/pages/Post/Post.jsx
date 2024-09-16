@@ -1,20 +1,30 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaHeart, FaHeartBroken, FaComment, FaShare, FaBookmark, FaEllipsisV, FaSmile } from "react-icons/fa";
-import Data from '@emoji-mart/data';
-import Picker from '@emoji-mart/react';
-import './Post.css';
-import ShareModal from '../ShareModal/ShareModal';
+import {
+  FaHeart,
+  FaHeartBroken,
+  FaComment,
+  FaShare,
+  FaBookmark,
+  FaEllipsisV,
+  FaSmile,
+} from "react-icons/fa";
+import Data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import "./Post.css";
+import ShareModal from "../ShareModal/ShareModal";
 import axios from "axios";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import Comment from "../Comment/Comment";
-
+import { useNavigate } from "react-router-dom";
 
 const Post = ({ data }) => {
   const [fireworks, setFireworks] = useState([]);
-  const [dislikeFireworks, setDislikeFireworks] = useState([]); 
+  const [dislikeFireworks, setDislikeFireworks] = useState([]);
   const [liked, setLiked] = useState(data.postInfo.isLiked.includes(data.user));
-  const [likeCount , setLikeCount] = useState(data.likeCount);
-  const [disliked, setDisliked] = useState(data.postInfo.isDisliked.includes(data.user));
+  const [likeCount, setLikeCount] = useState(data.likeCount);
+  const [disliked, setDisliked] = useState(
+    data.postInfo.isDisliked.includes(data.user)
+  );
   const [dislikeCount, setDislikeCount] = useState(data.dislikeCount);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -28,7 +38,7 @@ const Post = ({ data }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [shareModalOpen, setShareModalOpen] = useState(false); 
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const postRef = useRef(null);
   const menuRef = useRef(null);
@@ -38,29 +48,30 @@ const Post = ({ data }) => {
     setLiked(!liked);
     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
     if (disliked) {
-        setDisliked(false);
-        setDislikeCount(dislikeCount - 1);
+      setDisliked(false);
+      setDislikeCount(dislikeCount - 1);
     }
     if (postRef.current) {
-      const { left, top, width, height } = postRef.current.getBoundingClientRect();
+      const { left, top, width, height } =
+        postRef.current.getBoundingClientRect();
       const randomX = Math.random() * width;
       const randomY = Math.random() * height;
 
       const newFirework = {
         left: `${randomX}px`,
         top: `${randomY}px`,
-        id: Date.now()
+        id: Date.now(),
       };
 
       setFireworks((prev) => [...prev, newFirework]);
 
       setTimeout(() => {
-        setFireworks((prev) => prev.filter(fw => fw.id !== newFirework.id));
+        setFireworks((prev) => prev.filter((fw) => fw.id !== newFirework.id));
       }, 1000);
     }
   };
 
-  const AddComment=()=> {
+  const AddComment = () => {
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (pickerRef.current && !pickerRef.current.contains(event.target)) {
@@ -72,13 +83,9 @@ const Post = ({ data }) => {
 
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
-      }
-
+      };
     }, []);
-
-
-
-  }
+  };
 
   const handleCommentChange = (e) => {
     setCommenting(true);
@@ -90,7 +97,7 @@ const Post = ({ data }) => {
     setIsSubmitting(true);
     setError(null);
 
-    const postId = data.postInfo._id
+    const postId = data.postInfo._id;
 
     const payload = {
       postId: postId,
@@ -99,52 +106,48 @@ const Post = ({ data }) => {
 
     console.log(postId, comment);
 
-    try{
+    try {
       console.log(payload);
       const response = await axios.post(
-          "http://localhost:9090/api/comment/createComment",
-          payload,
-          { withCredentials: true, headers: { "Content-Type": "application/json" } }
+        "http://localhost:9090/api/comment/createComment",
+        payload,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
       );
-      console.log("Comment created:",response.data);
+      console.log("Comment created:", response.data);
       setComment("");
       setCommenting(false);
       setSuccess("Comment created!");
       setShowPicker(false);
       setShowComments(true);
+      fetchComments();
 
-      const event = new CustomEvent('CommentCreated');
+      const event = new CustomEvent("CommentCreated");
       window.dispatchEvent(event);
-    }
-    catch(err){
+    } catch (err) {
       console.error("Error creating post:", err);
       setError("Failed to create post. Please try again.");
       setSuccess("");
-
-    }
-    finally {
+    } finally {
       setIsSubmitting(false);
     }
-
-
-
   };
-
-
 
   const fetchComments = async () => {
     try {
       const postId = data.postInfo._id;
       const apiUrl = import.meta.env.VITE_API_URL;
       const response = await axios.get(
-          `${apiUrl}/comment/getAllComment/${postId}`,
-          {withCredentials: true});
+        `${apiUrl}/comment/getAllComment/${postId}`,
+        { withCredentials: true }
+      );
       console.log(response.data.comments);
-      setPreComment(response.data.comments);
+      await setPreComment(response.data.comments.reverse());
       setShowComments(true);
     } catch (err) {
-
-      console.error('Failed to fetch comments',err);
+      console.error("Failed to fetch comments", err);
     }
   };
 
@@ -152,25 +155,28 @@ const Post = ({ data }) => {
     dislikePost(data.postInfo._id);
     setDisliked(!disliked);
     setDislikeCount(disliked ? dislikeCount - 1 : dislikeCount + 1);
-    if(liked){
-        setLiked(false);
-        setLikeCount(likeCount - 1);
+    if (liked) {
+      setLiked(false);
+      setLikeCount(likeCount - 1);
     }
     if (postRef.current) {
-      const { left, top, width, height } = postRef.current.getBoundingClientRect();
+      const { left, top, width, height } =
+        postRef.current.getBoundingClientRect();
       const randomX = Math.random() * width;
       const randomY = Math.random() * height;
 
       const newDislikeFirework = {
         left: `${randomX}px`,
         top: `${randomY}px`,
-        id: Date.now()
+        id: Date.now(),
       };
 
       setDislikeFireworks((prev) => [...prev, newDislikeFirework]);
 
       setTimeout(() => {
-        setDislikeFireworks((prev) => prev.filter(fw => fw.id !== newDislikeFirework.id));
+        setDislikeFireworks((prev) =>
+          prev.filter((fw) => fw.id !== newDislikeFirework.id)
+        );
       }, 1000);
     }
   };
@@ -189,24 +195,22 @@ const Post = ({ data }) => {
     } else {
       setShowComments(false); // Hide comments if already shown
     }
-    if (isLoading){
+    if (isLoading) {
       return <div>Loading...</div>;
     }
   };
 
-
-
   const handleEmojiClick = (emoji) => {
-    setComment(prev => prev + emoji.native);
+    setComment((prev) => prev + emoji.native);
     setShowEmojiPicker(false);
   };
 
   const handleShareClick = () => {
-    setShareModalOpen(true); 
+    setShareModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setShareModalOpen(false); 
+    setShareModalOpen(false);
   };
 
   const handleSavePostClick = () => {
@@ -223,8 +227,8 @@ const Post = ({ data }) => {
     const diffInDays = Math.floor(diffInHours / 24);
 
     if (diffInSeconds < 60) {
-      return 'Vừa xong';
-    } else if(diffInMinutes < 60) {
+      return "Vừa xong";
+    } else if (diffInMinutes < 60) {
       return `${diffInMinutes} phút trước`;
     } else if (diffInHours < 24) {
       return `${diffInHours} giờ trước`;
@@ -236,18 +240,18 @@ const Post = ({ data }) => {
       const year = createdDate.getFullYear();
       return `${day} tháng ${month}, ${year}`;
     }
-  }
+  };
 
   const likePost = async (postId) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     try {
       await axios.post(
-          `${apiUrl}/post/likePost`,
-          { postId },
-          { withCredentials: true }
+        `${apiUrl}/post/likePost`,
+        { postId },
+        { withCredentials: true }
       );
     } catch (error) {
-      console.error('Failed to like post:', error);
+      console.error("Failed to like post:", error);
     }
   };
 
@@ -255,29 +259,41 @@ const Post = ({ data }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     try {
       await axios.post(
-          `${apiUrl}/post/dislikePost`,
-          {postId},
-          {withCredentials: true}
+        `${apiUrl}/post/dislikePost`,
+        { postId },
+        { withCredentials: true }
       );
     } catch (error) {
-      console.error('Failed to dislike post:', error);
+      console.error("Failed to dislike post:", error);
     }
-  }
+  };
+  const navigate = useNavigate();
+  const fetchProfile = async (userId) => {
+    try {
+      console.log(userId);
+      const res = await axios.post(
+        "http://localhost:9090/api/user/getProfileById",
+        { userId },
+        { withCredentials: true }
+      );
+      const userData = res.data;
+      navigate("/profile", { state: { userData } });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        postRef.current && 
+        postRef.current &&
         !postRef.current.contains(event.target) &&
-        menuRef.current && 
+        menuRef.current &&
         !menuRef.current.contains(event.target)
       ) {
         setMenuOpen(false);
       }
-      if (
-        !showEmojiPicker ||
-        !event.target.closest('.emoji-picker')
-      ) {
+      if (!showEmojiPicker || !event.target.closest(".emoji-picker")) {
         setShowEmojiPicker(false);
       }
     };
@@ -287,180 +303,180 @@ const Post = ({ data }) => {
   }, [showEmojiPicker]);
 
   return (
-      <div
-          ref={postRef}
-          className="post-container p-4 bg-background-lighter shadow-md rounded-lg max-w-xl mx-auto mb-6 relative"
+    <div
+      ref={postRef}
+      className="post-container p-4 bg-background-lighter shadow-md rounded-lg max-w-xl mx-auto mb-6 relative"
+    >
+      <button
+        className="absolute top-2 right-2 p-2 text-foreground-lighter hover:text-foreground transition-colors"
+        onClick={handleMenuToggle}
       >
-        <button
-            className="absolute top-2 right-2 p-2 text-foreground-lighter hover:text-foreground transition-colors"
-            onClick={handleMenuToggle}
+        <FaEllipsisV />
+      </button>
+
+      {menuOpen && (
+        <div
+          ref={menuRef}
+          className="absolute top-10 right-2 bg-dropdown text-foreground-lighter shadow-md rounded-lg z-10 overflow-hidden"
         >
-          <FaEllipsisV/>
-        </button>
-
-        {menuOpen && (
-            <div
-                ref={menuRef}
-                className="absolute top-10 right-2 bg-dropdown text-foreground-lighter shadow-md rounded-lg z-10 overflow-hidden"
-            >
-              <ul>
-                <li className="p-2 hover:bg-dropdown-hover cursor-pointer">Interested</li>
-                <li className="p-2 hover:bg-dropdown-hover cursor-pointer">Not Interested</li>
-              </ul>
-            </div>
-        )}
-
-        <div className="flex items-start gap-3">
-          <div className="w-11 h-11">
-            <img
-                src="https://github.com/shadcn.png"
-                alt="User Avatar"
-                className="w-full h-full object-cover rounded-full"
-            />
-          </div>
-          <div className="flex flex-col flex-grow">
-            <div className="text-lg font-semibold text-foreground">
-              {data.userInfo.name}
-            </div>
-            <p className="text-sm text-foreground-lighter">
-              {handleDateTime(data.postInfo.createdAt)}
-            </p>
-            <p className="mt-1 text-lg text-foreground">
-              {data.postInfo.content}
-            </p>
-            {data.postInfo.images.length > 0 && (
-                <div className="mt-3">
-                  {data.postInfo.images.map(image => (
-                      <img
-                          key = {data.postInfo._id}
-                          src={image}
-                          alt="Post Media"
-                          className="w-full h-auto rounded-lg"
-                      />
-                  ))}
-                </div>
-            )}
-          </div>
+          <ul>
+            <li className="p-2 hover:bg-dropdown-hover cursor-pointer">
+              Interested
+            </li>
+            <li className="p-2 hover:bg-dropdown-hover cursor-pointer">
+              Not Interested
+            </li>
+          </ul>
         </div>
+      )}
 
-
-        <div className="absolute inset-0 fireworks-container">
-          {fireworks.map(firework => (
-              <div
-                  key={firework.id}
-                  className="firework"
-                  style={{left: firework.left, top: firework.top}}
-              />
-          ))}
+      <div className="flex items-start gap-3">
+        <div className="w-11 h-11">
+          <img
+            src="https://github.com/shadcn.png"
+            alt="User Avatar"
+            className="w-full h-full object-cover rounded-full"
+            onClick={() => fetchProfile(data.postInfo.userId)}
+            style={{ cursor: "pointer" }}
+          />
         </div>
-
-
-        <div className="absolute inset-0 fireworkss-container">
-          {dislikeFireworks.map(firework => (
-              <div
-                  key={firework.id}
-                  className="fireworkk"
-                  style={{left: firework.left, top: firework.top}}
-              />
-          ))}
-        </div>
-        <div className="mt-3 border-t border-border pt-3">
-          <div className="flex gap-4 text-sm">
-            <button
-                className={`flex items-center gap-2 transition-colors duration-300 transform ${liked ? "text-red-500" : "text-[#B48FD9]"} hover:text-[#BFB26F] relative`}
-                onClick={handleLikeClick}
-            >
-              <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
-              <span>{liked ? "Đã Thích" : "Thích"} ({likeCount})</span>
-            </button>
-
-            <button
-                className={`flex items-center gap-2 transition-colors duration-300 transform ${disliked ? "text-gray-500" : "text-[#B48FD9]"} hover:text-[#BFB26F] relative`}
-                onClick={handleDislikeClick}
-            >
-              <FaHeartBroken
-                  className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
-              <span>{disliked ? "Không Thích" : "Không Thích"} ({dislikeCount})</span>
-            </button>
-
-            <button
-                className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-                onClick={handleCommentClick}
-            >
-              <FaComment className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
-              {commenting}
-              {showComments}
-              <span>Bình Luận</span>
-            </button>
-
-            <button
-                className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-                onClick={handleShareClick}
-            >
-              <FaShare className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
-              <span>Chia Sẻ</span>
-            </button>
-            <button
-                className="save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2"
-                onClick={handleSavePostClick}
-            >
-              <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
-            </button>
-
+        <div className="flex flex-col flex-grow">
+          <div
+            className="text-lg font-semibold text-foreground"
+            onClick={() => fetchProfile(data.postInfo.userId)}
+            style={{ cursor: "pointer" }}
+          >
+            {data.userInfo.name}
           </div>
-
-
-
-
-          {commenting && (
-              <div className="mt-3 flex items-center gap-2">
-                <input
-                    className="flex-grow p-2 bg-input text-foreground focus:outline-none rounded-lg text-sm"
-                    placeholder="Viết bình luận..."
-                    value={comment}
-                    onChange={handleCommentChange}
+          <p className="text-sm text-foreground-lighter">
+            {handleDateTime(data.postInfo.createdAt)}
+          </p>
+          <p className="mt-1 text-lg text-foreground">
+            {data.postInfo.content}
+          </p>
+          {data.postInfo.images.length > 0 && (
+            <div className="mt-3">
+              {data.postInfo.images.map((image) => (
+                <img
+                  key={data.postInfo._id}
+                  src={image}
+                  alt="Post Media"
+                  className="w-full h-auto rounded-lg"
                 />
-                <button
-                    className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                >
-                  <FaSmile/>
-                </button>
-                <button
-                    className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-                    onClick={handleCommentSubmit}
-                >
-                  Đăng
-                </button>
-                {showEmojiPicker && (
-                    <div className="emoji-picker absolute bottom-16 left-4">
-                      <Picker data={Data} onEmojiSelect={handleEmojiClick}/>
-                    </div>
-                )}
-              </div>
+              ))}
+            </div>
           )}
         </div>
-
-        {showComments && (
-            <div className="comments-section">
-
-              <Comment comments={preComment} />
-            </div>
-        )}
-
-        <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal}/>
-
-
-
       </div>
 
+      <div className="absolute inset-0 fireworks-container">
+        {fireworks.map((firework) => (
+          <div
+            key={firework.id}
+            className="firework"
+            style={{ left: firework.left, top: firework.top }}
+          />
+        ))}
+      </div>
 
+      <div className="absolute inset-0 fireworkss-container">
+        {dislikeFireworks.map((firework) => (
+          <div
+            key={firework.id}
+            className="fireworkk"
+            style={{ left: firework.left, top: firework.top }}
+          />
+        ))}
+      </div>
+      <div className="mt-3 border-t border-border pt-3">
+        <div className="flex gap-4 text-sm">
+          <button
+            className={`flex items-center gap-2 transition-colors duration-300 transform ${
+              liked ? "text-red-500" : "text-[#B48FD9]"
+            } hover:text-[#BFB26F] relative`}
+            onClick={handleLikeClick}
+          >
+            <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+            <span>
+              {liked ? "Đã Thích" : "Thích"} {likeCount}
+            </span>
+          </button>
+
+          <button
+            className={`flex items-center gap-2 transition-colors duration-300 transform ${
+              disliked ? "text-gray-500" : "text-[#B48FD9]"
+            } hover:text-[#BFB26F] relative`}
+            onClick={handleDislikeClick}
+          >
+            <FaHeartBroken className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+            <span>
+              {disliked ? "Không Thích" : "Không Thích"} {dislikeCount}
+            </span>
+          </button>
+
+          <button
+            className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+            onClick={handleCommentClick}
+          >
+            <FaComment className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+            {commenting}
+            {showComments}
+            <span>Bình Luận</span>
+          </button>
+
+          <button
+            className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+            onClick={handleShareClick}
+          >
+            <FaShare className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+            <span>Chia Sẻ</span>
+          </button>
+          <button
+            className="save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2"
+            onClick={handleSavePostClick}
+          >
+            <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+          </button>
+        </div>
+
+        {commenting && (
+          <div className="mt-3 flex items-center gap-2">
+            <input
+              className="flex-grow p-2 bg-input text-foreground focus:outline-none rounded-lg text-sm"
+              placeholder="Viết bình luận..."
+              value={comment}
+              onChange={handleCommentChange}
+            />
+            <button
+              className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
+              <FaSmile />
+            </button>
+            <button
+              className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+              onClick={handleCommentSubmit}
+            >
+              Đăng
+            </button>
+            {showEmojiPicker && (
+              <div className="emoji-picker absolute bottom-16 left-4">
+                <Picker data={Data} onEmojiSelect={handleEmojiClick} />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {showComments && (
+        <div className="comments-section">
+          <Comment comments={preComment} />
+        </div>
+      )}
+
+      <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal} />
+    </div>
   );
-
-
-
-
-
 };
 
 export default Post;

@@ -10,7 +10,7 @@ const tabs = [
     { name: 'Work', content: <div>Work Content</div> }
 ];
 
-const ProfileContent = () => {
+const ProfileContent = ({profile}) => {
     const [activeTab, setActiveTab] = useState(tabs[0].name);
 
     const handleTabClick = (tabName) => {
