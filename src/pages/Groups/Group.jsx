@@ -259,69 +259,133 @@ const Groups = () => {
           }
         
           return (
-            <div className="group-details w-1/2">
-              <h2 className="text-2xl font-bold mb-4">{inforgroup.group.name}</h2>
-              <div className="group-profile flex items-center mb-4">
-                <img
-                  src={inforgroup.group.profile.profilePhoto || "default-photo.jpg"}
-                  alt="Group Avatar"
-                  className="w-20 h-20 rounded-full object-cover mr-4"
-                />
-                <div className="group-info">
-                  <p className="mb-1">Bio: {inforgroup.group.profile.bio}</p>
-                  <p className="mb-1">Privacy: {inforgroup.group.privacy}</p>
-                  <p className="mb-1">
-                    Created At: {new Date(inforgroup.group.createdAt).toLocaleString()}
-                  </p>
-                  <p className="mb-1">
-                    Updated At: {new Date(inforgroup.group.updatedAt).toLocaleString()}
-                  </p>
+            <div className="container">
+              <div className="header">
+                  <div className="group-cover-edit">
+                      <img
+                          src={inforgroup.group.profile.coverPhoto || "default-cover.jpg"}
+                          alt="Group Cover"
+                          className="group-cover"
+                      />
+                      <button className="edit-button-cover">Edit</button>
+                      <div className="group-cover-info">
+                          <div className="group-avatar-edit">
+                              <img
+                                  src={inforgroup.group.profile.profilePhoto || "default-photo.jpg"}
+                                  alt="Group Avatar"
+                                  className="group-avatar1"
+                              />
+                          </div>
+                          <div className="group-name-members">
+                              <div className="group-name-buttons">
+                                  <h2>{inforgroup.group.name}</h2>
+                                  <div className="button-container">
+                                      <button className="group-button">Invite</button>
+                                      <button className="group-button">Share</button>
+                                  </div>
+                              </div>
+                              <div className="group-meta">
+                                  <span>{inforgroup.group.privacy === 'private' ? 'Private Group' : 'Public Group'}</span>
+                                  <span> · {inforgroup.group.members.length} {inforgroup.group.members.length > 1 ? 'members' : 'member'}</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div className="content">
+                <div className="tabs">
+                    <button className="tab-button" data-tab="discussion">Discussion</button>
+                    <button className="tab-button" data-tab="member">Member</button>
+                    <button className="tab-button" data-tab="events">Events</button>
+                    <button className="tab-button" data-tab="medias">Medias</button>
+                    <button className="tab-button" data-tab="files">Files</button>
+                    <button className="leave-group-button">Leave Group</button>
                 </div>
-              </div>
-              <div className="group-admin mb-4">
-                <h3 className="text-lg font-semibold mb-2">Admin:</h3>
-                {inforgroup.group.admin &&
-                  inforgroup.group.admin.length > 0 &&
-                  inforgroup.group.admin.map((admin) => (
-                    <div key={admin._id} className="flex items-center mb-2">
-                      <img
-                        src={admin.profile.profilePhoto || "default-photo.jpg"}
-                        alt="Admin Avatar"
-                        className="w-10 h-10 rounded-full object-cover mr-2"
-                      />
-                      <p>{admin.name}</p>
+                
+
+                <div className="tab-content">
+                    <div id="discussion" className="tab-pane">
+                        <p>Discussion content goes here.</p>
                     </div>
-                  ))}
-              </div>
-              <div className="group-members">
-                <h3 className="text-lg font-semibold mb-2">Members:</h3>
-                {inforgroup.group.members &&
-                  inforgroup.group.members.length > 0 &&
-                  inforgroup.group.members.map((member) => (
-                    <div key={member._id} className="flex items-center mb-2">
-                      <img
-                        src={member.profile.profilePhoto || "default-photo.jpg"}
-                        alt="Member Avatar"
-                        className="w-10 h-10 rounded-full object-cover mr-2"
-                      />
-                      <p>{member.name}</p>
+
+                    <div id="member" className="tab-pane">
+                        <div className="search-container">
+                            <input
+                                type="text"
+                                placeholder="Find a member"
+                                className="search-input"
+                            />
+                        </div>
+                        <div className="roles">
+                            <div className="role-section">
+                                <h4>Admins & Moderators</h4>
+                                <div className="role-list">
+                                    {inforgroup.group.admin &&
+                                        inforgroup.group.admin.length > 0 &&
+                                        inforgroup.group.admin.map((admin) => (
+                                            <div key={admin._id} className="role-item">
+                                                <img
+                                                    src={admin.profile.profilePhoto || "default-photo.jpg"}
+                                                    alt="Admin Avatar"
+                                                    className="role-avatar"
+                                                />
+                                                <p>{admin.name}</p>
+                                            </div>
+                                        ))}
+                                </div>
+                            </div>
+                            <div className="role-section">
+                                <h4>Members</h4>
+                                <div className="role-list">
+                                    {inforgroup.group.members &&
+                                        inforgroup.group.members.length > 0 &&
+                                        inforgroup.group.members.map((member) => (
+                                            <div key={member._id} className="role-item">
+                                                <img
+                                                    src={member.profile.profilePhoto || "default-photo.jpg"}
+                                                    alt="Member Avatar"
+                                                    className="role-avatar"
+                                                />
+                                                <p>{member.name}</p>
+                                            </div>
+                                        ))}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  ))}
-              </div>
-              <div className="group-posts mt-8 text-gray-800">
-                <h3 className="text-lg font-semibold mb-2 text-gray-50">Posts:</h3>
-                {inforgroup.data && inforgroup.data.length > 0 ? (
-                  inforgroup.data.map((post) => (
-                    <div key={post.postInfo._id} className="mb-4 p-4 border rounded">
-                      <Post data={post} />
+
+                    <div id="events" className="tab-pane">
+                        <p>Events content goes here.</p>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-gray-50">There are no posts in this group.</p>
-                )}
-              </div>
+
+                    <div id="medias" className="tab-pane">
+                        <p>Medias content goes here.</p>
+                    </div>
+
+                    <div id="files" className="tab-pane">
+                        <p>Files content goes here.</p>
+                    </div>
+                </div>
             </div>
-          );
+
+            
+              <div className="posts">
+                  <div className="group-posts">
+                      <h3>Posts:</h3>
+                      {inforgroup.data && inforgroup.data.length > 0 ? (
+                          inforgroup.data.map((post) => (
+                              <div key={post.postInfo._id} className="post-item">
+                                  <Post data={post} />
+                              </div>
+                          ))
+                      ) : (
+                          <p>There are no posts in this group.</p>
+                      )}
+                  </div>
+              </div>
+          </div>
+      );
         
       default:
         return (
