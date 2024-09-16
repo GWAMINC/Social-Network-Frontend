@@ -11,13 +11,12 @@ import Comment from "../Comment/Comment";
 
 const Post = ({ data }) => {
   const [fireworks, setFireworks] = useState([]);
-  const [dislikeFireworks, setDislikeFireworks] = useState([]); 
+  const [dislikeFireworks, setDislikeFireworks] = useState([]);
   const [liked, setLiked] = useState(data.postInfo.isLiked.includes(data.user));
   const [likeCount , setLikeCount] = useState(data.likeCount);
   const [disliked, setDisliked] = useState(data.postInfo.isDisliked.includes(data.user));
   const [dislikeCount, setDislikeCount] = useState(data.dislikeCount);
   const [menuOpen, setMenuOpen] = useState(false);
-
   const [commenting, setCommenting] = useState(false);
   const [preComment, setPreComment] = useState([]);
   const [showComments, setShowComments] = useState(false);
@@ -28,8 +27,9 @@ const Post = ({ data }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [shareModalOpen, setShareModalOpen] = useState(false); 
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(data.postInfo.isBookmarkedBy.includes(data.user));
   const postRef = useRef(null);
   const menuRef = useRef(null);
   const handleLikeClick = (e) => {
@@ -38,8 +38,8 @@ const Post = ({ data }) => {
     setLiked(!liked);
     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
     if (disliked) {
-        setDisliked(false);
-        setDislikeCount(dislikeCount - 1);
+      setDisliked(false);
+      setDislikeCount(dislikeCount - 1);
     }
     if (postRef.current) {
       const { left, top, width, height } = postRef.current.getBoundingClientRect();
@@ -126,8 +126,6 @@ const Post = ({ data }) => {
       setIsSubmitting(false);
     }
 
-
-
   };
 
 
@@ -153,8 +151,8 @@ const Post = ({ data }) => {
     setDisliked(!disliked);
     setDislikeCount(disliked ? dislikeCount - 1 : dislikeCount + 1);
     if(liked){
-        setLiked(false);
-        setLikeCount(likeCount - 1);
+      setLiked(false);
+      setLikeCount(likeCount - 1);
     }
     if (postRef.current) {
       const { left, top, width, height } = postRef.current.getBoundingClientRect();
@@ -202,15 +200,34 @@ const Post = ({ data }) => {
   };
 
   const handleShareClick = () => {
-    setShareModalOpen(true); 
+    setShareModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setShareModalOpen(false); 
+    setShareModalOpen(false);
   };
 
   const handleSavePostClick = () => {
-    console.log("Post saved!");
+    setIsBookmarked(!isBookmarked);
+    try {
+      const postId = data.postInfo._id;
+      const apiUrl = import.meta.env.VITE_API_URL;
+      if (!isBookmarked) {
+        axios.post(
+            `${apiUrl}/bookmark/addBookmark`,
+            { postId },
+            { withCredentials: true }
+        );
+      } else {
+        axios.post(
+            `${apiUrl}/bookmark/deleteBookmark`,
+            { postId },
+            { withCredentials: true }
+        );
+      }
+    } catch (error) {
+      console.error('Failed to bookmark post:', error);
+    }
   };
 
   const handleDateTime = (createdAt) => {
@@ -267,16 +284,16 @@ const Post = ({ data }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        postRef.current && 
-        !postRef.current.contains(event.target) &&
-        menuRef.current && 
-        !menuRef.current.contains(event.target)
+          postRef.current &&
+          !postRef.current.contains(event.target) &&
+          menuRef.current &&
+          !menuRef.current.contains(event.target)
       ) {
         setMenuOpen(false);
       }
       if (
-        !showEmojiPicker ||
-        !event.target.closest('.emoji-picker')
+          !showEmojiPicker ||
+          !event.target.closest('.emoji-picker')
       ) {
         setShowEmojiPicker(false);
       }
@@ -401,7 +418,7 @@ const Post = ({ data }) => {
               <span>Chia Sẻ</span>
             </button>
             <button
-                className="save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2"
+                className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"}`}
                 onClick={handleSavePostClick}
             >
               <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
