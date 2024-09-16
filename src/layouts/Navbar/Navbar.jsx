@@ -336,7 +336,7 @@ const NotificationPopover = () => {
             <div
               className={`${
                 isSearchFocused && searchQuery ? "" : "hidden"
-              } absolute w-full max-h-[calc(100vh-_5rem)] overflow-y-auto mt-2 rounded-lg shadow-md top-full bg-background-lighter`}
+              } absolute w-full max-h-[calc(100vh-_5rem)] overflow-y-auto mt-2 rounded-lg shadow-md top-full bg-background-lighter divide-y divide-border`}
             >
               {userSearchResults.length === 0 &&
               groupSearchResults.length === 0 &&
@@ -347,11 +347,7 @@ const NotificationPopover = () => {
               ) : (
                 <>
                   {/* User search results */}
-                  <div
-                    className={`${
-                      userSearchResults.length === 0 ? "hidden" : ""
-                    } border-b border-border`}
-                  >
+                  <div hidden={userSearchResults.length === 0}>
                     <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
                       Mọi người
                     </h3>
@@ -379,11 +375,7 @@ const NotificationPopover = () => {
                   </div>
 
                   {/* Group search results */}
-                  <div
-                    className={`${
-                      groupSearchResults.length === 0 ? "hidden" : ""
-                    } border-b border-border`}
-                  >
+                  <div hidden={groupSearchResults.length === 0}>
                     <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
                       Nhóm
                     </h3>
@@ -411,11 +403,7 @@ const NotificationPopover = () => {
                   </div>
 
                   {/* Post search results */}
-                  <div
-                    className={`${
-                      postSearchResults.length === 0 ? "hidden" : ""
-                    }`}
-                  >
+                  <div hidden={postSearchResults.length === 0}>
                     <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
                       Bài viết
                     </h3>
