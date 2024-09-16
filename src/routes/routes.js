@@ -3,6 +3,7 @@ import config from "@/config";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import ForgotPassword from "@/pages/ForgotPassword";
 import AddPost from "@/pages/AddPost";
 import EditProfile from "@/pages/EditProfile";
 
@@ -16,6 +17,7 @@ import Profile from "@/pages/Profile/Profile";
 const publicRoutes = [
     { path: config.routes.login, component: Login },
     { path: config.routes.register, component: Register },
+    { path: config.routes.forgotPassword, component: ForgotPassword },
     { path: `${config.routes.groups}/*`, component: Groups },
 ];
 

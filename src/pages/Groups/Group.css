@@ -6,14 +6,14 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #4a5568;
-    color: #edf2f7;
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
     transition: background-color 0.3s ease, transform 0.2s ease;
     cursor: pointer;
 }
 
 .setting-button:hover {
-    background-color: #2d3748;
+    background-color: hsl(var(--secondary-hover));
     transform: scale(1.1);
 }
 
@@ -21,7 +21,8 @@
 .search-group {
     display: flex;
     align-items: center;
-    background-color: #2d3748;
+    /* background-color: #2d3748; */
+    background-color: hsl(var(--input));
     padding: 8px;
     border-radius: 8px;
     transition: box-shadow 0.3s ease;
@@ -33,15 +34,18 @@
 }
 
 .search-icon {
-    color: #edf2f7;
+    /* color: #edf2f7; */
+    color: hsl(var(--secondary-foreground));
     margin-right: 8px; /* Khoảng cách giữa icon và input */
 }
 
 .search-input {
     flex-grow: 1;
-    background-color: #2d3748;
+    /* background-color: #2d3748; */
+    background-color: hsl(var(--input));
     border: none;
-    color: #edf2f7;
+    /* color: #edf2f7; */
+    color: hsl(var(--foreground));
     padding: 8px;
     font-size: 14px;
     outline: none;
@@ -54,15 +58,18 @@
     justify-content: center;
     padding: 10px;
     margin-top: 16px;
-    background-color: #4a5568;
+    /* background-color: #4a5568; */
+    background-color: hsl(var(--primary));
     border-radius: 8px;
-    color: #edf2f7;
+    /* color: #edf2f7; */
+    color: hsl(var(--primary-foreground));
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .create-group:hover {
-    background-color: #2d3748;
+    /* background-color: #2d3748; */
+    background-color: hsl(var(--primary-hover));
     transform: scale(1.05);
 }
 
@@ -74,7 +81,8 @@
 /* Divider Line */
 .divider {
     margin: 20px 0;
-    border-top: 1px solid #4a5568;
+    /* border-top: 1px solid #4a5568; */
+    border-top: 1px solid hsl(var(--border));
 }
 
 /* Groups Joined Section */
@@ -115,13 +123,15 @@
 
 .see-all-button {
     font-size: 0.875rem;
-    color: #63b3ed;
+    /* color: #63b3ed; */
+    color: hsl(var(--primary));
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .see-all-button:hover {
-    color: #3182ce;
+    /* color: #3182ce; */
+    color: hsl(var(--primary-hover));
 }
 
 .groups-joined-list {
@@ -134,7 +144,7 @@
 .group-item {
     display: flex;
     align-items: center;
-    background-color: #2d3748;
+    background-color: #4b5568;
     padding: 10px;
     margin-bottom: 8px;
     border-radius: 8px;
@@ -147,8 +157,8 @@
 }
 
 .group-avatar {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     margin-right: 12px;
 }
@@ -178,7 +188,8 @@
 .task-item {
     display: flex;
     align-items: center;
-    color: #e2e8f0;
+    /* color: #e2e8f0; */
+    color: hsl(var(--foreground));
     text-decoration: none;
     padding: 10px;
     border-radius: 8px;
@@ -187,16 +198,261 @@
 }
 
 .task-item:hover {
-    background-color: #4a5568;
+    /* background-color: #4a5568; */
+    background-color: hsl(var(--secondary-hover));
     transform: translateX(5px);
 }
 
 .task-icon {
     margin-right: 10px;
-    color: #cbd5e0;
+    /* color: #cbd5e0; */
+    color: hsl(var(--foreground));
     transition: color 0.3s ease;
 }
 
 .task-item:hover .task-icon {
-    color: #edf2f7;
+    /* color: #edf2f7; */
+}
+
+
+.groups-joined-header h3 {
+    color: hsl(var(--foreground));
+}
+
+/* General container styling */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #8e9cb6;
+    border-radius: 15px;
+}
+
+/* Header styling */
+.header {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.group-cover-edit {
+    position: relative;
+}
+
+.group-cover {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.edit-button-cover {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.group-cover-info {
+    display: flex;
+    align-items: center;
+    margin-top: -60px;
+    padding: 0 20px;
+}
+
+.group-avatar-edit {
+    margin-right: 20px;
+}
+
+.group-avatar1 {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.group-name-members {
+    flex: 1;
+}
+
+.group-name-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.group-name-buttons h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+}
+
+.group-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.group-button:hover {
+    background-color: #0056b3;
+}
+
+.group-meta {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+.content {
+    margin-bottom: 20px;
+}
+
+.tab-content {
+    padding: 20px;
+    background-color: #ffffff; 
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.tab-pane {
+    display: none; 
+}
+
+.tab-pane.active {
+    display: block; 
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid #007bff;
+    
+}
+
+.tab-button {
+    padding: 12px 24px; 
+    border: 2px solid transparent; 
+    background-color: #f1f3f5; 
+    color: #fdf6f6; 
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 6px 6px 0 0; 
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s; 
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center; 
+    text-align: center; 
+    line-height: 1.5; 
+}
+
+.tab-button:hover {
+    background-color: #e9ecef; 
+    color: #007bff; 
+}
+
+
+.tab-button.active {
+    background-color: #007bff; 
+    color: #ffffff;
+    border-color: #007bff; 
+}
+
+.tab-content-member {
+    padding: 20px;
+    background-color: #f9f9f9; 
+    border-radius: 8px; 
+}
+
+.leave-group-button {
+    top: 20px;
+    right: 20px;
+    padding: 2px 4px;
+    border: 2px solid #290d0f; 
+    background-color: #290d0f; 
+    color: #fff; 
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 6px; 
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.leave-group-button:hover {
+    background-color: #c82333; 
+    border-color: #c82333;
+}
+
+.search-container {
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* Roles section styling */
+.roles {
+    margin-top: 20px;
+}
+
+.role-section {
+    margin-bottom: 30px;
+}
+
+.role-section h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Role list styling */
+.role-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.role-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.role-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.role-item p {
+    margin: 0;
+    font-size: 14px;
 }

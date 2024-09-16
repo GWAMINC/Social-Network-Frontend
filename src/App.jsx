@@ -4,10 +4,15 @@ import { privateRoutes, publicRoutes } from "@/routes";
 import { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext(null);
+export const ThemeContext = createContext(null);
 
 function App() {
-    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
+    if (localStorage.getItem("theme") === null)
+        localStorage.theme = "dark";
 
+    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
+    const [theme, setTheme] = useState(localStorage.theme);
+    
     const checkAuth = () => {
         setIsAuthenticated(!!localStorage.getItem("token"));
     };
@@ -24,52 +29,54 @@ function App() {
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, checkAuth }}>
-            <Router>
-                <div className="app dark">
-                    <Routes>
-                        {/* Public Routes */}
-                        {publicRoutes.map((route, index) => {
-                            const Page = route.component;
-                            const Layout = route.layout || DefaultLayout;
+        <ThemeContext.Provider value={[theme, setTheme]}>
+            <AuthContext.Provider value={{ isAuthenticated, checkAuth }}>
+                <Router>
+                    <div className={`app ${theme}`}>
+                        <Routes>
+                            {/* Public Routes */}
+                            {publicRoutes.map((route, index) => {
+                                const Page = route.component;
+                                const Layout = route.layout || DefaultLayout;
 
-                            return (
-                                <Route
-                                    key={index}
-                                    path={route.path}
-                                    element={
-                                        <Layout>
-                                            <Page />
-                                        </Layout>
-                                    }
-                                />
-                            );
-                        })}
-
-                        {/* Private Routes */}
-                        {privateRoutes.map((route, index) => {
-                            const Page = route.component;
-                            const Layout = route.layout || DefaultLayout;
-
-                            return (
-                                <Route
-                                    key={index}
-                                    path={route.path}
-                                    element={
-                                        <ProtectedRoute>
+                                return (
+                                    <Route
+                                        key={index}
+                                        path={route.path}
+                                        element={
                                             <Layout>
                                                 <Page />
                                             </Layout>
-                                        </ProtectedRoute>
-                                    }
-                                />
-                            );
-                        })}
-                        <Route path="*" element={<Navigate to="/" replace />} />
-                    </Routes>
-                </div>
-            </Router>
-        </AuthContext.Provider>
+                                        }
+                                    />
+                                );
+                            })}
+
+                            {/* Private Routes */}
+                            {privateRoutes.map((route, index) => {
+                                const Page = route.component;
+                                const Layout = route.layout || DefaultLayout;
+
+                                return (
+                                    <Route
+                                        key={index}
+                                        path={route.path}
+                                        element={
+                                            <ProtectedRoute>
+                                                <Layout>
+                                                    <Page />
+                                                </Layout>
+                                            </ProtectedRoute>
+                                        }
+                                    />
+                                );
+                            })}
+                            <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                    </div>
+                </Router>
+            </AuthContext.Provider>
+        </ThemeContext.Provider>
     );
 }
 
