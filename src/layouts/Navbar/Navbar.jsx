@@ -18,7 +18,6 @@ import {
   Bell,
   Moon,
   Sun,
-  Monitor,
   House,
   Users,
   SquarePlus,
@@ -61,12 +60,83 @@ const NotificationPopover = () => {
   const [notifications, setNotifications] = useState(null);
   const [chats, setChats] = useState([]);
   const [userChatDatas, setUserChatDatas] = useState({});
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [activeNav, setActiveNav] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [userSearchResults, setUserSearchResults] = useState([]);
+  const [groupSearchResults, setGroupSearchResults] = useState([]);
+  const [postSearchResults, setPostSearchResults] = useState([]);
 
   const [theme, setTheme] = useContext(ThemeContext);
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const userId = localStorage.getItem("token");
-  const [activeNav, setActiveNav] = useState(0);
+
+  // Effect for search bar
+  useEffect(() => {
+    let ignore = false;
+
+    async function searchUsers(query) {
+      try {
+        const res = await axios.get(
+          `http://localhost:9090/api/user/getUsersByName/${query}`,
+          { withCredentials: true }
+        );
+        setUserSearchResults(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    async function searchGroups(query) {
+      try {
+        const res = await axios.get(
+          `http://localhost:9090/api/group/getGroupsByName/${query}`,
+          { withCredentials: true }
+        );
+        setGroupSearchResults(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    async function searchPosts(query) {
+      try {
+        const res = await axios.get(
+          `http://localhost:9090/api/post/getPostsByContent/${query}`,
+          { withCredentials: true }
+        );
+        const posts = res.data;
+
+        const result = await Promise.all(
+          posts.map(async (post) => {
+            const res = await axios.post(
+              `http://localhost:9090/api/user/getProfileById`,
+              { userId: post.userId },
+              { withCredentials: true }
+            );
+
+            return { ...post, user: res.data.user };
+          })
+        );
+
+        setPostSearchResults(result);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (!ignore && searchQuery) {
+      searchUsers(searchQuery);
+      searchGroups(searchQuery);
+      searchPosts(searchQuery);
+    }
+
+    return () => {
+      ignore = true;
+    };
+  }, [searchQuery]);
+
   const toggleNotifications = () => {
     setIsOpen(!isOpen);
     const fetchnoti = async () => {
@@ -222,19 +292,31 @@ const NotificationPopover = () => {
   return (
     <div className="fixed top-0 left-0 z-10 w-full shadow-lg bg-background-lighter">
       <div className="flex items-center justify-between h-16 max-w-full px-6 mx-auto">
-        {/* Logo and Search Bar */}
+        {/* Logo and search bar */}
         <div className="flex items-center flex-1">
-          <h1 className="mr-5 text-2xl font-bold text-foreground">
+          {/* Logo */}
+          <h1
+            className={`${
+              isSearchFocused ? "hidden" : ""
+            } mr-5 text-2xl font-bold text-foreground`}
+          >
             <Link to="/" className="no-underline text-inherit">
               Kit<span className="text-foreground-lighter">Kat</span>
             </Link>
           </h1>
-          <div className="relative w-72">
+
+          {/* Search bar */}
+          <div className="relative w-full mr-10">
             <input
               type="text"
               placeholder="Search for friends, groups, pages"
               className="w-full px-4 py-2 pl-10 rounded-lg text-foreground bg-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
             />
+
             <svg
               className="absolute w-5 h-5 transform -translate-y-1/2 text-foreground-lighter top-1/2 left-3"
               fill="none"
@@ -249,6 +331,139 @@ const NotificationPopover = () => {
                 d="M21 21l-4.35-4.35M14.35 14.35A6.5 6.5 0 0015 10a6.5 6.5 0 10-6.5 6.5 6.5 0 004.85-1.15z"
               />
             </svg>
+
+            {/* Search results */}
+            <div
+              className={`${
+                isSearchFocused && searchQuery ? "" : "hidden"
+              } absolute w-full max-h-[calc(100vh-_5rem)] overflow-y-auto mt-2 rounded-lg shadow-md top-full bg-background-lighter`}
+            >
+              {userSearchResults.length === 0 &&
+              groupSearchResults.length === 0 &&
+              postSearchResults.length === 0 ? (
+                <div className="p-4 font-bold select-none text-foreground-lighter">
+                  Không có kết quả
+                </div>
+              ) : (
+                <>
+                  {/* User search results */}
+                  <div
+                    className={`${
+                      userSearchResults.length === 0 ? "hidden" : ""
+                    } border-b border-border`}
+                  >
+                    <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
+                      Mọi người
+                    </h3>
+
+                    <ul>
+                      {userSearchResults.map((user) => {
+                        return (
+                          <li
+                            key={user._id}
+                            className="flex items-center px-4 py-2 cursor-pointer hover:bg-dropdown-hover"
+                          >
+                            <div className="w-10 mr-2">
+                              <img
+                                src={user.profile.profilePhoto}
+                                className="rounded-full"
+                              />
+                            </div>
+                            <p className="select-none text-foreground">
+                              {user.name}
+                            </p>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+
+                  {/* Group search results */}
+                  <div
+                    className={`${
+                      groupSearchResults.length === 0 ? "hidden" : ""
+                    } border-b border-border`}
+                  >
+                    <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
+                      Nhóm
+                    </h3>
+
+                    <ul>
+                      {groupSearchResults.map((group) => {
+                        return (
+                          <li
+                            key={group._id}
+                            className="flex items-center px-4 py-2 cursor-pointer hover:bg-dropdown-hover"
+                          >
+                            <div className="w-10 mr-2">
+                              <img
+                                src={group.profile.profilePhoto}
+                                className="rounded-full"
+                              />
+                            </div>
+                            <p className="select-none text-foreground">
+                              {group.name}
+                            </p>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+
+                  {/* Post search results */}
+                  <div
+                    className={`${
+                      postSearchResults.length === 0 ? "hidden" : ""
+                    }`}
+                  >
+                    <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
+                      Bài viết
+                    </h3>
+
+                    <ul>
+                      {postSearchResults.map((post) => {
+                        return (
+                          <li
+                            key={post._id}
+                            className="flex items-center justify-between px-4 py-2 text-sm cursor-pointer hover:bg-dropdown-hover"
+                          >
+                            <div>
+                              <p className="text-foreground line-clamp-3">
+                                {post.content}
+                              </p>
+
+                              <div className="flex items-center mt-1">
+                                <div className="w-5 mr-1">
+                                  <img
+                                    src={post.user.profile.profilePhoto}
+                                    className="rounded-full"
+                                  />
+                                </div>
+
+                                <span className="text-xs text-foreground-lighter">
+                                  {post.user.name}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div
+                              className={`${
+                                post.images.length === 0 ? "hidden" : ""
+                              } w-28`}
+                            >
+                              <img
+                                className="rounded-md"
+                                src={post.images[0]}
+                              />
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -294,7 +509,7 @@ const NotificationPopover = () => {
                   className="hover:bg-dropdown-hover"
                 >
                   <div className="flex items-center gap-2 px-3 py-2 cursor-pointer">
-                    {btn.icon()}
+                    <btn.icon />
                     <span>{btn.name}</span>
                   </div>
                 </Link>
