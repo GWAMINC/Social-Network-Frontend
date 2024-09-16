@@ -27,7 +27,6 @@ const Post = ({ data }) => {
   );
   const [dislikeCount, setDislikeCount] = useState(data.dislikeCount);
   const [menuOpen, setMenuOpen] = useState(false);
-
   const [commenting, setCommenting] = useState(false);
   const [preComment, setPreComment] = useState([]);
   const [showComments, setShowComments] = useState(false);
@@ -40,6 +39,7 @@ const Post = ({ data }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(data.postInfo.isBookmarkedBy.includes(data.user));
   const postRef = useRef(null);
   const menuRef = useRef(null);
   const handleLikeClick = (e) => {
@@ -155,6 +155,7 @@ const Post = ({ data }) => {
     dislikePost(data.postInfo._id);
     setDisliked(!disliked);
     setDislikeCount(disliked ? dislikeCount - 1 : dislikeCount + 1);
+
     if (liked) {
       setLiked(false);
       setLikeCount(likeCount - 1);
@@ -214,7 +215,26 @@ const Post = ({ data }) => {
   };
 
   const handleSavePostClick = () => {
-    console.log("Post saved!");
+    setIsBookmarked(!isBookmarked);
+    try {
+      const postId = data.postInfo._id;
+      const apiUrl = import.meta.env.VITE_API_URL;
+      if (!isBookmarked) {
+        axios.post(
+            `${apiUrl}/bookmark/addBookmark`,
+            { postId },
+            { withCredentials: true }
+        );
+      } else {
+        axios.post(
+            `${apiUrl}/bookmark/deleteBookmark`,
+            { postId },
+            { withCredentials: true }
+        );
+      }
+    } catch (error) {
+      console.error('Failed to bookmark post:', error);
+    }
   };
 
   const handleDateTime = (createdAt) => {
@@ -286,6 +306,7 @@ const Post = ({ data }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
+
         postRef.current &&
         !postRef.current.contains(event.target) &&
         menuRef.current &&
@@ -432,8 +453,8 @@ const Post = ({ data }) => {
             <span>Chia Sẻ</span>
           </button>
           <button
-            className="save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2"
-            onClick={handleSavePostClick}
+            className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"}`}
+                onClick={handleSavePostClick}
           >
             <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
           </button>
