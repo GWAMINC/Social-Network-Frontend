@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "@/layouts/Navbar";
+import { Button } from "@/components/ui/button.jsx";
 import {
   FaCog,
   FaSearch,
@@ -48,7 +49,7 @@ const Groups = () => {
       case "feed":
         return (
           <div>
-            <h1 className="text-4xl font-bold mb-4">Your Feed</h1>
+            <h1 className="mb-4 text-4xl font-bold">Your Feed</h1>
             {/* Nội dung bài post sẽ được hiển thị ở đây */}
             <div className="post-list">
               {/* Ví dụ nội dung bài post */}
@@ -169,17 +170,18 @@ const Groups = () => {
                         </div>
                       </div>
                     );                   
+
       case "create-group":
         return (
-          <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h1 className="text-4xl font-bold mb-6 text-center text-white">
+          <div className="flex flex-col items-center justify-center w-full max-w-md p-6 mx-auto rounded-lg shadow-lg bg-background-lighter">
+            <h1 className="mb-6 text-4xl font-bold text-center text-foreground">
               Create Group
             </h1>
             <form onSubmit={createGroup} className="space-y-4">
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-lg font-semibold text-white"
+                  className="block text-lg font-semibold text-foreground"
                 >
                   Group Name:
                 </label>
@@ -189,13 +191,13 @@ const Groups = () => {
                   required
                   value={group.name}
                   onChange={(e) => setGroup({ ...group, name: e.target.value })}
-                  className="mt-1 block w-full p-3  border border-gray-600 rounded-md bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full p-3 mt-1 border rounded-md text-foreground bg-input border-border focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
               <div>
                 <label
                   htmlFor="bio"
-                  className="block text-lg font-semibold text-white"
+                  className="block text-lg font-semibold text-foreground"
                 >
                   Bio:
                 </label>
@@ -204,13 +206,13 @@ const Groups = () => {
                   id="bio"
                   value={group.bio}
                   onChange={(e) => setGroup({ ...group, bio: e.target.value })}
-                  className="mt-1 block w-full p-3  border border-gray-600 rounded-md bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full p-3 mt-1 border rounded-md text-foreground bg-input border-border focus:outline-none focus:ring-2 focus:ring-primary"
                 ></textarea>
               </div>
               <div>
                 <label
                   htmlFor="profilePhoto"
-                  className="block text-lg font-semibold text-white"
+                  className="block text-lg font-semibold text-foreground"
                 >
                   Profile Photo:
                 </label>
@@ -220,13 +222,13 @@ const Groups = () => {
                   onChange={(e) =>
                     setGroup({ ...group, profilePhoto: e.target.files })
                   }
-                  className="mt-1 block w-full text-sm text-gray-300 file:border file:border-gray-600 file:bg-gray-900 file:text-white file:py-2 file:px-4 file:rounded-md hover:file:bg-gray-800"
+                  className="block w-full mt-1 text-sm text-foreground-lighter file:border file:border-border file:bg-secondary file:text-secondary-foreground file:py-2 file:px-4 file:rounded-md hover:file:bg-secondary-hover"
                 />
               </div>
               <div>
                 <label
                   htmlFor="privacy"
-                  className="block text-lg font-semibold text-white"
+                  className="block text-lg font-semibold text-foreground"
                 >
                   Privacy:
                 </label>
@@ -236,23 +238,25 @@ const Groups = () => {
                   onChange={(e) =>
                     setGroup({ ...group, privacy: e.target.value })
                   }
-                  className="mt-1 block w-full p-3 border border-gray-600 rounded-md bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="block w-full p-3 mt-1 text-foreground bg-dropdown border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="public">Public</option>
                   <option value="private">Private</option>
                 </select>
               </div>
-              <button
+
+              <Button
+                className="w-full py-3 rounded-md focus:outline-none"
                 type="submit"
-                className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 Create Group
-              </button>
+              </Button>
             </form>
             {error && <p className="mt-4 text-red-400">{error}</p>}
             {success && <p className="mt-4 text-green-400">{success}</p>}
           </div>
         );
+
         case "group":
           if (!inforgroup) {
             return <div>Loading...</div>; // or some loading indicator
@@ -390,7 +394,7 @@ const Groups = () => {
       default:
         return (
           <div>
-            <h1 className="text-4xl font-bold mb-4">Groups</h1>
+            <h1 className="mb-4 text-4xl font-bold">Groups</h1>
           </div>
         );
     }
@@ -483,22 +487,22 @@ const Groups = () => {
   }, [groupId]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="flex-shrink-0">
         <Navbar />
       </header>
-      <main className="flex-grow flex pt-16">
+      <main className="flex flex-grow pt-16">
         {/* Sidebar for tasks */}
-        <aside className="w-1/4 bg-gray-800 p-4 flex flex-col space-y-2">
-          <div className="flex justify-between items-center">
-            <h2 className="text-4xl font-bold mb-4">Groups</h2>
-            <button className="setting-button mb-4 self-end">
+        <aside className="flex flex-col w-1/4 p-4 space-y-2 bg-background-lighter">
+          <div className="flex items-center justify-between">
+            <h2 className="mb-4 text-4xl font-bold">Groups</h2>
+            <button className="self-end mb-4 setting-button">
               <FaCog className="text-xl" />
             </button>
           </div>
 
           {/* Search Group */}
-          <div className="search-group mb-4">
+          <div className="mb-4 search-group">
             <FaSearch className="search-icon" />
             <input
               type="text"
@@ -511,7 +515,7 @@ const Groups = () => {
 
           {/* Task List */}
           <div>
-            <h2 className="text-xl font-bold mb-4">Tasks</h2>
+            <h2 className="mb-4 text-xl font-bold">Tasks</h2>
             <ul className="task-list">
               <li>
                 <a
@@ -571,7 +575,7 @@ const Groups = () => {
                     className="group-item"
                     onClick={() => {
                       setGroupId(group._id);
-                      saveGroupIdToLocalStorage(group._id)
+                      saveGroupIdToLocalStorage(group._id);
                       setTimeout(() => {
                         handleNavigation("group");
                       }, 200);
@@ -596,7 +600,7 @@ const Groups = () => {
         </aside>
 
         {/* Main content */}
-        <section className="w-full flex justify-center p-6">
+        <section className="flex justify-center w-full p-6">
           {getMainContent()}
         </section>
       </main>

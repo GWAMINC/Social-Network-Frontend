@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button.jsx";
 import { PopoverContent } from "@radix-ui/react-popover";
+import { ThemeContext } from "@/App";
 import {
   Avatar,
   AvatarImage,
@@ -17,7 +18,6 @@ import {
   Bell,
   Moon,
   Sun,
-  Monitor,
   House,
   Users,
   SquarePlus,
@@ -58,12 +58,85 @@ const handleViewProfile = () => {
 const NotificationPopover = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState(null);
-
   const [chats, setChats] = useState([]);
   const [userChatDatas, setUserChatDatas] = useState({});
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const userId = localStorage.getItem('token');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [activeNav, setActiveNav] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [userSearchResults, setUserSearchResults] = useState([]);
+  const [groupSearchResults, setGroupSearchResults] = useState([]);
+  const [postSearchResults, setPostSearchResults] = useState([]);
+
+  const [theme, setTheme] = useContext(ThemeContext);
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const userId = localStorage.getItem("token");
+
+  // Effect for search bar
+  useEffect(() => {
+    let ignore = false;
+
+    async function searchUsers(query) {
+      try {
+        const res = await axios.get(
+          `http://localhost:9090/api/user/getUsersByName/${query}`,
+          { withCredentials: true }
+        );
+        setUserSearchResults(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    async function searchGroups(query) {
+      try {
+        const res = await axios.get(
+          `http://localhost:9090/api/group/getGroupsByName/${query}`,
+          { withCredentials: true }
+        );
+        setGroupSearchResults(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    async function searchPosts(query) {
+      try {
+        const res = await axios.get(
+          `http://localhost:9090/api/post/getPostsByContent/${query}`,
+          { withCredentials: true }
+        );
+        const posts = res.data;
+
+        const result = await Promise.all(
+          posts.map(async (post) => {
+            const res = await axios.post(
+              `http://localhost:9090/api/user/getProfileById`,
+              { userId: post.userId },
+              { withCredentials: true }
+            );
+
+            return { ...post, user: res.data.user };
+          })
+        );
+
+        setPostSearchResults(result);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (!ignore && searchQuery) {
+      searchUsers(searchQuery);
+      searchGroups(searchQuery);
+      searchPosts(searchQuery);
+    }
+
+    return () => {
+      ignore = true;
+    };
+  }, [searchQuery]);
+
   const toggleNotifications = () => {
     setIsOpen(!isOpen);
     const fetchnoti = async () => {
@@ -98,7 +171,7 @@ const NotificationPopover = () => {
     const setUserDatas = async () => {
       const userDatas = {};
       for (const chat of chats) {
-        const otherUserId = chat.participants.find(id => id !== userId);
+        const otherUserId = chat.participants.find((id) => id !== userId);
         const response = await fetchUser(otherUserId);
         userDatas[otherUserId] = response;
       }
@@ -107,14 +180,16 @@ const NotificationPopover = () => {
     const fetchUser = async (userId) => {
       const apiUrl = import.meta.env.VITE_API_URL;
       try {
-        const response = await axios.get(`${apiUrl}/user/getUser/${userId}`, { withCredentials: true });
+        const response = await axios.get(`${apiUrl}/user/getUser/${userId}`, {
+          withCredentials: true,
+        });
         return response.data;
       } catch (error) {
-        console.error('Failed to fetch user:', error);
+        console.error("Failed to fetch user:", error);
       }
     };
     setUserDatas();
-  }
+  };
 
   const handleDateTime = (createdAt) => {
     const now = new Date();
@@ -170,10 +245,25 @@ const NotificationPopover = () => {
 
   const navButtons = [
     { name: "Home", icon: House, linkTo: "/" },
-    { name: "Friends", icon: Users, linkTo: "/friends" },
-    { name: "Create a post", icon: SquarePlus, linkTo: "/create-post" },
-    { name: "Video", icon: Video, linkTo: "/video" },
-    { name: "Groups", icon: Group, linkTo: "/groups" },
+    {
+      name: "Friends",
+      icon: Users,
+      linkTo: "/friends",
+      dis: "translate-x-[100%]",
+    },
+    {
+      name: "Create a post",
+      icon: SquarePlus,
+      linkTo: "/create-post",
+      dis: "translate-x-[200%]",
+    },
+    { name: "Video", icon: Video, linkTo: "/video", dis: "translate-x-[300%]" },
+    {
+      name: "Groups",
+      icon: Group,
+      linkTo: "/groups",
+      dis: "translate-x-[400%]",
+    },
   ];
 
   const menuButtons = [
@@ -202,19 +292,31 @@ const NotificationPopover = () => {
   return (
     <div className="fixed top-0 left-0 z-10 w-full shadow-lg bg-background-lighter">
       <div className="flex items-center justify-between h-16 max-w-full px-6 mx-auto">
-        {/* Logo and Search Bar */}
+        {/* Logo and search bar */}
         <div className="flex items-center flex-1">
-          <h1 className="mr-5 text-2xl font-bold text-foreground">
+          {/* Logo */}
+          <h1
+            className={`${
+              isSearchFocused ? "hidden" : ""
+            } mr-5 text-2xl font-bold text-foreground`}
+          >
             <Link to="/" className="no-underline text-inherit">
               Kit<span className="text-foreground-lighter">Kat</span>
             </Link>
           </h1>
-          <div className="relative w-72">
+
+          {/* Search bar */}
+          <div className="relative w-full mr-10">
             <input
               type="text"
               placeholder="Search for friends, groups, pages"
-              className="w-full px-4 py-2 pl-10 rounded-lg text-foreground-lighter bg-input"
+              className="w-full px-4 py-2 pl-10 rounded-lg text-foreground bg-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
             />
+
             <svg
               className="absolute w-5 h-5 transform -translate-y-1/2 text-foreground-lighter top-1/2 left-3"
               fill="none"
@@ -229,6 +331,127 @@ const NotificationPopover = () => {
                 d="M21 21l-4.35-4.35M14.35 14.35A6.5 6.5 0 0015 10a6.5 6.5 0 10-6.5 6.5 6.5 0 004.85-1.15z"
               />
             </svg>
+
+            {/* Search results */}
+            <div
+              className={`${
+                isSearchFocused && searchQuery ? "" : "hidden"
+              } absolute w-full max-h-[calc(100vh-_5rem)] overflow-y-auto mt-2 rounded-lg shadow-md top-full bg-background-lighter divide-y divide-border`}
+            >
+              {userSearchResults.length === 0 &&
+              groupSearchResults.length === 0 &&
+              postSearchResults.length === 0 ? (
+                <div className="p-4 font-bold select-none text-foreground-lighter">
+                  Không có kết quả
+                </div>
+              ) : (
+                <>
+                  {/* User search results */}
+                  <div hidden={userSearchResults.length === 0}>
+                    <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
+                      Mọi người
+                    </h3>
+
+                    <ul>
+                      {userSearchResults.map((user) => {
+                        return (
+                          <li
+                            key={user._id}
+                            className="flex items-center px-4 py-2 cursor-pointer hover:bg-dropdown-hover"
+                          >
+                            <div className="w-10 mr-2">
+                              <img
+                                src={user.profile.profilePhoto}
+                                className="rounded-full"
+                              />
+                            </div>
+                            <p className="select-none text-foreground">
+                              {user.name}
+                            </p>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+
+                  {/* Group search results */}
+                  <div hidden={groupSearchResults.length === 0}>
+                    <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
+                      Nhóm
+                    </h3>
+
+                    <ul>
+                      {groupSearchResults.map((group) => {
+                        return (
+                          <li
+                            key={group._id}
+                            className="flex items-center px-4 py-2 cursor-pointer hover:bg-dropdown-hover"
+                          >
+                            <div className="w-10 mr-2">
+                              <img
+                                src={group.profile.profilePhoto}
+                                className="rounded-full"
+                              />
+                            </div>
+                            <p className="select-none text-foreground">
+                              {group.name}
+                            </p>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+
+                  {/* Post search results */}
+                  <div hidden={postSearchResults.length === 0}>
+                    <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
+                      Bài viết
+                    </h3>
+
+                    <ul>
+                      {postSearchResults.map((post) => {
+                        return (
+                          <li
+                            key={post._id}
+                            className="flex items-center justify-between px-4 py-2 text-sm cursor-pointer hover:bg-dropdown-hover"
+                          >
+                            <div>
+                              <p className="text-foreground line-clamp-3">
+                                {post.content}
+                              </p>
+
+                              <div className="flex items-center mt-1">
+                                <div className="w-5 mr-1">
+                                  <img
+                                    src={post.user.profile.profilePhoto}
+                                    className="rounded-full"
+                                  />
+                                </div>
+
+                                <span className="text-xs text-foreground-lighter">
+                                  {post.user.name}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div
+                              className={`${
+                                post.images.length === 0 ? "hidden" : ""
+                              } w-28`}
+                            >
+                              <img
+                                className="rounded-md"
+                                src={post.images[0]}
+                              />
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -241,8 +464,10 @@ const NotificationPopover = () => {
                   setActiveNav(index);
                 }}
                 className={`${
-                  activeNav === index ? "text-primary" : "text-foreground"
-                } transition-colors gap-2 px-8 py-3 rounded-md opacity-100 hover:bg-primary-hover`}
+                  activeNav === index
+                    ? "text-primary"
+                    : "text-secondary-foreground"
+                } transition-colors gap-2 px-8 py-3 rounded-md opacity-100 hover:bg-secondary-hover`}
               >
                 <btn.icon />
               </button>
@@ -250,9 +475,7 @@ const NotificationPopover = () => {
           ))}
 
           <div
-            className={`absolute left-${
-              activeNav === 0 ? "0" : `[${(activeNav / 5) * 100}%]`
-            } transition-all bottom-0 w-1/5 h-1 rounded-t-full bg-primary`}
+            className={`${navButtons[activeNav].dis} absolute bottom-0 left-0 w-1/5 h-1 transition-all rounded-t-full bg-primary`}
           ></div>
         </div>
 
@@ -274,7 +497,7 @@ const NotificationPopover = () => {
                   className="hover:bg-dropdown-hover"
                 >
                   <div className="flex items-center gap-2 px-3 py-2 cursor-pointer">
-                    {btn.icon()}
+                    <btn.icon />
                     <span>{btn.name}</span>
                   </div>
                 </Link>
@@ -283,42 +506,17 @@ const NotificationPopover = () => {
           </Popover>
 
           {/* Theme */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="secondary"
-                className="flex items-center gap-2 ml-4"
-              >
-                <Moon />
-              </Button>
-            </PopoverTrigger>
-
-            <PopoverContent className="flex flex-col gap-2 overflow-hidden rounded-lg shadow-md focus:outline-none text-foreground bg-background-lighter shadow-black w-36">
-              <div
-                className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
-                onClick={() => {}}
-              >
-                <Sun />
-                <span>Light</span>
-              </div>
-
-              <div
-                className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
-                onClick={() => {}}
-              >
-                <Moon />
-                <span>Dark</span>
-              </div>
-
-              <div
-                className="flex items-center gap-2 px-4 py-2 cursor-pointer select-none text-foreground hover:bg-dropdown-hover"
-                onClick={() => {}}
-              >
-                <Monitor />
-                <span>System</span>
-              </div>
-            </PopoverContent>
-          </Popover>
+          <Button
+            variant="secondary"
+            className="flex items-center gap-2 ml-4"
+            onClick={() => {
+              const nextTheme = theme === "dark" ? "light" : "dark";
+              localStorage.theme = nextTheme;
+              setTheme(nextTheme);
+            }}
+          >
+            {theme === "dark" ? <Moon /> : <Sun />}
+          </Button>
 
           {/* Messages */}
           <Popover>
@@ -429,31 +627,37 @@ const NotificationPopover = () => {
                 style={{ height: "calc(100% - 150px)" }}
               >
                 {chats.map((chat, index) => (
-                  <div
-                    key={index}
-                  >
-                    <Link to={`/chats/${chat._id}`} className="messenger-item flex items-center gap-3 px-3 py-2 hover:bg-gray-100 cursor-pointer">
-                    <Avatar className="w-10 h-10">
-                      <AvatarImage src={userChatDatas[chat.participants[1]]?.avatar || ""} alt={userChatDatas[chat.participants[1]]?.name || ""} />
-                      <AvatarFallback>Avatar</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-foreground">
-                        {userChatDatas[chat.participants[1]]?.name || "User Name"}
-                      </span>
-                      <span className="text-sm truncate text-foreground-lighter">
-                        Message content
-                      </span>
-                    </div>
+                  <div key={index}>
+                    <Link
+                      to={`/chats/${chat._id}`}
+                      className="flex items-center gap-3 px-3 py-2 cursor-pointer messenger-item hover:bg-gray-100"
+                    >
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage
+                          src={
+                            userChatDatas[chat.participants[1]]?.avatar || ""
+                          }
+                          alt={userChatDatas[chat.participants[1]]?.name || ""}
+                        />
+                        <AvatarFallback>Avatar</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-foreground">
+                          {userChatDatas[chat.participants[1]]?.name ||
+                            "User Name"}
+                        </span>
+                        <span className="text-sm truncate text-foreground-lighter">
+                          Message content
+                        </span>
+                      </div>
                     </Link>
                   </div>
                 ))}
               </div>
               <div className="border-t messenger-footer border-border bg-background">
-                <Link to = {"/chats"}>
+                <Link to={"/chats"}>
                   <Button>See All in Messenger</Button>
                 </Link>
-
               </div>
             </PopoverContent>
           </Popover>
