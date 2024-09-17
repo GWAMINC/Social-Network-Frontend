@@ -18,12 +18,24 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const [isButtonVisible, setIsButtonVisible] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [currentUser, setCurrentUser] = useState();
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   // Fetch posts on page load and post created
   useEffect(() => {
+    const fetchCurrentUser = async () => {
+        try {
+            const response = await axios.get(
+            `${apiUrl}/user/profile`,
+            { withCredentials: true }
+            );
+            await setCurrentUser(response.data.user);
+        } catch (error) {
+            console.error("Failed to fetch user:", error);
+        }
+    }
     const getPosts = async () => {
-      const apiUrl = import.meta.env.VITE_API_URL;
       try {
         const response = await axios.get(
             `${apiUrl}/post/getAllPost`,
@@ -34,6 +46,7 @@ const Home = () => {
         console.error('Failed to fetch posts:', error);
       }
     };
+    fetchCurrentUser();
     getPosts();
     window.addEventListener("postCreated", getPosts);
     return () => window.removeEventListener("postCreated", getPosts);
@@ -61,7 +74,7 @@ const Home = () => {
 
   return (
     <div className="w-full flex flex-col">
-      <Navbar />
+      <Navbar currentUser = {currentUser}/>
       <div className="flex-grow pt-3 px-4">
         <header className="text-center py-16">
           <h1 className="text-4xl font-bold text-foreground">
@@ -97,7 +110,7 @@ const Home = () => {
           </div>
 
           {/* Create a Post */}
-          <AddPost />
+          <AddPost currentUser = {currentUser}/>
 
           <div className="space-y-8 md:space-y-0 md:flex md:gap-8">
             {/* Active Friends */}

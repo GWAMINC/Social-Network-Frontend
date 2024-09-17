@@ -40,6 +40,9 @@ const Post = ({ data }) => {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(data.postInfo.isBookmarkedBy.includes(data.user));
+  const avatarUrl = data.userInfo.profile.profilePhoto;
+  const userName = data.userInfo.name;
+  const firstLetter = userName?.charAt(0).toUpperCase();
   const postRef = useRef(null);
   const menuRef = useRef(null);
   const handleLikeClick = (e) => {
@@ -353,13 +356,19 @@ const Post = ({ data }) => {
 
       <div className="flex items-start gap-3">
         <div className="w-11 h-11">
-          <img
-            src="https://github.com/shadcn.png"
-            alt="User Avatar"
-            className="w-full h-full object-cover rounded-full"
-            onClick={() => fetchProfile(data.postInfo.userId)}
-            style={{ cursor: "pointer" }}
-          />
+          {avatarUrl ? (
+              <img
+                  src={avatarUrl}
+                  alt="Avatar"
+                  className="w-full h-full object-cover rounded-full"
+                  onClick={() => fetchProfile(data.postInfo.userId)}
+                  style={{ cursor: "pointer" }}
+              />
+          ) : (
+              <div className="text-2xl text-gray-600 bg-gray-200 w-full h-full flex items-center justify-center rounded-full">
+                {firstLetter}
+              </div>
+          )}
         </div>
         <div className="flex flex-col flex-grow">
           <div
