@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
 import Navbar from '@/layouts/Navbar'
+import { Outlet } from 'react-router-dom';
 
-function DefaultLayout({ children }) {
+function DefaultLayout() {
     return (
         <div className='wrapper'>
             <Navbar />
-            <div className='body bg-background'>{children}</div>
+            <div className='body bg-background'>
+                <Outlet />
+            </div>
         </div>
     );
 }

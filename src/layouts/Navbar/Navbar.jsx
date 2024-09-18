@@ -217,7 +217,11 @@ const NotificationPopover = () => {
   };
 
   // Ẩn navbar khi ở trang đăng nhập hoặc trang đăng ký
-  if (location.pathname === "/login" || location.pathname === "/register"|| location.pathname === "/forgot-password") {
+  if (
+    location.pathname === "/login" ||
+    location.pathname === "/register" ||
+    location.pathname === "/forgot-password"
+  ) {
     return null;
   }
 
@@ -265,6 +269,17 @@ const NotificationPopover = () => {
       dis: "translate-x-[400%]",
     },
   ];
+
+  const pathIsInNavbar = (() => {
+    let flag = false;
+    for (const btn of navButtons) {
+      if (btn.linkTo === location.pathname) {
+        flag = true;
+        break;
+      }
+    }
+    return flag;
+  })();
 
   const menuButtons = [
     { name: "Tạo", icon: FiPlusSquare, linkTo: "/create" },
@@ -460,23 +475,23 @@ const NotificationPopover = () => {
           {navButtons.map((btn, index) => (
             <Link key={btn.name} to={btn.linkTo}>
               <button
-                onClick={() => {
-                  setActiveNav(index);
-                }}
+                onClick={() => setActiveNav(index)}
                 className={`${
-                  activeNav === index
+                  activeNav === index && pathIsInNavbar
                     ? "text-primary"
                     : "text-secondary-foreground"
-                } transition-colors gap-2 px-8 py-3 rounded-md opacity-100 hover:bg-secondary-hover`}
+                } transition-colors gap-2 px-9 py-3 rounded-md opacity-100 hover:bg-secondary-hover`}
               >
                 <btn.icon />
               </button>
             </Link>
           ))}
 
-          <div
-            className={`${navButtons[activeNav].dis} absolute bottom-0 left-0 w-1/5 h-1 transition-all rounded-t-full bg-primary`}
-          ></div>
+          {pathIsInNavbar && (
+            <div
+              className={`${navButtons[activeNav].dis} absolute bottom-0 left-0 w-1/5 h-1 transition-transform rounded-t-full bg-primary`}
+            ></div>
+          )}
         </div>
 
         {/* Avatar and Menu */}

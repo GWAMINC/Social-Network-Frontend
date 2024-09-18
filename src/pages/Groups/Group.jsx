@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Navbar from "@/layouts/Navbar";
 import { Button } from "@/components/ui/button.jsx";
 import {
   FaCog,
@@ -488,9 +487,6 @@ const Groups = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <header className="flex-shrink-0">
-        <Navbar />
-      </header>
       <main className="flex flex-grow pt-16">
         {/* Sidebar for tasks */}
         <aside className="flex flex-col w-1/4 p-4 space-y-2 bg-background-lighter">

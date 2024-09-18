@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "@/layouts/Navbar";
 import { Button } from "@/components/ui/button";
 import {
   AiOutlineCamera,
@@ -61,7 +60,6 @@ const Home = () => {
 
   return (
     <div className="w-full flex flex-col">
-      <Navbar />
       <div className="flex-grow pt-3 px-4">
         <header className="text-center py-16">
           <h1 className="text-4xl font-bold text-foreground">

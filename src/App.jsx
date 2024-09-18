@@ -34,43 +34,39 @@ function App() {
                 <Router>
                     <div className={`app ${theme}`}>
                         <Routes>
-                            {/* Public Routes */}
-                            {publicRoutes.map((route, index) => {
-                                const Page = route.component;
-                                const Layout = route.layout || DefaultLayout;
+                            <Route path="/" element={<DefaultLayout />}>
+                                {/* Public Routes */}
+                                {publicRoutes.map((route, index) => {
+                                    const Page = route.component;
 
-                                return (
-                                    <Route
-                                        key={index}
-                                        path={route.path}
-                                        element={
-                                            <Layout>
-                                                <Page />
-                                            </Layout>
-                                        }
-                                    />
-                                );
-                            })}
+                                    return (
+                                        <Route
+                                            key={index}
+                                            path={route.path}
+                                            element={ <Page /> }
+                                        />
+                                    );
+                                })}
 
-                            {/* Private Routes */}
-                            {privateRoutes.map((route, index) => {
-                                const Page = route.component;
-                                const Layout = route.layout || DefaultLayout;
+                                {/* Private Routes */}
+                                {privateRoutes.map((route, index) => {
+                                    const Page = route.component;
 
-                                return (
-                                    <Route
-                                        key={index}
-                                        path={route.path}
-                                        element={
-                                            <ProtectedRoute>
-                                                <Layout>
+                                    return (
+                                        <Route
+                                            key={index}
+                                            path={route.path}
+                                            element={
+                                                <ProtectedRoute>
                                                     <Page />
-                                                </Layout>
-                                            </ProtectedRoute>
-                                        }
-                                    />
-                                );
-                            })}
+                                                </ProtectedRoute>
+                                            }
+                                        />
+                                    );
+                                })}
+
+                            </Route>
+
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </div>
