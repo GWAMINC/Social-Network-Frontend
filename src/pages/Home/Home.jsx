@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "@/layouts/Navbar";
 import { Button } from "@/components/ui/button";
 import {
   AiOutlineCamera,
