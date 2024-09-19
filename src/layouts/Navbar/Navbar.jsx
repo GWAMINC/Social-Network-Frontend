@@ -37,10 +37,25 @@ import axios from "axios";
 import "./Messenger.css";
 import "./Notification.css";
 
-const Navbar = ({currentUser}) => {
+const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const [currentUser, setCurrentUser] = useState();
+  const apiUrl = import.meta.env.VITE_API_URL;
+  useEffect(() => {
+      const fetchCurrentUser = async () => {
+        try {
+          const response = await axios.get(
+              `${apiUrl}/user/profile`,
+              { withCredentials: true }
+          );
+          await setCurrentUser(response.data.user);
+        } catch (error) {
+          console.error("Failed to fetch user:", error);
+        }
+      }
+      fetchCurrentUser();
+      }, []);
   return (
     <nav>
       <NotificationPopover currentUser = {currentUser} />

@@ -73,7 +73,6 @@ const Home = () => {
 
   return (
     <div className="w-full flex flex-col">
-      <Navbar currentUser = {currentUser}/>
       <div className="flex-grow pt-3 px-4">
         <header className="text-center py-16">
           <h1 className="text-4xl font-bold text-foreground">
