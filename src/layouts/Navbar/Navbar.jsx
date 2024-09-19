@@ -37,13 +37,13 @@ import axios from "axios";
 import "./Messenger.css";
 import "./Notification.css";
 
-const Navbar = () => {
+const Navbar = ({currentUser}) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   return (
     <nav>
-      <NotificationPopover />
+      <NotificationPopover currentUser = {currentUser} />
     </nav>
   );
 };
@@ -55,7 +55,9 @@ const handleViewProfile = () => {
   }
 };
 
-const NotificationPopover = () => {
+const NotificationPopover = ({currentUser}) => {
+  const location = useLocation();
+  const userData = location.state?.userData;
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState(null);
   const [chats, setChats] = useState([]);
@@ -68,9 +70,34 @@ const NotificationPopover = () => {
   const [postSearchResults, setPostSearchResults] = useState([]);
 
   const [theme, setTheme] = useContext(ThemeContext);
-
+  const [profile, setProfile] = useState();
+  const avatarUrl = profile?.profile?.profilePhoto;
+  const firstLetter = profile?.name?.charAt(0).toUpperCase();
   const apiUrl = import.meta.env.VITE_API_URL;
   const userId = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const response = await axios.get(`${apiUrl}/user/profile`, {
+          withCredentials: true,
+        });
+        if (userData) {
+          setProfile(userData.user);
+        } else {
+          setProfile(response.data.user);
+        }
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    };
+    if (userData) {
+      setProfile(userData.user);
+    } else {
+      fetchProfile();
+    }
+  }, [userData]);
 
   // Effect for search bar
   useEffect(() => {
@@ -746,11 +773,17 @@ const NotificationPopover = () => {
             <PopoverTrigger asChild>
               <div className="flex items-center gap-2 ml-4 cursor-pointer">
                 <Avatar className="w-10 h-10">
-                  <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="@shadcn"
-                  />
-                  <AvatarFallback>TT</AvatarFallback>
+                  {avatarUrl ? (
+                      <img
+                          src={avatarUrl}
+                          alt="Avatar"
+                          className="w-full h-full object-cover rounded-full"
+                      />
+                  ) : (
+                      <div className="text-2xl text-gray-600 bg-gray-200 w-full h-full flex items-center justify-center rounded-full">
+                        {firstLetter}
+                      </div>
+                  )}
                 </Avatar>
               </div>
             </PopoverTrigger>
