@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Listbox } from "@headlessui/react";
 import { AiOutlineCamera, AiOutlineSmile, AiOutlineVideoCamera } from "react-icons/ai";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { Button } from "@/components/ui/button";
+import {useLocation} from "react-router-dom";
 
-const AddPost = () => {
+const AddPost = ({currentUser}) => {
   const [content, setContent] = useState("");
   const [access, setAccess] = useState("public");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,6 +18,9 @@ const AddPost = () => {
   const [video, setVideo] = useState(null);
   const pickerRef = useRef(null); 
   const accessOptions = ["public", "private"];
+  const avatarUrl = currentUser?.profile?.profilePhoto;
+  const firstLetter = currentUser?.name?.charAt(0).toUpperCase();
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (pickerRef.current && !pickerRef.current.contains(event.target)) {
@@ -90,11 +94,17 @@ const AddPost = () => {
 
         <div className="flex items-start gap-4 mt-4">
           <div className="w-12 h-12">
-            <img
-              src="https://github.com/shadcn.png"
-              alt="User Avatar"
-              className="object-cover w-full h-full rounded-full"
-            />
+            {avatarUrl ? (
+                <img
+                    src={avatarUrl}
+                    alt="Avatar"
+                    className="w-full h-full object-cover rounded-full"
+                />
+            ) : (
+                <div className="text-2xl text-gray-600 bg-gray-200 w-full h-full flex items-center justify-center rounded-full">
+                  {firstLetter}
+                </div>
+            )}
           </div>
           <div className="flex-1">
             <label htmlFor="content" className="block text-sm font-medium text-foreground-lighter">Content</label>

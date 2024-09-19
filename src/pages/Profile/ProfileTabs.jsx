@@ -15,8 +15,9 @@ const ProfileTabs = ({ profile }) => {
   const [activeTab, setActiveTab] = useState("Posts");
   const [relationshipStatus, setRelationshipStatus] = useState("Single");
   const [posts, setPosts] = useState();
+  const [bookmarkedPosts, setBookmarkedPosts] = useState([]);
   const userId = profile?._id;
-  const tabs = ["Posts", "About", "Friends", "Follow", "Photos", "More"];
+  const tabs = ["Posts", "About", "Friends", "Follow", "Photos","Bookmark", "More"];
   useEffect(() => {
     const fetchPost = async () => {
       const res = await axios.post(
@@ -26,7 +27,20 @@ const ProfileTabs = ({ profile }) => {
       );
       setPosts(res.data.reverse());
     };
+    const fetchBookmarkedPosts = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:9090/api/bookmark/getBookmarks",
+          { withCredentials: true }
+        );
+        setBookmarkedPosts(res.data);
+      } catch (error) {
+        console.error("Error fetching bookmarked posts:", error);
+      }
+    };
+
     fetchPost();
+    fetchBookmarkedPosts();
   }, [userId]);
   return (
     <div>
@@ -181,7 +195,14 @@ const ProfileTabs = ({ profile }) => {
                 )}
           </div>
         )}
-
+        {activeTab === "Bookmark" && (
+          <div>
+            {bookmarkedPosts &&
+              bookmarkedPosts.map((post) => (
+                <Post data={post} key={post._id} />
+              ))}
+          </div>
+        )}
         {activeTab === "More" && <div>More content here.</div>}
       </div>
     </div>
