@@ -12,12 +12,17 @@ import Data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import "./Post.css";
 import ShareModal from "../ShareModal/ShareModal";
+import UpdateModal from "./UpdateModal";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Comment from "../Comment/Comment";
 import { useNavigate } from "react-router-dom";
 
 const Post = ({ data }) => {
+  const ownerId = data.postInfo.userId;
+  const currentUserId = localStorage.getItem("token");
+  const [isVisible, setIsVisible] = useState(true);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [fireworks, setFireworks] = useState([]);
   const [dislikeFireworks, setDislikeFireworks] = useState([]);
   const [liked, setLiked] = useState(data.postInfo.isLiked.includes(data.user));
@@ -25,6 +30,8 @@ const Post = ({ data }) => {
   const [disliked, setDisliked] = useState(
     data.postInfo.isDisliked.includes(data.user)
   );
+  const [content, setContent] = useState(data.postInfo.content);
+  const [access, setAccess] = useState(data.postInfo.access);
   const [dislikeCount, setDislikeCount] = useState(data.dislikeCount);
   const [menuOpen, setMenuOpen] = useState(false);
   const [commenting, setCommenting] = useState(false);
@@ -45,6 +52,7 @@ const Post = ({ data }) => {
   const firstLetter = userName?.charAt(0).toUpperCase();
   const postRef = useRef(null);
   const menuRef = useRef(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
   const handleLikeClick = (e) => {
     e.preventDefault();
     likePost(data.postInfo._id);
@@ -240,6 +248,49 @@ const Post = ({ data }) => {
     }
   };
 
+  const handleNotInterestedClick = () => {
+    try {
+      axios.post(
+        `${apiUrl}/post/notInterested`,
+        { postId: data.postInfo._id },
+        { withCredentials: true }
+      );
+      setIsVisible(false);
+    } catch (error) {
+      console.error("Failed to mark post as not interested:", error);
+    }
+  }
+
+  const handleUpdateClick = () => {
+    setIsUpdateModalOpen(true);
+  }
+
+  const handleUpdateModalClose = () => {
+    setIsUpdateModalOpen(false);
+  }
+
+  const handleUpdate = async (updatedData) => {
+    setContent(updatedData.content);
+    setAccess(updatedData.access);
+  }
+
+  const handleDeleteClick = () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+    if (confirmDelete) {
+      try {
+        axios.post(
+            `${apiUrl}/post/deletePost`,
+            {postId: data.postInfo._id},
+            {withCredentials: true}
+        );
+        console.log("Deleted post");
+        setIsVisible(false);
+      } catch (error) {
+        console.error("Failed to delete post:", error);
+      }
+    }
+  }
+
   const handleDateTime = (createdAt) => {
     const now = new Date();
     const createdDate = new Date(createdAt);
@@ -325,7 +376,9 @@ const Post = ({ data }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showEmojiPicker]);
-
+  if (!isVisible) {
+    return null;
+  }
   return (
     <div
       ref={postRef}
@@ -343,14 +396,25 @@ const Post = ({ data }) => {
           ref={menuRef}
           className="absolute top-10 right-2 bg-dropdown text-foreground-lighter shadow-md rounded-lg z-10 overflow-hidden"
         >
+          {ownerId === currentUserId ? (
           <ul>
-            <li className="p-2 hover:bg-dropdown-hover cursor-pointer">
-              Interested
+            <li className="p-2 hover:bg-dropdown-hover cursor-pointer" onClick={handleNotInterestedClick}>
+              Not Interested
             </li>
-            <li className="p-2 hover:bg-dropdown-hover cursor-pointer">
+            <li className="p-2 hover:bg-dropdown-hover cursor-pointer" onClick={handleUpdateClick}>
+              Update
+            </li>
+            <li className="p-2 hover:bg-dropdown-hover cursor-pointer" onClick={handleDeleteClick}>
+              Delete
+            </li>
+          </ul>
+          ) : (
+          <ul>
+            <li className="p-2 hover:bg-dropdown-hover cursor-pointer" onClick={handleNotInterestedClick}>
               Not Interested
             </li>
           </ul>
+          )}
         </div>
       )}
 
@@ -382,7 +446,7 @@ const Post = ({ data }) => {
             {handleDateTime(data.postInfo.createdAt)}
           </p>
           <p className="mt-1 text-lg text-foreground">
-            {data.postInfo.content}
+            {content}
           </p>
           {data.postInfo.images.length > 0 && (
             <div className="mt-3">
@@ -503,7 +567,7 @@ const Post = ({ data }) => {
           <Comment comments={preComment} />
         </div>
       )}
-
+      <UpdateModal data={data.postInfo} isOpen={isUpdateModalOpen} onClose={handleUpdateModalClose} onUpdate={handleUpdate} />
       <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal} />
     </div>
   );

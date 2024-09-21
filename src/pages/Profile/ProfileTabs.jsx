@@ -17,7 +17,11 @@ const ProfileTabs = ({ profile }) => {
   const [posts, setPosts] = useState();
   const [bookmarkedPosts, setBookmarkedPosts] = useState([]);
   const userId = profile?._id;
-  const tabs = ["Posts", "About", "Friends", "Follow", "Photos","Bookmark", "More"];
+  const currentUserId = localStorage.getItem("token");
+  const tabs = ["Posts", "About", "Friends", "Follow", "Photos", "More"];
+  if (currentUserId === userId) {
+    tabs.splice(tabs.indexOf("More"), 0, "Bookmark");
+  }
   useEffect(() => {
     const fetchPost = async () => {
       const res = await axios.post(
