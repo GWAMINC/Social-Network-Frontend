@@ -8,7 +8,6 @@
 
     & .tab-content {
         color: hsl(var(--foreground));
-        background-color: hsl(var(--background-lighter));
         margin-top: 20px;
     }
 }
@@ -35,4 +34,5 @@
     border-bottom: 2px solid hsl(var(--primary));
     color: hsl(var(--primary));
     font-weight: bold;
+    background-color: aqua;
 }

@@ -116,12 +116,12 @@ const ProfileTabs = ({ profile }) => {
                       className="w-full h-full rounded-full object-cover"
                     />
                   ) : (
-                    <AvatarFallback className="w-full h-full flex items-center justify-center text-white bg-slate-500 rounded-full text-lg font-bold">
+                    <AvatarFallback className="w-full h-full flex items-center justify-center text-foreground bg-slate-500 rounded-full text-lg font-bold">
                       {friend.name.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   )}
                 </Avatar>
-                <div className="ml-4 text-lg font-medium text-gray-800">
+                <div className="ml-4 text-lg font-medium text-foreground">
                   {friend.name}
                 </div>
               </div>
@@ -146,7 +146,7 @@ const ProfileTabs = ({ profile }) => {
                           className="rounded-full w-8 h-8"
                         />
                       ) : (
-                        <AvatarFallback className="rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-600">
+                        <AvatarFallback className="rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-foreground">
                           {follower.name.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       )}
@@ -172,7 +172,7 @@ const ProfileTabs = ({ profile }) => {
                           className="rounded-full w-8 h-8"
                         />
                       ) : (
-                        <AvatarFallback className="rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-gray-600">
+                        <AvatarFallback className="rounded-full w-8 h-8 flex items-center justify-center bg-gray-200 text-foreground">
                           {follower.name.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       )}

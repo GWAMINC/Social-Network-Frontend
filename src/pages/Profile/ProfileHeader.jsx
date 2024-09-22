@@ -184,18 +184,18 @@ const ProfileHeader = ({ user, currentUserId }) => {
       )}
 
       <div className="text-center mt-2">
-        <h1 className="text-xl font-bold">{userName}</h1>
-        <p className="mt-1 text-gray-600">{profile?.profile?.bio}</p>
+        <h1 className="text-xl text-foreground font-bold">{userName}</h1>
+        <p className="mt-1 text-foreground">{profile?.profile?.bio}</p>
       </div>
 
       <div className="flex justify-center space-x-2 mt-2">
-        <button className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm">
+        <button className="px-3 py-2 bg-blue-500 text-foreground rounded-md hover:bg-blue-600 text-sm">
           Add Friend
         </button>
-        <button className="px-3 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 text-sm">
+        <button className="px-3 py-2 bg-green-500 text-foreground rounded-md hover:bg-green-600 text-sm">
           Message
         </button>
-        <button className="px-3 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 text-sm">
+        <button className="px-3 py-2 bg-gray-500 text-foreground rounded-md hover:bg-gray-600 text-sm">
           More
         </button>
       </div>
