@@ -10,7 +10,7 @@ const tabs = [
   { name: "Work" },
 ];
 
-const ProfileContent = ({ user }) => {
+const ProfileContent = ({ user, currentUserId }) => {
   const [profile, setProfile] = useState({
     personalWebsite: [],
     relationship: [],
@@ -117,7 +117,9 @@ const ProfileContent = ({ user }) => {
   const saveProfileChanges = async () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
-      await axios.post(`${apiUrl}/user/profile/update`, profile, { withCredentials: true });
+      await axios.post(`${apiUrl}/user/profile/update`, profile, {
+        withCredentials: true,
+      });
       setHasChanges(false);
     } catch (error) {
       console.error("Error saving profile:", error);
@@ -127,7 +129,7 @@ const ProfileContent = ({ user }) => {
   return (
     <div className="profile-content p-4">
       <div className="mb-4">
-        {hasChanges && (
+        {currentUserId === user?._id && hasChanges && (
           <button
             onClick={saveProfileChanges}
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -140,7 +142,9 @@ const ProfileContent = ({ user }) => {
         {tabs.map((tab) => (
           <Button
             key={tab.name}
-            className={`tab-button w-1/5 text-foreground ${activeTab === tab.name ? "active" : ""}`}
+            className={`tab-button w-1/5 text-foreground ${
+              activeTab === tab.name ? "active" : ""
+            }`}
             variant="secondary"
             onClick={() => handleTabClick(tab.name)}
           >
@@ -153,7 +157,10 @@ const ProfileContent = ({ user }) => {
           <div>
             <p className="font-semibold">Relationship:</p>
             {relationships.map((item, index) => (
-              <div key={index} className="border-b border-gray-300 flex justify-between items-center py-2">
+              <div
+                key={index}
+                className="border-b border-gray-300 flex justify-between items-center py-2"
+              >
                 {editIndex === index ? (
                   <>
                     <input
@@ -163,31 +170,63 @@ const ProfileContent = ({ user }) => {
                       className="bg-transparent border-0 outline-none text-inherit flex-1 p-2"
                     />
                     <div>
-                      <button onClick={() => saveEditRelationship(index)} className="text-blue-500 mx-1">Lưu</button>
-                      <button onClick={() => setEditIndex(null)} className="text-red-500 mx-1">Hủy</button>
+                      <button
+                        onClick={() => saveEditRelationship(index)}
+                        className="text-blue-500 mx-1"
+                      >
+                        Lưu
+                      </button>
+                      <button
+                        onClick={() => setEditIndex(null)}
+                        className="text-red-500 mx-1"
+                      >
+                        Hủy
+                      </button>
                     </div>
                   </>
                 ) : (
                   <>
                     <p className="flex-1">{item}</p>
                     <div>
-                      <button onClick={() => startEditRelationship(index)} className="text-blue-500 mx-1">Sửa</button>
-                      <button onClick={() => removeRelationship(index)} className="text-red-500 mx-1">Xóa</button>
+                      {currentUserId === user?._id && (
+                        <button
+                          onClick={() => startEditRelationship(index)}
+                          className="text-blue-500 mx-1"
+                        >
+                          Sửa
+                        </button>
+                      )}
+                      {currentUserId === user?._id && (
+                        <button
+                          onClick={() => removeRelationship(index)}
+                          className="text-red-500 mx-1"
+                        >
+                          Xóa
+                        </button>
+                      )}
                     </div>
                   </>
                 )}
               </div>
             ))}
-            <button onClick={() => setShowRelationshipForm(true)} className="text-blue-500 mt-2">
-              Thêm liên kết
-            </button>
+            {currentUserId === user?._id && (
+              <button
+                onClick={() => setShowRelationshipForm(true)}
+                className="text-blue-500 mt-2"
+              >
+                Thêm liên kết
+              </button>
+            )}
           </div>
         )}
         {activeTab === "Social links" && (
           <div>
             <p className="font-semibold">Social Links:</p>
             {links.map((link, index) => (
-              <div key={index} className="border-b border-gray-300 flex justify-between items-center py-2">
+              <div
+                key={index}
+                className="border-b border-gray-300 flex justify-between items-center py-2"
+              >
                 {editIndex === index ? (
                   <>
                     <input
@@ -197,56 +236,94 @@ const ProfileContent = ({ user }) => {
                       className="bg-transparent border-0 outline-none text-inherit flex-1 p-2"
                     />
                     <div>
-                      <button onClick={() => saveEditLink(index)} className="text-blue-500 mx-1">Lưu</button>
-                      <button onClick={() => setEditIndex(null)} className="text-red-500 mx-1">Hủy</button>
+                      <button
+                        onClick={() => saveEditLink(index)}
+                        className="text-blue-500 mx-1"
+                      >
+                        Lưu
+                      </button>
+                      <button
+                        onClick={() => setEditIndex(null)}
+                        className="text-red-500 mx-1"
+                      >
+                        Hủy
+                      </button>
                     </div>
                   </>
                 ) : (
                   <>
                     <p className="flex-1">{link}</p>
                     <div>
-                      <button onClick={() => startEditLink(index)} className="text-blue-500 mx-1">Sửa</button>
-                      <button onClick={() => removeLink(index)} className="text-red-500 mx-1">Xóa</button>
+                      {currentUserId === user?._id && (
+                        <button
+                          onClick={() => startEditLink(index)}
+                          className="text-blue-500 mx-1"
+                        >
+                          Sửa
+                        </button>
+                      )}
+                      {currentUserId === user?._id && (
+                        <button
+                          onClick={() => removeLink(index)}
+                          className="text-red-500 mx-1"
+                        >
+                          Xóa
+                        </button>
+                      )}
                     </div>
                   </>
                 )}
               </div>
             ))}
-            <button onClick={() => setShowLinkForm(true)} className="text-blue-500 mt-2">
-              Thêm liên kết
-            </button>
+            {currentUserId === user?._id && (
+              <button
+                onClick={() => setShowLinkForm(true)}
+                className="text-blue-500 mt-2"
+              >
+                Thêm liên kết
+              </button>
+            )}
           </div>
         )}
         {activeTab === "Home town" && (
           <div>
             <p className="font-semibold">City:</p>
-            <input
-              type="text"
-              value={profile.city}
-              onChange={(e) => {
-                setProfile((prev) => ({ ...prev, city: e.target.value }));
-                setHasChanges(true);
-              }}
-              className="bg-transparent border-0 outline-none text-inherit p-2 mb-2"
-              placeholder="Nhập thành phố"
-            />
+            {currentUserId === user?._id ? (
+              <input
+                type="text"
+                value={profile.city}
+                onChange={(e) => {
+                  setProfile((prev) => ({ ...prev, city: e.target.value }));
+                  setHasChanges(true);
+                }}
+                className="bg-transparent border-0 outline-none text-inherit p-2 mb-2"
+                placeholder="Nhập thành phố"
+              />
+            ) : (
+              <p>{profile.city}</p>
+            )}
+
             <p className="font-semibold">Address:</p>
-            <input
-              type="text"
-              value={profile.address}
-              onChange={(e) => {
-                setProfile((prev) => ({ ...prev, address: e.target.value }));
-                setHasChanges(true);
-              }}
-              className="bg-transparent border-0 outline-none text-inherit p-2"
-              placeholder="Nhập địa chỉ"
-            />
+            {currentUserId === user?._id ? (
+              <input
+                type="text"
+                value={profile.address}
+                onChange={(e) => {
+                  setProfile((prev) => ({ ...prev, address: e.target.value }));
+                  setHasChanges(true);
+                }}
+                className="bg-transparent border-0 outline-none text-inherit p-2"
+                placeholder="Nhập địa chỉ"
+              />
+            ) : (
+              <p>{profile.address}</p>
+            )}
           </div>
         )}
         {activeTab === "Education" && (
           <div>
             <p className="font-semibold">School/University:</p>
-            <input
+            {currentUserId === user?._id ?<input
               type="text"
               value={profile.education}
               onChange={(e) => {
@@ -258,13 +335,14 @@ const ProfileContent = ({ user }) => {
               }}
               className="bg-transparent border-0 outline-none text-inherit p-2 mb-2"
               placeholder="Nhập trường/đại học"
-            />
+            />:<p>{profile.education}</p>}
+            
           </div>
         )}
         {activeTab === "Work" && (
           <div>
             <p className="font-semibold">Job:</p>
-            <input
+            {currentUserId === user?._id ?<input
               type="text"
               value={profile.job}
               onChange={(e) => {
@@ -273,7 +351,8 @@ const ProfileContent = ({ user }) => {
               }}
               className="bg-transparent border-0 outline-none text-inherit p-2 mb-2"
               placeholder="Nhập công việc"
-            />
+            />:<p>{profile.job}</p>}
+            
           </div>
         )}
       </div>
@@ -285,7 +364,9 @@ const ProfileContent = ({ user }) => {
           className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50"
         >
           <div className="p-4 bg-white shadow-md rounded-lg max-w-sm mx-auto">
-            <h3 className="text-lg secondary text-black font-semibold mb-3">Thêm liên kết</h3>
+            <h3 className="text-lg secondary text-black font-semibold mb-3">
+              Thêm liên kết
+            </h3>
             <input
               type="text"
               value={newLink}
@@ -316,7 +397,9 @@ const ProfileContent = ({ user }) => {
           className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50"
         >
           <div className="p-4 bg-white shadow-md rounded-lg max-w-sm mx-auto">
-            <h3 className="text-lg text-black  font-semibold mb-3">Thêm mối quan hệ</h3>
+            <h3 className="text-lg text-black  font-semibold mb-3">
+              Thêm mối quan hệ
+            </h3>
             <input
               type="text"
               value={newRelationship}

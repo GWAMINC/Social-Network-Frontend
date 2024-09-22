@@ -34,7 +34,7 @@ const Profile = () => {
   return (
     <div className="profile">
       <ProfileHeader user={profile} currentUserId={currentUserId} />
-      <ProfileContent activeTab={activeTab} user={profile} />
+      <ProfileContent activeTab={activeTab} user={profile} currentUserId={currentUserId}/>
       <ProfileTabs
         activeTab={activeTab}
         setActiveTab={setActiveTab}
