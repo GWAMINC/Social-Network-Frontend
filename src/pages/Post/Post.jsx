@@ -28,9 +28,10 @@ const Post = ({ data }) => {
   const [dislikeCount, setDislikeCount] = useState(data.dislikeCount);
   const [menuOpen, setMenuOpen] = useState(false);
   const [commenting, setCommenting] = useState(false);
-  const [preComment, setPreComment] = useState([]);
+
   const [showComments, setShowComments] = useState(false);
-  const [comment, setComment] = useState([]);
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState([]);
   const [showPicker, setShowPicker] = useState(false);
   const pickerRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,6 +43,7 @@ const Post = ({ data }) => {
   const [isBookmarked, setIsBookmarked] = useState(data.postInfo.isBookmarkedBy.includes(data.user));
   const avatarUrl = data.userInfo.profile.profilePhoto;
   const userName = data.userInfo.name;
+  const cmtRef = useRef(null);
   const firstLetter = userName?.charAt(0).toUpperCase();
   const postRef = useRef(null);
   const menuRef = useRef(null);
@@ -72,22 +74,6 @@ const Post = ({ data }) => {
         setFireworks((prev) => prev.filter((fw) => fw.id !== newFirework.id));
       }, 1000);
     }
-  };
-
-  const AddComment = () => {
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (pickerRef.current && !pickerRef.current.contains(event.target)) {
-          setShowPicker(false);
-        }
-      };
-
-      document.addEventListener("mousedown", handleClickOutside);
-
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
   };
 
   const handleCommentChange = (e) => {
@@ -147,7 +133,7 @@ const Post = ({ data }) => {
         { withCredentials: true }
       );
       console.log(response.data.comments);
-      await setPreComment(response.data.comments.reverse());
+      await setComments(response.data.comments.reverse());
       setShowComments(true);
     } catch (err) {
       console.error("Failed to fetch comments", err);
@@ -190,18 +176,21 @@ const Post = ({ data }) => {
   };
 
   const handleCommentClick = () => {
-    setCommenting(true);
+
     setIsLoading(true);
 
-    if (!showComments) {
+    if (!showComments||!commenting) {
+      setCommenting(true)
       fetchComments(); // Fetch comments when button is clicked
       setIsLoading(false);
     } else {
+      setCommenting(false)
       setShowComments(false); // Hide comments if already shown
     }
     if (isLoading) {
-      return <div>Loading...</div>;
+      return <div> Loading... </div>;
     }
+
   };
 
   const handleEmojiClick = (emoji) => {
@@ -338,6 +327,7 @@ const Post = ({ data }) => {
         <FaEllipsisV />
       </button>
 
+
       {menuOpen && (
         <div
           ref={menuRef}
@@ -421,69 +411,73 @@ const Post = ({ data }) => {
       <div className="mt-3 border-t border-border pt-3">
         <div className="flex gap-4 text-sm">
           <button
-            className={`flex items-center gap-2 transition-colors duration-300 transform ${
-              liked ? "text-red-500" : "text-[#B48FD9]"
-            } hover:text-[#BFB26F] relative`}
-            onClick={handleLikeClick}
+              className={`flex items-center gap-2 transition-colors duration-300 transform ${
+                  liked ? "text-red-500" : "text-[#B48FD9]"
+              } hover:text-[#BFB26F] relative`}
+              onClick={handleLikeClick}
           >
-            <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+            <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
             <span>
               {liked ? "Đã Thích" : "Thích"} {likeCount}
             </span>
           </button>
 
           <button
-            className={`flex items-center gap-2 transition-colors duration-300 transform ${
-              disliked ? "text-gray-500" : "text-[#B48FD9]"
-            } hover:text-[#BFB26F] relative`}
-            onClick={handleDislikeClick}
+              className={`flex items-center gap-2 transition-colors duration-300 transform ${
+                  disliked ? "text-gray-500" : "text-[#B48FD9]"
+              } hover:text-[#BFB26F] relative`}
+              onClick={handleDislikeClick}
           >
-            <FaHeartBroken className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+            <FaHeartBroken
+                className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
             <span>
               {disliked ? "Không Thích" : "Không Thích"} {dislikeCount}
             </span>
           </button>
 
           <button
-            className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-            onClick={handleCommentClick}
+              className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+              onClick={handleCommentClick}
           >
-            <FaComment className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+            <FaComment className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
             {commenting}
             {showComments}
             <span>Bình Luận</span>
           </button>
 
           <button
-            className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-            onClick={handleShareClick}
+              className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+              onClick={handleShareClick}
           >
-            <FaShare className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+            <FaShare className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
             <span>Chia Sẻ</span>
           </button>
           <button
-            className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"}`}
-                onClick={handleSavePostClick}
+              className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"}`}
+              onClick={handleSavePostClick}
           >
-            <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
+            <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
           </button>
         </div>
+        <div ref={cmtRef}
+             className="comments-section relative">
 
-        {commenting && (
-          <div className="mt-3 flex items-center gap-2">
-            <input
-              className="flex-grow p-2 bg-input text-foreground focus:outline-none rounded-lg text-sm"
-              placeholder="Viết bình luận..."
-              value={comment}
-              onChange={handleCommentChange}
-            />
-            <button
-              className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            >
-              <FaSmile />
-            </button>
-            <button
+
+          {commenting && (
+              <div className="p-5 flex items-center gap-2 bg-background-darker shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
+                <input
+                    className="flex-grow p-2 bg-input text-foreground focus:outline-none rounded-lg text-sm"
+                    placeholder="Viết bình luận..."
+                    value={comment}
+                    onChange={handleCommentChange}
+                />
+                <button
+                    className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                >
+                  <FaSmile/>
+                </button>
+                <button
               className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
               onClick={handleCommentSubmit}
             >
@@ -496,13 +490,32 @@ const Post = ({ data }) => {
             )}
           </div>
         )}
+
+         {showComments && (
+             comments.length>0?(
+                 <section className="comments-section p-5 bg-gray-900 shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
+                   {comments.map((comments, index) => (
+                       <div key={index}
+                            className="comments-section relative">
+                         <Comment
+                             cmtdata={comments}
+                             fetchComments={fetchComments}
+                         />
+
+                       </div>
+                   ))}
+                 </section>
+
+             ):(
+                 <div>No Comment Found</div>
+             )
+         )}
+       </div>
+
       </div>
 
-      {showComments && (
-        <div className="comments-section">
-          <Comment comments={preComment} />
-        </div>
-      )}
+
+
 
       <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal} />
     </div>
