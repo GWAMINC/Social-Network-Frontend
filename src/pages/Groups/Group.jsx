@@ -28,11 +28,27 @@ const Groups = () => {
   const [mygroup, setMygroup] = useState([]);
   const [groupId, setGroupId] = useState(null);
   const [inforgroup, setInforgroup] = useState(null);
-  // Hàm để điều hướng và cập nhật URL
+  const [activeTab, setActiveTab] = useState('discussion');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId);
+};
+
+useEffect(() => {
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    tabPanes.forEach(pane => {
+        pane.style.display = 'none';
+    });
+    const activePane = document.getElementById(activeTab);
+    if (activePane) {
+        activePane.style.display = 'block';
+    }
+}, [activeTab]);
+
   const handleNavigation = (content) => {
     navigate(`/groups/${content}`);
   };
-  // Function to save groupId to localStorage
   const saveGroupIdToLocalStorage = (id) => {
     localStorage.setItem("groupId", id);
   };
@@ -83,7 +99,9 @@ const Groups = () => {
                                   className="w-full h-32 object-cover"
                               />
                               <div className="p-4 flex flex-col flex-grow">
-                                  <h3 className="text-xl font-semibold mb-2">{group.name}</h3>
+                              <h3 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>{group.name}</h3>
+
+                                  <h3 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>{group.name}</h3>
                                   <p className="text-gray-600 mb-4 flex-grow">{group.profile.bio}</p>
                                   <button className="w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-300">
                                       Join Group
@@ -95,80 +113,45 @@ const Groups = () => {
                 </div>
               );
               case "joins":
-                // Fake data
-                const mygroup = [
-                    {
-                        _id: '1',
-                        name: 'Group Alpha',
-                        profile: {
-                            profilePhoto: 'https://via.placeholder.com/150',
-                            bio: 'A great group for tech enthusiasts.'
-                        }
-                    },
-                    {
-                        _id: '2',
-                        name: 'Group Beta',
-                        profile: {
-                            profilePhoto: 'https://via.placeholder.com/150',
-                            bio: 'Join us to discuss the latest trends in gaming.'
-                        }
-                    },
-                    {
-                        _id: '3',
-                        name: 'Group Gamma',
-                        profile: {
-                            profilePhoto: 'https://via.placeholder.com/150',
-                            bio: 'A community for people who love reading books.'
-                        }
-                    },
-                    {
-                        _id: '4',
-                        name: 'Group Delta',
-                        profile: {
-                            profilePhoto: 'https://via.placeholder.com/150',
-                            bio: 'Connect with others who are passionate about travel.'
-                        }
-                    }
-                ];
-            
-                return (
-                    <div className="w-full max-w-screen-lg mx-auto px-4 py-6">
-                        <h1 className="text-4xl font-bold mb-4">
-                            All groups you've joined ({mygroup.length})
-                        </h1>
-                        <div className="joined-groups-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {mygroup.map((group) => (
-                                <div key={group._id} className="joined-group-card bg-white shadow-lg rounded-lg overflow-hidden flex flex-col">
-                                    <img
-                                        src={group.profile.profilePhoto}
-                                        alt="Group Avatar"
-                                        className="joined-group-avatar w-full h-32 object-cover"
-                                    />
-                                    <div className="p-4 flex flex-col flex-grow">
-                                        <h3 className="joined-group-name text-xl font-semibold mb-2">{group.name}</h3>
-                                        <p className="joined-group-description text-gray-600 mb-4 flex-grow">{group.profile.bio}</p>
-                                        <div className="flex justify-between items-center mt-auto">
-                                            <button
-                                                onClick={() => {
-                                                    setGroupId(group._id);
-                                                    setTimeout(() => {
-                                                        handleNavigation("group");
-                                                    }, 200);
-                                                }}
-                                                className="joined-group-view-button px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-300"
-                                            >
-                                                View Group
-                                            </button>
-                                            <button className="joined-group-custom-button px-4 py-2 bg-gray-200 text-gray-600 font-semibold rounded-lg hover:bg-gray-300 transition-colors duration-300">
-                                                Tùy chỉnh
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>                         
-                          ))}       
-                        </div>
-                      </div>
-                    );                   
+        return (
+          <div className="w-full max-w-screen-lg mx-auto px-4 py-6">
+            <h1 className="text-4xl font-bold mb-4">
+              All groups you've joined ({mygroup.length})
+            </h1>
+            <div className="joined-groups-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {mygroup.map((group) => (
+                <div key={group._id} className="joined-group-card bg-white shadow-lg rounded-lg overflow-hidden flex flex-col">
+                  <img
+                    src={group.profile.profilePhoto}
+                    alt="Group Avatar"
+                    className="joined-group-avatar w-full h-32 object-cover"
+                  />
+                  <div className="p-4 flex flex-col flex-grow">
+                  <h3 className={`joined-group-name text-xl font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>{group.name}</h3>
+                    <p className="joined-group-description text-gray-600 mb-4 flex-grow">{group.profile.bio}</p>
+                    <div className="flex justify-between items-center mt-auto">
+                      <button
+                        onClick={() => {
+                          setGroupId(group._id);
+                          saveGroupIdToLocalStorage(group._id);
+                          setTimeout(() => {
+                            handleNavigation("group");
+                          }, 200);
+                        }}
+                        className="joined-group-view-button px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                      >
+                        View Group
+                      </button>
+                      <button className="joined-group-custom-button px-4 py-2 bg-gray-200 text-gray-600 font-semibold rounded-lg hover:bg-gray-300 transition-colors duration-300">
+                        Tùy chỉnh
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );                   
 
       case "create-group":
         return (
@@ -297,80 +280,91 @@ const Groups = () => {
               </div>
 
               <div className="content">
-                <div className="tabs">
-                    <button className="tab-button" data-tab="discussion">Discussion</button>
-                    <button className="tab-button" data-tab="member">Member</button>
-                    <button className="tab-button" data-tab="events">Events</button>
-                    <button className="tab-button" data-tab="medias">Medias</button>
-                    <button className="tab-button" data-tab="files">Files</button>
-                    <button className="leave-group-button">Leave Group</button>
+              <div className="tabs">
+                <button 
+                    className={`tab-button1 ${activeTab === 'discussion' ? 'active' : ''}`} 
+                    onClick={() => handleTabClick('discussion')}
+                >
+                    Discussion
+                </button>
+                <button 
+                    className={`tab-button1 ${activeTab === 'member' ? 'active' : ''}`} 
+                    onClick={() => handleTabClick('member')}
+                >
+                    Member
+                </button>
+                <button 
+                    className={`tab-button1 ${activeTab === 'events' ? 'active' : ''}`} 
+                    onClick={() => handleTabClick('events')}
+                >
+                    Events
+                </button>
+                <button 
+                    className={`tab-button1 ${activeTab === 'medias' ? 'active' : ''}`} 
+                    onClick={() => handleTabClick('medias')}
+                >
+                    Medias
+                </button>
+                <button 
+                    className={`tab-button1 ${activeTab === 'files' ? 'active' : ''}`} 
+                    onClick={() => handleTabClick('files')}
+                >
+                    Files
+                </button>
+                <button className="leave-group-button">Leave Group</button>
+            </div>
+
+
+            <div className="tab-content">
+            <div id="discussion" className="tab-pane" style={{ display: activeTab === 'discussion' ? 'block' : 'none' }}>
+                <p>Discussion content goes here.</p>
+            </div>
+            <div id="member" className="tab-pane" style={{ display: activeTab === 'member' ? 'block' : 'none' }}>
+                <div className="search-container">
+                    <input type="text" placeholder="Find a member" className="search-input" />
                 </div>
-                
-
-                <div className="tab-content">
-                    <div id="discussion" className="tab-pane">
-                        <p>Discussion content goes here.</p>
-                    </div>
-
-                    <div id="member" className="tab-pane">
-                        <div className="search-container">
-                            <input
-                                type="text"
-                                placeholder="Find a member"
-                                className="search-input"
-                            />
-                        </div>
-                        <div className="roles">
-                            <div className="role-section">
-                                <h4>Admins & Moderators</h4>
-                                <div className="role-list">
-                                    {inforgroup.group.admin &&
-                                        inforgroup.group.admin.length > 0 &&
-                                        inforgroup.group.admin.map((admin) => (
-                                            <div key={admin._id} className="role-item">
-                                                <img
-                                                    src={admin.profile.profilePhoto || "default-photo.jpg"}
-                                                    alt="Admin Avatar"
-                                                    className="role-avatar"
-                                                />
-                                                <p>{admin.name}</p>
-                                            </div>
-                                        ))}
-                                </div>
-                            </div>
-                            <div className="role-section">
-                                <h4>Members</h4>
-                                <div className="role-list">
-                                    {inforgroup.group.members &&
-                                        inforgroup.group.members.length > 0 &&
-                                        inforgroup.group.members.map((member) => (
-                                            <div key={member._id} className="role-item">
-                                                <img
-                                                    src={member.profile.profilePhoto || "default-photo.jpg"}
-                                                    alt="Member Avatar"
-                                                    className="role-avatar"
-                                                />
-                                                <p>{member.name}</p>
-                                            </div>
-                                        ))}
-                                </div>
-                            </div>
+                <div className="roles">
+                    <div className={`role-section ${isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-800'} p-4 rounded-md mb-4`}>
+                        <h4 className={`font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Admins & Moderators</h4>
+                        <input type="text" placeholder="Search Admins & Moderators" className="search1" />
+                        <div className="role-list">
+                            {inforgroup.group.admin && inforgroup.group.admin.length > 0 &&
+                                inforgroup.group.admin.map((admin) => (
+                                    <div key={admin._id} className={`role-item flex items-center p-2 ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}>
+                                        <img src={admin.profile.profilePhoto || "default-photo.jpg"} alt="Admin Avatar" className="role-avatar rounded-full mr-2" />
+                                        <p>{admin.name}</p>
+                                    </div>
+                                ))}
                         </div>
                     </div>
 
-                    <div id="events" className="tab-pane">
-                        <p>Events content goes here.</p>
+                    <div className={`role-section ${isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-800'} p-4 rounded-md mb-4`}>
+                        <h4 className={`font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>Members</h4>
+                        <input type="text" placeholder="Search Members" className="search1" />
+                        <div className="role-list">
+                            {inforgroup.group.members && inforgroup.group.members.length > 0 &&
+                                inforgroup.group.members.map((member) => (
+                                    <div key={member._id} className={`role-item flex items-center p-2 ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}>
+                                        <img src={member.profile.profilePhoto || "default-photo.jpg"} alt="Member Avatar" className="role-avatar rounded-full mr-2" />
+                                        <p>{member.name}</p>
+                                    </div>
+                                ))}
+                        </div>
                     </div>
 
-                    <div id="medias" className="tab-pane">
-                        <p>Medias content goes here.</p>
                     </div>
-
-                    <div id="files" className="tab-pane">
-                        <p>Files content goes here.</p>
-                    </div>
+                </div>
+                <div id="events" className="tab-pane" style={{ display: activeTab === 'events' ? 'block' : 'none' }}>
+                    <p>Events content goes here.</p>
+                </div>
+                <div id="medias" className="tab-pane" style={{ display: activeTab === 'medias' ? 'block' : 'none' }}>
+                    <p>Medias content goes here.</p>
+                </div>
+                <div id="files" className="tab-pane" style={{ display: activeTab === 'files' ? 'block' : 'none' }}>
+                    <p>Files content goes here.</p>
                 </div>
             </div>
+        </div>
 
             
               <div className="posts">
