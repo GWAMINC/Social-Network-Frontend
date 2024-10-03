@@ -381,6 +381,15 @@ const Post = ({ data }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showEmojiPicker]);
+
+  useEffect(() => {
+    let ignore = false;
+    setContent(data.postInfo.content);
+    return () => {
+      ignore = true;
+    };
+  }, [data.postInfo._id]);
+
   if (!isVisible) {
     return null;
   }
@@ -649,6 +658,8 @@ export function PostWrapper() {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
+    let ignore = false;
+
     const fetchPostData = async () => {
       try {
         const postRes = await axios.post(
@@ -663,25 +674,29 @@ export function PostWrapper() {
           { withCredentials: true }
         );
 
-        const currentUserRes = await axios.get(
-          `${apiUrl}/user/profile`,
-          { withCredentials: true, }
-        );
-
-        setPostData({
-          postInfo: postRes.data.post,
-          userInfo: userRes.data.user,
-          likeCount: postRes.data.post.isLiked.length,
-          dislikeCount: postRes.data.post.isDisliked.length,
-          user: currentUserRes.data.user._id,
+        const currentUserRes = await axios.get(`${apiUrl}/user/profile`, {
+          withCredentials: true,
         });
+
+        if (!ignore)
+          setPostData({
+            postInfo: postRes.data.post,
+            userInfo: userRes.data.user,
+            likeCount: postRes.data.post.isLiked.length,
+            dislikeCount: postRes.data.post.isDisliked.length,
+            user: currentUserRes.data.user._id,
+          });
       } catch (error) {
         console.error("Failed to fetch post data:", error);
       }
     };
 
     fetchPostData();
-  }, []);
+
+    return () => {
+      ignore = true;
+    };
+  }, [postId]);
 
   return (
     <div className="h-screen pt-24 overflow-auto ">
