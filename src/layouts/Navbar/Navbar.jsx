@@ -33,16 +33,19 @@ import {
   FiMenu,
 } from "react-icons/fi";
 import axios from "axios";
+import io from 'socket.io-client';
 
 import "./Messenger.css";
 import "./Notification.css";
 
+const socket = io('http://localhost:3000');
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentUser, setCurrentUser] = useState();
   const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
+    socket.connect();
       const fetchCurrentUser = async () => {
         try {
           const response = await axios.get(
@@ -98,20 +101,12 @@ const NotificationPopover = ({currentUser}) => {
         const response = await axios.get(`${apiUrl}/user/profile`, {
           withCredentials: true,
         });
-        if (userData) {
-          setProfile(userData.user);
-        } else {
-          setProfile(response.data.user);
-        }
+        setProfile(response.data.user);
       } catch (error) {
         console.error("Failed to fetch profile:", error);
       }
     };
-    if (userData) {
-      setProfile(userData.user);
-    } else {
       fetchProfile();
-    }
   }, [userData]);
 
   // Effect for search bar
@@ -692,19 +687,17 @@ const NotificationPopover = ({currentUser}) => {
                       <Avatar className="w-10 h-10">
                         <AvatarImage
                           src={
-                            userChatDatas[chat.participants[1]]?.avatar || ""
+                            userChatDatas[chat.participants[1]]?.avatar ||  userChatDatas[chat.participants[0]]?.avatar || ""
                           }
-                          alt={userChatDatas[chat.participants[1]]?.name || ""}
                         />
-                        <AvatarFallback>Avatar</AvatarFallback>
+                        <AvatarFallback>{userChatDatas[chat.participants[0]]?.name.charAt(0).toUpperCase() || userChatDatas[chat.participants[1]]?.name.charAt(0).toUpperCase() }</AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
                         <span className="font-semibold text-foreground">
-                          {userChatDatas[chat.participants[1]]?.name ||
+                          {userChatDatas[chat.participants[1]]?.name ||  userChatDatas[chat.participants[0]]?.name ||
                             "User Name"}
                         </span>
                         <span className="text-sm truncate text-foreground-lighter">
-                          Message content
                         </span>
                       </div>
                     </Link>
