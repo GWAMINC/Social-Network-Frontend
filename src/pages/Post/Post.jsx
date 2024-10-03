@@ -384,7 +384,9 @@ const Post = ({ data }) => {
 
   useEffect(() => {
     let ignore = false;
-    setContent(data.postInfo.content);
+
+    if (!ignore) setContent(data.postInfo.content);
+
     return () => {
       ignore = true;
     };
