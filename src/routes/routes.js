@@ -12,7 +12,8 @@ import AllChats from "@/pages/Chat/AllChats.jsx";
 
 import Groups from "@/pages/Groups";
 import Profile from "@/pages/Profile/Profile"; 
-
+// import Post from "@/pages/Post";
+import { PostWrapper } from "@/pages/Post/Post";
 
 const publicRoutes = [
     { path: config.routes.login, component: Login },
@@ -31,7 +32,7 @@ const privateRoutes = [
 
     { path: config.routes.profile, component: Profile }, 
     { path: `${config.routes.groups}/*`, component: Groups },
-
+    { path: config.routes.post, component: PostWrapper },
 ];
 
 export { publicRoutes, privateRoutes };

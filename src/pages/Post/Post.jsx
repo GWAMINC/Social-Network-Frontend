@@ -16,7 +16,7 @@ import UpdateModal from "./UpdateModal";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Comment from "../Comment/Comment";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Post = ({ data }) => {
   const ownerId = data.postInfo.userId;
@@ -641,5 +641,53 @@ const Post = ({ data }) => {
     </div>
   );
 };
+
+export function PostWrapper() {
+  const { postId } = useParams();
+  const [postData, setPostData] = useState();
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    const fetchPostData = async () => {
+      try {
+        const postRes = await axios.post(
+          `${apiUrl}/post/getPostById`,
+          { postId },
+          { withCredentials: true }
+        );
+
+        const userRes = await axios.post(
+          `${apiUrl}/user/getProfileById`,
+          { userId: postRes.data.post.userId },
+          { withCredentials: true }
+        );
+
+        const currentUserRes = await axios.get(
+          `${apiUrl}/user/profile`,
+          { withCredentials: true, }
+        );
+
+        setPostData({
+          postInfo: postRes.data.post,
+          userInfo: userRes.data.user,
+          likeCount: postRes.data.post.isLiked.length,
+          dislikeCount: postRes.data.post.isDisliked.length,
+          user: currentUserRes.data.user._id,
+        });
+      } catch (error) {
+        console.error("Failed to fetch post data:", error);
+      }
+    };
+
+    fetchPostData();
+  }, []);
+
+  return (
+    <div className="h-screen pt-24 overflow-auto ">
+      {postData && <Post data={postData} />}
+    </div>
+  );
+}
 
 export default Post;

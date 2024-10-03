@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button.jsx";
 import {
@@ -12,6 +12,7 @@ import {
 import "./Group.css";
 import axios from "axios";
 import Post from "../Post";
+import { GroupIdContext } from "@/layouts/DefaultLayout/DefaultLayout";
 
 const Groups = () => {
   const navigate = useNavigate();
@@ -26,14 +27,15 @@ const Groups = () => {
   const [success, setSuccess] = useState("");
   const [listgroup, setListgroup] = useState([]);
   const [mygroup, setMygroup] = useState([]);
-  const [groupId, setGroupId] = useState(null);
   const [inforgroup, setInforgroup] = useState(null);
   const [activeTab, setActiveTab] = useState('discussion');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  
+  const [groupId, setGroupId] = useContext(GroupIdContext);
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
-};
+  };
 
 useEffect(() => {
     const tabPanes = document.querySelectorAll('.tab-pane');

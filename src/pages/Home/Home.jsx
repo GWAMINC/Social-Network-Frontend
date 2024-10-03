@@ -84,7 +84,9 @@ const Home = () => {
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
           {/* Pages */}
           <div className="p-6  bg-background-lighter shadow-lg rounded-lg">
-            <h2 className="text-2xl font-semibold text-foreground">Your Pages</h2>
+            <h2 className="text-2xl font-semibold text-foreground">
+              Your Pages
+            </h2>
             <div className="mt-4 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-foreground-lighter">Page 1</span>
@@ -108,25 +110,24 @@ const Home = () => {
           </div>
 
           {/* Create a Post */}
-          <AddPost currentUser = {currentUser}/>
+          <AddPost currentUser={currentUser} />
 
           <div className="space-y-8 md:space-y-0 md:flex md:gap-8">
             {/* Active Friends */}
-            <ActiveFr /> 
+            <ActiveFr />
           </div>
         </section>
 
         {posts.length > 0 && (
-        <section className="mt-8">
-          <div className="bg-transparent">
-            {/* <h2 className="text-2xl font-semibold text-foreground">Posts</h2> */}
-              {posts.map(post =>(
-                  <div key = {post.postInfo._id}>
-                <Post data = {post} />
-                  </div>
-            ))}
-          </div>
-        </section>
+          <section className="mt-8">
+            <div className="bg-transparent">
+              {posts.map((post) => (
+                <div key={post.postInfo._id}>
+                  <Post data={post} />
+                </div>
+              ))}
+            </div>
+          </section>
         )}
 
         <footer className="text-center mt-16 py-6 border-t border-border">
