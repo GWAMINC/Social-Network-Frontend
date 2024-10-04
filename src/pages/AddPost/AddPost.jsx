@@ -1,22 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Listbox } from "@headlessui/react";
 import { AiOutlineCamera, AiOutlineSmile, AiOutlineVideoCamera } from "react-icons/ai";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { Button } from "@/components/ui/button";
-import {useLocation} from "react-router-dom";
 
-const AddPost = ({currentUser}) => {
+const AddPost = ({ currentUser, onPostCreated }) => {
   const [content, setContent] = useState("");
   const [access, setAccess] = useState("public");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
   const [showPicker, setShowPicker] = useState(false);
-  const [photos, setPhotos] = useState([]); 
+  const [photos, setPhotos] = useState([]);
   const [video, setVideo] = useState(null);
-  const pickerRef = useRef(null); 
+  const pickerRef = useRef(null);
   const accessOptions = ["public", "private"];
   const avatarUrl = currentUser?.profile?.profilePhoto;
   const firstLetter = currentUser?.name?.charAt(0).toUpperCase();
@@ -28,10 +27,10 @@ const AddPost = ({currentUser}) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
   const handleSubmit = async (e) => {
@@ -42,15 +41,18 @@ const AddPost = ({currentUser}) => {
     const formData = new FormData();
     formData.append("content", content);
     formData.append("access", access);
-    photos.forEach(photo => formData.append("images", photo));  // Append all photos
+    photos.forEach((photo) => formData.append("images", photo)); // Append all photos
     if (video) formData.append("video", video);
 
     try {
-      console.log(formData)
+      console.log(formData);
       const response = await axios.post(
         "http://localhost:9090/api/post/createPost",
         formData,
-        { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } }
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
       console.log("Post created:", response.data);
       setContent("");
@@ -60,9 +62,7 @@ const AddPost = ({currentUser}) => {
       setError("");
       setSuccess("Post created!");
       setShowPicker(false);
-
-      const event = new CustomEvent('postCreated');
-      window.dispatchEvent(event);
+      onPostCreated(response.data.post);
     } catch (error) {
       console.error("Error creating post:", error);
       setError("Failed to create post. Please try again.");
@@ -73,10 +73,7 @@ const AddPost = ({currentUser}) => {
   };
 
   const handlePhotoChange = (e) => {
-    setPhotos(prevPhotos => [
-      ...prevPhotos,
-      ...Array.from(e.target.files)
-    ]);
+    setPhotos((prevPhotos) => [...prevPhotos, ...Array.from(e.target.files)]);
   };
 
   const handleVideoChange = (e) => {
@@ -90,24 +87,31 @@ const AddPost = ({currentUser}) => {
   return (
     <div className="relative p-6 rounded-lg shadow-lg bg-background-lighter">
       <form onSubmit={handleSubmit}>
-        <h2 className="text-2xl font-semibold text-foreground">Create a Post</h2>
+        <h2 className="text-2xl font-semibold text-foreground">
+          Create a Post
+        </h2>
 
         <div className="flex items-start gap-4 mt-4">
           <div className="w-12 h-12">
             {avatarUrl ? (
-                <img
-                    src={avatarUrl}
-                    alt="Avatar"
-                    className="w-full h-full object-cover rounded-full"
-                />
+              <img
+                src={avatarUrl}
+                alt="Avatar"
+                className="w-full h-full object-cover rounded-full"
+              />
             ) : (
-                <div className="text-2xl text-gray-600 bg-gray-200 w-full h-full flex items-center justify-center rounded-full">
-                  {firstLetter}
-                </div>
+              <div className="text-2xl text-gray-600 bg-gray-200 w-full h-full flex items-center justify-center rounded-full">
+                {firstLetter}
+              </div>
             )}
           </div>
           <div className="flex-1">
-            <label htmlFor="content" className="block text-sm font-medium text-foreground-lighter">Content</label>
+            <label
+              htmlFor="content"
+              className="block text-sm font-medium text-foreground-lighter"
+            >
+              Content
+            </label>
             <textarea
               id="content"
               className="block w-full p-2 mt-1 rounded-md shadow-sm bg-input text-foreground focus:outline-none sm:text-sm"
@@ -118,7 +122,12 @@ const AddPost = ({currentUser}) => {
             />
           </div>
           <div className="w-1/3">
-            <label htmlFor="access" className="block text-sm font-medium text-foreground-lighter">Access</label>
+            <label
+              htmlFor="access"
+              className="block text-sm font-medium text-foreground-lighter"
+            >
+              Access
+            </label>
             <Listbox value={access} onChange={setAccess}>
               <div className="relative mt-1">
                 <Listbox.Button className="cursor-pointer relative w-full py-2 pl-3 pr-10 text-left hover:text-foreground hover:bg-dropdown-hover bg-dropdown text-foreground-lighter rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
@@ -129,12 +138,18 @@ const AddPost = ({currentUser}) => {
                     <Listbox.Option
                       key={idx}
                       className={({ selected }) =>
-                        `${selected ? "bg-dropdown-selected" : "bg-dropdown"} hover:bg-dropdown-hover cursor-pointer select-none relative py-2 pl-10 pr-4`
+                        `${
+                          selected ? "bg-dropdown-selected" : "bg-dropdown"
+                        } hover:bg-dropdown-hover cursor-pointer select-none relative py-2 pl-10 pr-4`
                       }
                       value={option}
                     >
                       {({ selected }) => (
-                        <span className={`${selected ? "font-medium" : "font-normal"} block truncate`}>
+                        <span
+                          className={`${
+                            selected ? "font-medium" : "font-normal"
+                          } block truncate`}
+                        >
                           {option}
                         </span>
                       )}
@@ -146,18 +161,18 @@ const AddPost = ({currentUser}) => {
           </div>
         </div>
         {photos.length > 0 && (
-        <div className="mt-4">
-          <div className="grid grid-cols-2 gap-4 mt-2">
-            {photos.map((photo, index) => (
-              <img
-                key={index}
-                src={URL.createObjectURL(photo)}
-                className="object-cover w-full h-auto rounded-md"
-              />
-            ))}
+          <div className="mt-4">
+            <div className="grid grid-cols-2 gap-4 mt-2">
+              {photos.map((photo, index) => (
+                <img
+                  key={index}
+                  src={URL.createObjectURL(photo)}
+                  className="object-cover w-full h-auto rounded-md"
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
         {error && <p className="mt-4 text-red-500">{error}</p>}
         {success && <p className="mt-4 text-green-500">{success}</p>}
@@ -191,7 +206,7 @@ const AddPost = ({currentUser}) => {
                 className="transition-colors flex items-center gap-2"
                 onClick={() => setShowPicker(!showPicker)}
               >
-                <AiOutlineSmile className="w-6 h-6"/>
+                <AiOutlineSmile className="w-6 h-6" />
                 <span className="hidden md:inline">Emoji</span>
               </button>
               {showPicker && (
@@ -206,7 +221,9 @@ const AddPost = ({currentUser}) => {
             </div>
           </div>
           <Button
-            className={`w-full transition-colors ${isSubmitting ? "hover:bg-secondary" : ""}`}
+            className={`w-full transition-colors ${
+              isSubmitting ? "hover:bg-secondary" : ""
+            }`}
             type="submit"
             disabled={isSubmitting}
           >
@@ -214,8 +231,6 @@ const AddPost = ({currentUser}) => {
           </Button>
         </div>
       </form>
-
-     
     </div>
   );
 };

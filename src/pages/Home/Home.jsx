@@ -1,56 +1,84 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  AiOutlineCamera,
-  AiOutlineVideoCamera,
-  AiOutlineSmile,
-  AiOutlineUser,
-  AiOutlineGroup,
-  AiOutlineComment,
-} from "react-icons/ai";
 import AddPost from "../AddPost";
 import Post from "../Post/Post";
 import ActiveFr from "../ActiveFr/ActiveFr";
 import axios from "axios"; 
-import { useNavigate } from "react-router-dom";
+import { toPostData } from "@/lib/utils";
 
 const Home = () => {
   const [isButtonVisible, setIsButtonVisible] = useState(false);
   const [posts, setPosts] = useState([]);
   const [currentUser, setCurrentUser] = useState();
-  const navigate = useNavigate();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const [page, setPage] = useState(1);
+  const [maxPage, setMaxPage] = useState();
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
 
-  // Fetch posts on page load and post created
+  const numOfPostsPerPage = 5;
+  const isLoadedFirstTime = posts.length === 0;
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+  // Fetch posts when page loads the first time or page number changes
   useEffect(() => {
+    let ignore = false;
+
     const fetchCurrentUser = async () => {
-        try {
-            const response = await axios.get(
-            `${apiUrl}/user/profile`,
-            { withCredentials: true }
-            );
-            await setCurrentUser(response.data.user);
-        } catch (error) {
-            console.error("Failed to fetch user:", error);
-        }
-    }
-    const getPosts = async () => {
       try {
-        const response = await axios.get(
-            `${apiUrl}/post/getAllPost`,
-            {withCredentials: true});
-        // console.log(response.data);
-        await setPosts(response.data.posts.reverse());
+        const res = await axios.get(`${apiUrl}/user/profile`, {
+          withCredentials: true,
+        });
+
+        if (!ignore) setCurrentUser(res.data.user);
       } catch (error) {
-        console.error('Failed to fetch posts:', error);
+        console.error("Failed to fetch user:", error);
       }
     };
+
+    const getPosts = async () => {
+      try {
+        setIsLoadingPosts(true);
+
+        const res = await axios.get(
+          `${apiUrl}/post/getAllPost?page=${page}&limit=${numOfPostsPerPage}`,
+          { withCredentials: true }
+        );
+
+        if (!ignore) {
+          setIsLoadingPosts(false);
+          setMaxPage(res.data.pages);
+          setPosts((prevPosts) => [...prevPosts, ...res.data.posts]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      }
+    };
+
     fetchCurrentUser();
     getPosts();
-    window.addEventListener("postCreated", getPosts);
-    return () => window.removeEventListener("postCreated", getPosts);
-  }, []);
 
+    return () => {
+      ignore = true;
+    };
+  }, [apiUrl, page]);
+
+  // Increase page number when user reaches the bottom of the page
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        document.documentElement.scrollHeight - window.innerHeight <=
+          Math.ceil(window.scrollY) &&
+        !isLoadedFirstTime
+      ) {
+        setPage((page) => Math.min(page + 1, maxPage));
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isLoadedFirstTime, maxPage]);
+
+  // Show scroll to top button
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 100) {
@@ -68,7 +96,7 @@ const Home = () => {
       top: 0,
       behavior: "smooth",
     });
-    setIsButtonVisible(false); 
+    setIsButtonVisible(false);
   };
 
   return (
@@ -110,7 +138,12 @@ const Home = () => {
           </div>
 
           {/* Create a Post */}
-          <AddPost currentUser={currentUser} />
+          <AddPost
+            onPostCreated={async (post) =>
+              setPosts([await toPostData(post), ...posts])
+            }
+            currentUser={currentUser}
+          />
 
           <div className="space-y-8 md:space-y-0 md:flex md:gap-8">
             {/* Active Friends */}
@@ -118,17 +151,20 @@ const Home = () => {
           </div>
         </section>
 
-        {posts.length > 0 && (
-          <section className="mt-8">
-            <div className="bg-transparent">
-              {posts.map((post) => (
-                <div key={post.postInfo._id}>
-                  <Post data={post} />
-                </div>
-              ))}
+        <section className="mt-8 relative">
+          {posts.map((post) => (
+            <div key={post.postInfo._id}>
+              <Post data={post} />
             </div>
-          </section>
-        )}
+          ))}
+
+          {isLoadingPosts && (
+            <div className="right-0 left-0 absolute flex items-center justify-center text-foreground-lighter select-none">
+              <div className="inline-block h-6 w-6 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+              <span className="ml-3 text-xl">Loading...</span>
+            </div>
+          )}
+        </section>
 
         <footer className="text-center mt-16 py-6 border-t border-border">
           <p className="text-foreground-lighter">

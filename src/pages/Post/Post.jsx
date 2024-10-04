@@ -17,6 +17,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Comment from "../Comment/Comment";
 import { useNavigate, useParams } from "react-router-dom";
+import { toPostData } from "@/lib/utils";
 
 const Post = ({ data }) => {
   const ownerId = data.postInfo.userId;
@@ -47,7 +48,7 @@ const Post = ({ data }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(data.postInfo.isBookmarkedBy.includes(data.user));
 
-  const groupAvatarUrl = data.group?.profile.profilePhoto;
+  const groupAvatarUrl = data.group?.profile.profilePhoto[0];
   const groupName = data.group?.name;
   const avatarUrl = data.userInfo.profile.profilePhoto;
   const userName = data.userInfo.name;
@@ -670,24 +671,8 @@ export function PostWrapper() {
           { withCredentials: true }
         );
 
-        const userRes = await axios.post(
-          `${apiUrl}/user/getProfileById`,
-          { userId: postRes.data.post.userId },
-          { withCredentials: true }
-        );
-
-        const currentUserRes = await axios.get(`${apiUrl}/user/profile`, {
-          withCredentials: true,
-        });
-
         if (!ignore)
-          setPostData({
-            postInfo: postRes.data.post,
-            userInfo: userRes.data.user,
-            likeCount: postRes.data.post.isLiked.length,
-            dislikeCount: postRes.data.post.isDisliked.length,
-            user: currentUserRes.data.user._id,
-          });
+          setPostData(await toPostData(postRes.data.post));
       } catch (error) {
         console.error("Failed to fetch post data:", error);
       }
@@ -698,7 +683,7 @@ export function PostWrapper() {
     return () => {
       ignore = true;
     };
-  }, [postId]);
+  }, [apiUrl, postId]);
 
   return (
     <div className="h-screen pt-24 overflow-auto ">
