@@ -604,10 +604,11 @@ const Post = ({ data }) => {
             <span>Chia Sẻ</span>
           </button>
           <button
-            className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${
-              isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"
-            }`}
-            onClick={handleSavePostClick}
+
+
+              className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"}`}
+              onClick={handleSavePostClick}
+
           >
             <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
           </button>
