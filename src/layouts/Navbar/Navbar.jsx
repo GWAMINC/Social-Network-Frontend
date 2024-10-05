@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button.jsx";
@@ -37,6 +37,7 @@ import io from 'socket.io-client';
 
 import "./Messenger.css";
 import "./Notification.css";
+import { GroupIdContext } from "../DefaultLayout/DefaultLayout";
 
 const socket = io('http://localhost:3000');
 const Navbar = () => {
@@ -44,6 +45,7 @@ const Navbar = () => {
   const location = useLocation();
   const [currentUser, setCurrentUser] = useState();
   const apiUrl = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     socket.connect();
       const fetchCurrentUser = async () => {
@@ -56,12 +58,14 @@ const Navbar = () => {
         } catch (error) {
           console.error("Failed to fetch user:", error);
         }
+
       }
-      fetchCurrentUser();
-      }, []);
+    };
+    fetchCurrentUser();
+  }, []);
   return (
     <nav>
-      <NotificationPopover currentUser = {currentUser} />
+      <NotificationPopover currentUser={currentUser} />
     </nav>
   );
 };
@@ -73,9 +77,10 @@ const handleViewProfile = () => {
   }
 };
 
-const NotificationPopover = ({currentUser}) => {
+const NotificationPopover = ({ currentUser }) => {
+  const navigate = useNavigate();
   const location = useLocation();
-  const userData = location.state?.userData;
+
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState(null);
   const [chats, setChats] = useState([]);
@@ -86,9 +91,14 @@ const NotificationPopover = ({currentUser}) => {
   const [userSearchResults, setUserSearchResults] = useState([]);
   const [groupSearchResults, setGroupSearchResults] = useState([]);
   const [postSearchResults, setPostSearchResults] = useState([]);
+  const [profile, setProfile] = useState();
 
   const [theme, setTheme] = useContext(ThemeContext);
-  const [profile, setProfile] = useState();
+  const [groupId, setGroupId] = useContext(GroupIdContext);
+
+  const searchBarRef = useRef(null);
+
+  const userData = location.state?.userData;
   const avatarUrl = profile?.profile?.profilePhoto;
   const firstLetter = profile?.name?.charAt(0).toUpperCase();
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -262,6 +272,42 @@ const NotificationPopover = ({currentUser}) => {
     return null;
   }
 
+  const blurSearchBar = () => {
+    setSearchQuery("");
+    searchBarRef.current.blur();
+  };
+
+  const handleUserSearchResultClick = async (id) => {
+    try {
+      blurSearchBar();
+      const res = await axios.post(
+        `${apiUrl}/user/getProfileById`,
+        { userId: id },
+        { withCredentials: true }
+      );
+      const userData = res.data;
+      navigate("/profile", { state: { userData } });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const handleGroupSearchResultClick = async (id) => {
+    blurSearchBar();
+    setGroupId(id);
+    localStorage.setItem("groupId", id);
+    setTimeout(() => {
+      navigate("/groups/group");
+    }, 200);
+  };
+
+  const handlePostSearchResultClick = async (postId) => {
+    blurSearchBar();
+    setTimeout(() => {
+      navigate(`/posts/${postId}`);
+    }, 200);
+  };
+
   const handleLogout = async () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
@@ -358,15 +404,19 @@ const NotificationPopover = ({currentUser}) => {
           </h1>
 
           {/* Search bar */}
-          <div className="relative w-full mr-10">
+          <div
+            className="relative w-full mr-10"
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setIsSearchFocused(false)}
+            tabIndex="0"
+            ref={searchBarRef}
+          >
             <input
               type="text"
               placeholder="Search for friends, groups, pages"
               className="w-full px-4 py-2 pl-10 rounded-lg text-foreground bg-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setIsSearchFocused(true)}
-              onBlur={() => setIsSearchFocused(false)}
             />
 
             <svg
@@ -390,119 +440,131 @@ const NotificationPopover = ({currentUser}) => {
                 isSearchFocused && searchQuery ? "" : "hidden"
               } absolute w-full max-h-[calc(100vh-_5rem)] overflow-y-auto mt-2 rounded-lg shadow-md top-full bg-background-lighter divide-y divide-border`}
             >
-              {userSearchResults.length === 0 &&
-              groupSearchResults.length === 0 &&
-              postSearchResults.length === 0 ? (
-                <div className="p-4 font-bold select-none text-foreground-lighter">
-                  Không có kết quả
-                </div>
-              ) : (
-                <>
-                  {/* User search results */}
-                  <div hidden={userSearchResults.length === 0}>
-                    <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
-                      Mọi người
-                    </h3>
+              {/* User search results */}
+              <div>
+                <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
+                  Mọi người
+                </h3>
 
-                    <ul>
-                      {userSearchResults.map((user) => {
-                        return (
-                          <li
-                            key={user._id}
-                            className="flex items-center px-4 py-2 cursor-pointer hover:bg-dropdown-hover"
-                          >
-                            <div className="w-10 mr-2">
-                              <img
-                                src={user.profile.profilePhoto}
-                                className="rounded-full"
-                              />
-                            </div>
-                            <p className="select-none text-foreground">
-                              {user.name}
-                            </p>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                {userSearchResults.length ? (
+                  <ul>
+                    {userSearchResults.map((user) => {
+                      return (
+                        <li
+                          key={user._id}
+                          className="flex items-center px-4 py-2 cursor-pointer hover:bg-dropdown-hover"
+                          onClick={() => handleUserSearchResultClick(user._id)}
+                        >
+                          <div className="w-10 mr-2">
+                            <img
+                              src={user.profile.profilePhoto}
+                              className="rounded-full"
+                            />
+                          </div>
+                          <p className="select-none text-foreground">
+                            {user.name}
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <div className="pb-4 pl-4 select-none text-foreground-lighter">
+                    Không có kết quả
                   </div>
+                )}
+              </div>
 
-                  {/* Group search results */}
-                  <div hidden={groupSearchResults.length === 0}>
-                    <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
-                      Nhóm
-                    </h3>
+              {/* Group search results */}
+              <div>
+                <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
+                  Nhóm
+                </h3>
 
-                    <ul>
-                      {groupSearchResults.map((group) => {
-                        return (
-                          <li
-                            key={group._id}
-                            className="flex items-center px-4 py-2 cursor-pointer hover:bg-dropdown-hover"
-                          >
-                            <div className="w-10 mr-2">
-                              <img
-                                src={group.profile.profilePhoto}
-                                className="rounded-full"
-                              />
-                            </div>
-                            <p className="select-none text-foreground">
-                              {group.name}
-                            </p>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                {groupSearchResults.length ? (
+                  <ul>
+                    {groupSearchResults.map((group) => {
+                      return (
+                        <li
+                          key={group._id}
+                          className="flex items-center px-4 py-2 cursor-pointer hover:bg-dropdown-hover"
+                          onClick={() =>
+                            handleGroupSearchResultClick(group._id)
+                          }
+                        >
+                          <div className="w-10 mr-2">
+                            <img
+                              src={group.profile.profilePhoto}
+                              className="rounded-full"
+                            />
+                          </div>
+                          <p className="select-none text-foreground">
+                            {group.name}
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <div className="pb-4 pl-4 select-none text-foreground-lighter">
+                    Không có kết quả
                   </div>
+                )}
+              </div>
 
-                  {/* Post search results */}
-                  <div hidden={postSearchResults.length === 0}>
-                    <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
-                      Bài viết
-                    </h3>
+              {/* Post search results */}
+              <div>
+                <h3 className="px-4 py-2 font-bold select-none text-foreground-lighter">
+                  Bài viết
+                </h3>
 
-                    <ul>
-                      {postSearchResults.map((post) => {
-                        return (
-                          <li
-                            key={post._id}
-                            className="flex items-center justify-between px-4 py-2 text-sm cursor-pointer hover:bg-dropdown-hover"
-                          >
-                            <div>
-                              <p className="text-foreground line-clamp-3">
-                                {post.content}
-                              </p>
+                {postSearchResults.length ? (
+                  <ul>
+                    {postSearchResults.map((post) => {
+                      return (
+                        <li
+                          key={post._id}
+                          className="flex items-center justify-between px-4 py-2 text-sm cursor-pointer hover:bg-dropdown-hover"
+                          onClick={() => {
+                            handlePostSearchResultClick(post._id);
+                          }}
+                        >
+                          <div>
+                            <p className="text-foreground line-clamp-3">
+                              {post.content}
+                            </p>
 
-                              <div className="flex items-center mt-1">
-                                <div className="w-5 mr-1">
-                                  <img
-                                    src={post.user.profile.profilePhoto}
-                                    className="rounded-full"
-                                  />
-                                </div>
-
-                                <span className="text-xs text-foreground-lighter">
-                                  {post.user.name}
-                                </span>
+                            <div className="flex items-center mt-1">
+                              <div className="w-5 mr-1">
+                                <img
+                                  src={post.user.profile.profilePhoto}
+                                  className="rounded-full"
+                                />
                               </div>
-                            </div>
 
-                            <div
-                              className={`${
-                                post.images.length === 0 ? "hidden" : ""
-                              } w-28`}
-                            >
-                              <img
-                                className="rounded-md"
-                                src={post.images[0]}
-                              />
+                              <span className="text-xs text-foreground-lighter">
+                                {post.user.name}
+                              </span>
                             </div>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                          </div>
+
+                          <div
+                            className={`${
+                              post.images.length === 0 ? "hidden" : ""
+                            } w-28`}
+                          >
+                            <img className="rounded-md" src={post.images[0]} />
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <div className="pb-4 pl-4 select-none text-foreground-lighter">
+                    Không có kết quả
                   </div>
-                </>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -797,15 +859,15 @@ const NotificationPopover = ({currentUser}) => {
               <div className="flex items-center gap-2 ml-4 cursor-pointer">
                 <Avatar className="w-10 h-10">
                   {avatarUrl ? (
-                      <img
-                          src={avatarUrl}
-                          alt="Avatar"
-                          className="w-full h-full object-cover rounded-full"
-                      />
+                    <img
+                      src={avatarUrl}
+                      alt="Avatar"
+                      className="object-cover w-full h-full rounded-full"
+                    />
                   ) : (
-                      <div className="text-2xl text-gray-600 bg-gray-200 w-full h-full flex items-center justify-center rounded-full">
-                        {firstLetter}
-                      </div>
+                    <div className="flex items-center justify-center w-full h-full text-2xl text-gray-600 bg-gray-200 rounded-full">
+                      {firstLetter}
+                    </div>
                   )}
                 </Avatar>
               </div>

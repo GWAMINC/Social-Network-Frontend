@@ -16,7 +16,8 @@ import UpdateModal from "./UpdateModal";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Comment from "../Comment/Comment";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { toPostData } from "@/lib/utils";
 
 const Post = ({ data }) => {
   console.log(data);
@@ -51,7 +52,7 @@ const Post = ({ data }) => {
     data.postInfo.isBookmarkedBy.includes(data.user)
   );
 
-  const groupAvatarUrl = data.group?.profile.profilePhoto;
+  const groupAvatarUrl = data.group?.profile.profilePhoto[0];
   const groupName = data.group?.name;
   const avatarUrl = data.userInfo.profile.profilePhoto;
   const userName = data.userInfo.name;
@@ -372,6 +373,17 @@ const Post = ({ data }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showEmojiPicker]);
+
+  useEffect(() => {
+    let ignore = false;
+
+    if (!ignore) setContent(data.postInfo.content);
+
+    return () => {
+      ignore = true;
+    };
+  }, [data.postInfo._id]);
+
   if (!isVisible) {
     return null;
   }
@@ -673,5 +685,43 @@ const Post = ({ data }) => {
     </div>
   );
 };
+
+export function PostWrapper() {
+  const { postId } = useParams();
+  const [postData, setPostData] = useState();
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    let ignore = false;
+
+    const fetchPostData = async () => {
+      try {
+        const postRes = await axios.post(
+          `${apiUrl}/post/getPostById`,
+          { postId },
+          { withCredentials: true }
+        );
+
+        if (!ignore)
+          setPostData(await toPostData(postRes.data.post));
+      } catch (error) {
+        console.error("Failed to fetch post data:", error);
+      }
+    };
+
+    fetchPostData();
+
+    return () => {
+      ignore = true;
+    };
+  }, [apiUrl, postId]);
+
+  return (
+    <div className="h-screen pt-24 overflow-auto ">
+      {postData && <Post data={postData} />}
+    </div>
+  );
+}
 
 export default Post;

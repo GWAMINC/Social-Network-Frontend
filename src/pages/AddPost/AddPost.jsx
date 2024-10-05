@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Listbox } from "@headlessui/react";
 import {
@@ -11,7 +11,9 @@ import Picker from "@emoji-mart/react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "react-router-dom";
 
-const AddPost = ({ currentUser }) => {
+
+const AddPost = ({ currentUser, onPostCreated }) => {
+
   const [content, setContent] = useState("");
   const [access, setAccess] = useState("public");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,7 +68,6 @@ const AddPost = ({ currentUser }) => {
       setError("");
       setSuccess("Post created!");
       setShowPicker(false);
-
       const event = new CustomEvent("postCreated");
       window.dispatchEvent(event);
     } catch (error) {

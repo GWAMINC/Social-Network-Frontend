@@ -11,7 +11,7 @@ const routes = {
     profileUpdate: '/profile/edit',
     groups: '/groups',
     profile: '/profile',
-
+    post: '/posts/:postId',
 }
 
 export default routes;
