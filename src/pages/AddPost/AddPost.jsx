@@ -1,12 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Listbox } from "@headlessui/react";
-import { AiOutlineCamera, AiOutlineSmile, AiOutlineVideoCamera } from "react-icons/ai";
+import {
+  AiOutlineCamera,
+  AiOutlineSmile,
+  AiOutlineVideoCamera,
+} from "react-icons/ai";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { Button } from "@/components/ui/button";
+import { useLocation } from "react-router-dom";
+
 
 const AddPost = ({ currentUser, onPostCreated }) => {
+
   const [content, setContent] = useState("");
   const [access, setAccess] = useState("public");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -14,7 +21,7 @@ const AddPost = ({ currentUser, onPostCreated }) => {
   const [success, setSuccess] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const [photos, setPhotos] = useState([]);
-  const [video, setVideo] = useState(null);
+  const [videos, setVideos] = useState([]);
   const pickerRef = useRef(null);
   const accessOptions = ["public", "private"];
   const avatarUrl = currentUser?.profile?.profilePhoto;
@@ -33,6 +40,7 @@ const AddPost = ({ currentUser, onPostCreated }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -41,11 +49,10 @@ const AddPost = ({ currentUser, onPostCreated }) => {
     const formData = new FormData();
     formData.append("content", content);
     formData.append("access", access);
-    photos.forEach((photo) => formData.append("images", photo)); // Append all photos
-    if (video) formData.append("video", video);
+    photos.forEach((photo) => formData.append("images", photo));
+    videos.forEach((video) => formData.append("videos", video));
 
     try {
-      console.log(formData);
       const response = await axios.post(
         "http://localhost:9090/api/post/createPost",
         formData,
@@ -54,15 +61,15 @@ const AddPost = ({ currentUser, onPostCreated }) => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      console.log("Post created:", response.data);
       setContent("");
       setAccess("public");
       setPhotos([]);
-      setVideo(null);
+      setVideos([]);
       setError("");
       setSuccess("Post created!");
       setShowPicker(false);
-      onPostCreated(response.data.post);
+      const event = new CustomEvent("postCreated");
+      window.dispatchEvent(event);
     } catch (error) {
       console.error("Error creating post:", error);
       setError("Failed to create post. Please try again.");
@@ -77,7 +84,27 @@ const AddPost = ({ currentUser, onPostCreated }) => {
   };
 
   const handleVideoChange = (e) => {
-    setVideo(e.target.files[0]);
+    setVideos((prevVideos) => [...prevVideos, ...Array.from(e.target.files)]);
+  };
+
+  const handleDeletePhoto = (index) => {
+    setPhotos((prevPhotos) => {
+      const newPhotos = prevPhotos.filter((_, i) => i !== index);
+      if (newPhotos.length < prevPhotos.length) {
+        document.getElementById("photo-input").value = ""; // Reset input file
+      }
+      return newPhotos;
+    });
+  };
+
+  const handleDeleteVideo = (index) => {
+    setVideos((prevVideos) => {
+      const newVideos = prevVideos.filter((_, i) => i !== index);
+      if (newVideos.length < prevVideos.length) {
+        document.getElementById("video-input").value = ""; // Reset input file
+      }
+      return newVideos;
+    });
   };
 
   const handleEmoji = (emoji) => {
@@ -160,17 +187,49 @@ const AddPost = ({ currentUser, onPostCreated }) => {
             </Listbox>
           </div>
         </div>
+
+        {/* Hiển thị ảnh để xem trước */}
         {photos.length > 0 && (
           <div className="mt-4">
             <div className="grid grid-cols-2 gap-4 mt-2">
               {photos.map((photo, index) => (
-                <img
-                  key={index}
-                  src={URL.createObjectURL(photo)}
-                  className="object-cover w-full h-auto rounded-md"
-                />
+                <div key={index} className="relative">
+                  <img
+                    src={URL.createObjectURL(photo)}
+                    className="object-cover w-full h-auto rounded-md"
+                    alt={`Preview ${index}`}
+                  />
+                  <button
+                    type="button"
+                    className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                    onClick={() => handleDeletePhoto(index)}
+                  >
+                    &times; {/* Nút xóa */}
+                  </button>
+                </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Hiển thị video để xem trước */}
+        {videos.length > 0 && (
+          <div className="mt-4">
+            {videos.map((video, index) => (
+              <div key={index} className="relative mb-4">
+                <video controls className="w-1/2 rounded-lg mb-4">
+                  <source src={URL.createObjectURL(video)} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                <button
+                  type="button"
+                  className="absolute top-2 right-1/2 text-red-500 hover:text-red-700 mr-3"
+                  onClick={() => handleDeleteVideo(index)}
+                >
+                  &times; {/* Nút xóa */}
+                </button>
+              </div>
+            ))}
           </div>
         )}
 
@@ -185,6 +244,7 @@ const AddPost = ({ currentUser, onPostCreated }) => {
                 <span className="hidden md:inline">Photos</span>
                 <input
                   type="file"
+                  id="photo-input"
                   accept="image/*"
                   multiple
                   onChange={handlePhotoChange}
@@ -196,7 +256,9 @@ const AddPost = ({ currentUser, onPostCreated }) => {
                 <span className="hidden md:inline">Video</span>
                 <input
                   type="file"
+                  id="video-input"
                   accept="video/*"
+                  multiple
                   onChange={handleVideoChange}
                   className="hidden"
                 />
