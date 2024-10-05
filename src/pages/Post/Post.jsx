@@ -19,6 +19,7 @@ import Comment from "../Comment/Comment";
 import { useNavigate } from "react-router-dom";
 
 const Post = ({ data }) => {
+  console.log(data);
   const ownerId = data.postInfo.userId;
   const currentUserId = localStorage.getItem("token");
   const [isVisible, setIsVisible] = useState(true);
@@ -37,7 +38,7 @@ const Post = ({ data }) => {
   const [commenting, setCommenting] = useState(false);
 
   const [showComments, setShowComments] = useState(false);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [showPicker, setShowPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,7 +47,9 @@ const Post = ({ data }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(data.postInfo.isBookmarkedBy.includes(data.user));
+  const [isBookmarked, setIsBookmarked] = useState(
+    data.postInfo.isBookmarkedBy.includes(data.user)
+  );
 
   const groupAvatarUrl = data.group?.profile.profilePhoto;
   const groupName = data.group?.name;
@@ -57,7 +60,7 @@ const Post = ({ data }) => {
   const postRef = useRef(null);
   const menuRef = useRef(null);
   const pickerRef = useRef(null);
-  
+
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleLikeClick = (e) => {
@@ -189,21 +192,19 @@ const Post = ({ data }) => {
   };
 
   const handleCommentClick = () => {
-
     setIsLoading(true);
 
-    if (!showComments||!commenting) {
-      setCommenting(true)
+    if (!showComments || !commenting) {
+      setCommenting(true);
       fetchComments(); // Fetch comments when button is clicked
       setIsLoading(false);
     } else {
-      setCommenting(false)
+      setCommenting(false);
       setShowComments(false); // Hide comments if already shown
     }
     if (isLoading) {
       return <div> Loading... </div>;
     }
-
   };
 
   const handleEmojiClick = (emoji) => {
@@ -226,19 +227,19 @@ const Post = ({ data }) => {
       const apiUrl = import.meta.env.VITE_API_URL;
       if (!isBookmarked) {
         axios.post(
-            `${apiUrl}/bookmark/addBookmark`,
-            { postId },
-            { withCredentials: true }
+          `${apiUrl}/bookmark/addBookmark`,
+          { postId },
+          { withCredentials: true }
         );
       } else {
         axios.post(
-            `${apiUrl}/bookmark/deleteBookmark`,
-            { postId },
-            { withCredentials: true }
+          `${apiUrl}/bookmark/deleteBookmark`,
+          { postId },
+          { withCredentials: true }
         );
       }
     } catch (error) {
-      console.error('Failed to bookmark post:', error);
+      console.error("Failed to bookmark post:", error);
     }
   };
 
@@ -253,29 +254,31 @@ const Post = ({ data }) => {
     } catch (error) {
       console.error("Failed to mark post as not interested:", error);
     }
-  }
+  };
 
   const handleUpdateClick = () => {
     setIsUpdateModalOpen(true);
-  }
+  };
 
   const handleUpdateModalClose = () => {
     setIsUpdateModalOpen(false);
-  }
+  };
 
   const handleUpdate = async (updatedData) => {
     setContent(updatedData.content);
     setAccess(updatedData.access);
-  }
+  };
 
   const handleDeleteClick = () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this post?"
+    );
     if (confirmDelete) {
       try {
         axios.post(
-            `${apiUrl}/post/deletePost`,
-            {postId: data.postInfo._id},
-            {withCredentials: true}
+          `${apiUrl}/post/deletePost`,
+          { postId: data.postInfo._id },
+          { withCredentials: true }
         );
         console.log("Deleted post");
         setIsVisible(false);
@@ -283,7 +286,7 @@ const Post = ({ data }) => {
         console.error("Failed to delete post:", error);
       }
     }
-  }
+  };
 
   const handleDateTime = (createdAt) => {
     const now = new Date();
@@ -354,7 +357,6 @@ const Post = ({ data }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-
         postRef.current &&
         !postRef.current.contains(event.target) &&
         menuRef.current &&
@@ -385,30 +387,41 @@ const Post = ({ data }) => {
         <FaEllipsisV />
       </button>
 
-
       {menuOpen && (
         <div
           ref={menuRef}
           className="absolute top-10 right-2 bg-dropdown text-foreground-lighter shadow-md rounded-lg z-10 overflow-hidden"
         >
           {ownerId === currentUserId ? (
-          <ul>
-            <li className="p-2 hover:bg-dropdown-hover cursor-pointer" onClick={handleNotInterestedClick}>
-              Not Interested
-            </li>
-            <li className="p-2 hover:bg-dropdown-hover cursor-pointer" onClick={handleUpdateClick}>
-              Update
-            </li>
-            <li className="p-2 hover:bg-dropdown-hover cursor-pointer" onClick={handleDeleteClick}>
-              Delete
-            </li>
-          </ul>
+            <ul>
+              <li
+                className="p-2 hover:bg-dropdown-hover cursor-pointer"
+                onClick={handleNotInterestedClick}
+              >
+                Not Interested
+              </li>
+              <li
+                className="p-2 hover:bg-dropdown-hover cursor-pointer"
+                onClick={handleUpdateClick}
+              >
+                Update
+              </li>
+              <li
+                className="p-2 hover:bg-dropdown-hover cursor-pointer"
+                onClick={handleDeleteClick}
+              >
+                Delete
+              </li>
+            </ul>
           ) : (
-          <ul>
-            <li className="p-2 hover:bg-dropdown-hover cursor-pointer" onClick={handleNotInterestedClick}>
-              Not Interested
-            </li>
-          </ul>
+            <ul>
+              <li
+                className="p-2 hover:bg-dropdown-hover cursor-pointer"
+                onClick={handleNotInterestedClick}
+              >
+                Not Interested
+              </li>
+            </ul>
           )}
         </div>
       )}
@@ -500,13 +513,11 @@ const Post = ({ data }) => {
           )}
         </div>
 
-        <div className="flex flex-col flex-grow">
-          <p className="mt-1 text-lg text-foreground">
-            {content}
-          </p>
+        <div className="flex flex-col flex-grow rounded-lg shadow-md">
+          <p className="mt-1 text-lg text-foreground">{content}</p>
 
           {data.postInfo.images.length > 0 && (
-            <div className="mt-3">
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {data.postInfo.images.map((image) => (
                 <img
                   key={data.postInfo._id}
@@ -517,6 +528,16 @@ const Post = ({ data }) => {
               ))}
             </div>
           )}
+          {data.postInfo.videos.map((video, index) => (
+            <video
+              key={index}
+              controls
+              className="w-1/2 rounded-lg mb-4"
+            >
+              <source src={video} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          ))}
         </div>
       </div>
 
@@ -542,126 +563,111 @@ const Post = ({ data }) => {
       <div className="mt-3 border-t border-border pt-3">
         <div className="flex gap-4 text-sm">
           <button
-              className={`flex items-center gap-2 transition-colors duration-300 transform ${
-                  liked ? "text-red-500" : "text-[#B48FD9]"
-              } hover:text-[#BFB26F] relative`}
-              onClick={handleLikeClick}
+            className={`flex items-center gap-2 transition-colors duration-300 transform ${
+              liked ? "text-red-500" : "text-[#B48FD9]"
+            } hover:text-[#BFB26F] relative`}
+            onClick={handleLikeClick}
           >
-            <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
+            <FaHeart className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
             <span>
               {liked ? "Đã Thích" : "Thích"} {likeCount}
             </span>
           </button>
 
           <button
-              className={`flex items-center gap-2 transition-colors duration-300 transform ${
-                  disliked ? "text-gray-500" : "text-[#B48FD9]"
-              } hover:text-[#BFB26F] relative`}
-              onClick={handleDislikeClick}
+            className={`flex items-center gap-2 transition-colors duration-300 transform ${
+              disliked ? "text-gray-500" : "text-[#B48FD9]"
+            } hover:text-[#BFB26F] relative`}
+            onClick={handleDislikeClick}
           >
-            <FaHeartBroken
-                className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
+            <FaHeartBroken className="dislike-icon w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
             <span>
               {disliked ? "Không Thích" : "Không Thích"} {dislikeCount}
             </span>
           </button>
 
           <button
-              className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-              onClick={handleCommentClick}
+            className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+            onClick={handleCommentClick}
           >
-            <FaComment className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
+            <FaComment className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
             {commenting}
             {showComments}
             <span>Bình Luận</span>
           </button>
 
           <button
-              className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-              onClick={handleShareClick}
+            className="flex items-center gap-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+            onClick={handleShareClick}
           >
-            <FaShare className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
+            <FaShare className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
             <span>Chia Sẻ</span>
           </button>
           <button
 
+
               className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"}`}
               onClick={handleSavePostClick}
-            className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${
-              isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"
-            }`}
-            onClick={handleSavePostClick}
 
           >
-            <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125"/>
+            <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
           </button>
         </div>
-        <div ref={cmtRef}
-             className="comments-section relative">
-
-
+        <div ref={cmtRef} className="comments-section relative">
           {commenting && (
-              <div className="p-5 flex items-center gap-2 bg-background-darker shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
-                <input
-                    className="flex-grow p-2 bg-input text-foreground focus:outline-none rounded-lg text-sm"
-                    placeholder="Viết bình luận..."
-                    value={comment}
-                    onChange={handleCommentChange}
-                />
-                <button
-                    className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                >
-                  <FaSmile/>
-                </button>
-                <button
-              className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
-              onClick={handleCommentSubmit}
-            >
-              Đăng
-            </button>
-            {showEmojiPicker && (
-              <div className="emoji-picker absolute bottom-16 left-4">
-                <Picker data={Data} onEmojiSelect={handleEmojiClick} />
-              </div>
-            )}
-          </div>
-        )}
+            <div className="p-5 flex items-center gap-2 bg-background-darker shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
+              <input
+                className="flex-grow p-2 bg-input text-foreground focus:outline-none rounded-lg text-sm"
+                placeholder="Viết bình luận..."
+                value={comment}
+                onChange={handleCommentChange}
+              />
+              <button
+                className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              >
+                <FaSmile />
+              </button>
+              <button
+                className="p-2 text-[#B48FD9] hover:text-[#BFB26F] transition-colors"
+                onClick={handleCommentSubmit}
+              >
+                Đăng
+              </button>
+              {showEmojiPicker && (
+                <div className="emoji-picker absolute bottom-16 left-4">
+                  <Picker data={Data} onEmojiSelect={handleEmojiClick} />
+                </div>
+              )}
+            </div>
+          )}
 
-         {showComments && (
-             comments.length>0?(
-                 <section className="comments-section p-5 bg-gray-900 shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
-                   {comments.map((comments, index) => (
-                       <div key={index}
-                            className="comments-section relative">
-                         <Comment
-                             cmtdata={comments}
-                             fetchComments={fetchComments}
-                         />
-
-                       </div>
-                   ))}
-                 </section>
-
-             ):(
-                 <div>No Comment Found</div>
-             )
-         )}
-       </div>
-
+          {showComments &&
+            (comments.length > 0 ? (
+              <section className="comments-section p-5 bg-gray-900 shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
+                {comments.map((comments, index) => (
+                  <div key={index} className="comments-section relative">
+                    <Comment cmtdata={comments} fetchComments={fetchComments} />
+                  </div>
+                ))}
+              </section>
+            ) : (
+              <div>No Comment Found</div>
+            ))}
+        </div>
       </div>
-
-
-
-
-
 
       {showComments && (
         <div className="comments-section">
           <Comment comments={preComment} />
         </div>
       )}
-      <UpdateModal data={data.postInfo} isOpen={isUpdateModalOpen} onClose={handleUpdateModalClose} onUpdate={handleUpdate} />
+      <UpdateModal
+        data={data.postInfo}
+        isOpen={isUpdateModalOpen}
+        onClose={handleUpdateModalClose}
+        onUpdate={handleUpdate}
+      />
 
       <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal} />
     </div>
