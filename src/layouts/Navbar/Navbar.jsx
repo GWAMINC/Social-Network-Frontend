@@ -52,11 +52,11 @@ const Navbar = () => {
 
     const fetchCurrentUser = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/user/profile`,
-          { withCredentials: true }
-        );
-        setCurrentUser(response.data.user);
+        const response = await axios.get(`${apiUrl}/user/profile`, {
+          withCredentials: true,
+        });
+        await setCurrentUser(response.data.user);
+
       } catch (error) {
         console.error("Failed to fetch user:", error);
       }
