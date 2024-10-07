@@ -104,36 +104,36 @@ const Comment = ({ cmtdata, fetchComments }) => {
     };
 
     const confirmDelete = async (e) => {
-         e.preventDefault();
-         setError(null);
+        e.preventDefault();
+        setError(null);
 
-         const formData = new FormData();
-         formData.append("commentId", commentId);
-         try{
-             console.log(formData+" deleting "+commentId);
-             const response = await axios.post(
-                 `${apiUrl}/comment/deleteComment/${commentId}`,
-                 formData,
-                 {
-                     headers:{
-                         "Content-Type": "application/json",
-                     },
-                     withCredentials:true,
-                 }
-             )
-             console.log("Comment deleted",response.data);
-             setComment("");
-             setSuccess(true);
-             setcmtMenuOpen(false);
-             fetchComments();
-             setShowComments(true);
+        const formData = new FormData();
+        formData.append("commentId", commentId);
+        try{
+            console.log(formData+" deleting "+commentId);
+            const response = await axios.post(
+                `${apiUrl}/comment/deleteComment/${commentId}`,
+                formData,
+                {
+                    headers:{
+                        "Content-Type": "application/json",
+                    },
+                    withCredentials:true,
+                }
+            )
+            console.log("Comment deleted",response.data);
+            setComment("");
+            setSuccess(true);
+            setcmtMenuOpen(false);
+            fetchComments();
+            setShowComments(true);
 
-         }
-         catch (err){
-             console.log("Delete failed", err);
-             setError("Delete failed");
-             setSuccess(false);
-         }
+        }
+        catch (err){
+            console.log("Delete failed", err);
+            setError("Delete failed");
+            setSuccess(false);
+        }
 
         setShowDeleteModal(false); // Ẩn modal sau khi xác nhận xóa
     };
@@ -146,7 +146,7 @@ const Comment = ({ cmtdata, fetchComments }) => {
 
     return (
         <div ref={cmtRef}
-            className="comments-container bg-gray-900 shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
+             className="comments-container bg-gray-900 shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
             <div className="comment-bg">
                 {updating && (
                     <div className="comment-edit flex items-center gap-2 rounded-lg max-w-xl mx-auto mb-7 relative">
