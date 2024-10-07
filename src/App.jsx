@@ -3,6 +3,7 @@ import DefaultLayout from "@/layouts/DefaultLayout";
 import { privateRoutes, publicRoutes } from "@/routes";
 import { createContext, useState, useEffect } from "react";
 
+
 export const AuthContext = createContext(null);
 export const ThemeContext = createContext(null);
 
