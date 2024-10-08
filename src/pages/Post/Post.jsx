@@ -669,11 +669,7 @@ const Post = ({ data }) => {
         </div>
       </div>
 
-      {showComments && (
-        <div className="comments-section">
-          <Comment comments={preComment} />
-        </div>
-      )}
+
       <UpdateModal
         data={data.postInfo}
         isOpen={isUpdateModalOpen}
