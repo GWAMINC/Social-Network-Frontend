@@ -14,6 +14,8 @@ import Groups from "@/pages/Groups";
 import Profile from "@/pages/Profile/Profile"; 
 // import Post from "@/pages/Post";
 import { PostWrapper } from "@/pages/Post/Post";
+import NotificationsPage from "@/pages/NotificationsPage/NotificationsPage";
+import NotificationSettingsPage from "@/pages/NotificationSettingsPage/NotificationSettingsPage";
 
 const publicRoutes = [
     { path: config.routes.login, component: Login },
@@ -33,6 +35,8 @@ const privateRoutes = [
     { path: config.routes.profile, component: Profile }, 
     { path: `${config.routes.groups}/*`, component: Groups },
     { path: config.routes.post, component: PostWrapper },
+    { path: config.routes.notifications, component: NotificationsPage },
+    { path: config.routes.notificationSettings, component: NotificationSettingsPage },
 ];
 
 export { publicRoutes, privateRoutes };

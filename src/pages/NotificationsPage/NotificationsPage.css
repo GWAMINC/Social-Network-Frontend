@@ -1,0 +1,127 @@
+.notifications-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #c1b5b5; 
+    min-height: 100vh;
+    margin-top: 60px;
+    font-family: "Inter", sans-serif;
+  }
+  
+  .TitleNoti {
+    font-size: 2rem; 
+    font-weight: bold; 
+    color: #333; 
+    margin-bottom: 20px; 
+    text-align: center; 
+    font-family: "Inter", sans-serif; 
+}
+  
+  .notifications-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px; 
+    margin-bottom: 10px;
+  }
+  
+  .search-notification-section {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+  }
+  
+  .search-notification-input {
+    padding: 8px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    width: 100%; 
+    margin-right: 10px; 
+    outline: none;
+    color: #3d1e66;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .filter-buttons button {
+    padding: 6px 8px;
+    border: none;
+    border-radius: 4px;
+    background-color: #737577; 
+    color: white;
+    cursor: pointer;
+    font-size: 14px; 
+  }
+  
+  .filter-buttons button.active {
+    background-color: #1f2124; 
+  }
+
+  .mark-all-read {
+    background-color: transparent; 
+    color: #1e1442; 
+    border: none; 
+    cursor: pointer;
+  }
+  
+  .notifications-container {
+    width: 100%;
+    max-width: 600px; 
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 10px; 
+  }
+  
+  .notification-card {
+    display: flex;
+    padding: 10px;
+    border-radius: 8px; 
+    border-bottom: 1px solid #eee;
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
+    margin-bottom: 10px; 
+    position: relative;
+  }
+  
+  .notification-card:last-child {
+    border-bottom: none; 
+  }
+  
+  .notification-card:hover {
+    background-color: #e6f7ff; 
+  }
+  
+  .notification-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .notification-content {
+    flex-grow: 1;
+  }
+  
+  .notification-message {
+    font-size: 14px;
+    margin: 0;
+    color: #333; 
+  }
+  
+  .notification-time {
+    font-size: 12px;
+    color: #888; 
+  }
+  
+  .read-indicator {
+    margin-left: auto; 
+    color: green; 
+    font-size: 18px; 
+  }

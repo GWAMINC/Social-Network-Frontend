@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
+import config from "@/config";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button.jsx";
 import { PopoverContent } from "@radix-ui/react-popover";
@@ -48,21 +49,27 @@ const Navbar = () => {
 
   useEffect(() => {
     socket.connect();
-      const fetchCurrentUser = async () => {
-        try {
-          const response = await axios.get(
-              `${apiUrl}/user/profile`,
-              { withCredentials: true }
-          );
-          await setCurrentUser(response.data.user);
-        } catch (error) {
-          console.error("Failed to fetch user:", error);
-        }
 
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await axios.get(
+          `${apiUrl}/user/profile`,
+          { withCredentials: true }
+        );
+        setCurrentUser(response.data.user);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
       }
     };
+
     fetchCurrentUser();
-  }, []);
+
+    // Cleanup function to disconnect socket on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, [apiUrl]);
+
   return (
     <nav>
       <NotificationPopover currentUser={currentUser} />
@@ -238,6 +245,7 @@ const NotificationPopover = ({ currentUser }) => {
     setUserDatas();
   };
 
+  
   const handleDateTime = (createdAt) => {
     const now = new Date();
     const createdDate = new Date(createdAt);
@@ -300,6 +308,20 @@ const NotificationPopover = ({ currentUser }) => {
       navigate("/groups/group");
     }, 200);
   };
+
+  const handleViewAll = () => {
+    console.log("Navigating to notifications page"); 
+    navigate(config.routes.notifications);
+};
+
+const handleOpenNotifications = () => {
+  navigate('/notifications'); 
+};
+
+
+const handleOpenSettings = () => {
+  navigate(config.routes.notificationSettings); 
+};
 
   const handlePostSearchResultClick = async (postId) => {
     blurSearchBar();
@@ -775,44 +797,58 @@ const NotificationPopover = ({ currentUser }) => {
           </Popover>
 
           {/* Notifications */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="secondary"
-                className="flex items-center gap-2 ml-4"
-                onClick={toggleNotifications}
-              >
-                <Bell />
-              </Button>
-            </PopoverTrigger>
-
-            <PopoverContent className="shadow-md notification-container bg-background-lighter shadow-black">
-              <div className="flex items-center justify-between p-3 border-b border-border notification-header">
-                <div className="text-lg font-semibold text-foreground notification-title">
-                  Notifications
-                </div>
-                <Button variant="secondary" className="p-1 rounded-full">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="secondary"
+                    className="flex items-center gap-2 ml-4"
+                    onClick={toggleNotifications}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  </svg>
-                </Button>
-              </div>
+                    <Bell />
+                  </Button>
+                </PopoverTrigger>
 
-              <div className="flex justify-between p-3 border-b border-border notification-filters">
-                <Button variant="secondary">Unread</Button>
-                <Button variant="secondary">All</Button>
-              </div>
+                <PopoverContent className="shadow-md notification-container bg-background-lighter shadow-black">
+                  <div className="flex items-center justify-between p-3 border-b border-border notification-header">
+                    <div className="text-lg font-semibold text-foreground notification-title">
+                      Notifications
+                    </div>
+                    <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="secondary" className="p-1 rounded-full">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4 6h16M4 12h16M4 18h16"
+                      />
+                    </svg>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="shadow-md bg-white shadow-black rounded-lg">
+                  <div className="flex flex-col p-2">
+                  <Button variant="secondary" className="mb-1" onClick={handleOpenNotifications}>
+                    Open Notifications
+                  </Button>
+                    <Button variant="secondary" className="mb-1" onClick={handleOpenSettings}>
+                        Notification Settings
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+                <div className="flex justify-between p-3 border-b border-border notification-filters">
+                    <Button variant="secondary">Unread</Button>
+                    <Button variant="secondary" onClick={handleViewAll}>All</Button> 
+                </div>
 
               <div className="notification-content">
                 {notifications &&

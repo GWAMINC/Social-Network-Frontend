@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import AddPost from "../AddPost";
 import Post from "../Post/Post";
 import ActiveFr from "../ActiveFr/ActiveFr";
+import Chatbox from "./Chatbox";
 import axios from "axios"; 
 import { toPostData } from "@/lib/utils";
 
@@ -111,7 +112,7 @@ const Home = () => {
 
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
           {/* Pages */}
-          <div className="p-6  bg-background-lighter shadow-lg rounded-lg">
+          <div className="p-6 bg-background-lighter shadow-lg rounded-lg">
             <h2 className="text-2xl font-semibold text-foreground">
               Your Pages
             </h2>
@@ -172,6 +173,10 @@ const Home = () => {
           </p>
         </footer>
       </div>
+      
+      {/* Chatbox Component */}
+      <Chatbox /> 
+
       {/* Scroll to Top Button */}
       {isButtonVisible && (
         <Button
