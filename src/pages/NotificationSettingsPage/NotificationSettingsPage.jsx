@@ -1,12 +1,42 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faUserShield, faGlobe, faHeart, faBell, faUniversalAccess, faLanguage, faFilm, faMoon, faLock, faUser, faUsers, faBullhorn, faNewspaper, faComment, faVideo, faUserFriends, faTag, faBan, faCreditCard, faDollarSign, faBriefcase, faChartLine, faDownload, faSyncAlt, faSignInAlt, faShieldAlt, faGavel } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheckCircle,
+  faUserShield,
+  faGlobe,
+  faHeart,
+  faBell,
+  faUniversalAccess,
+  faLanguage,
+  faFilm,
+  faMoon,
+  faLock,
+  faUser,
+  faUsers,
+  faBullhorn,
+  faNewspaper,
+  faVideo,
+  faUserFriends,
+  faTag,
+  faBan,
+  faCreditCard,
+  faDollarSign,
+  faBriefcase,
+  faChartLine,
+  faDownload,
+  faSyncAlt,
+  faSignInAlt,
+  faShieldAlt,
+  faGavel,
+} from '@fortawesome/free-solid-svg-icons';
 
 const NotificationSettingsPage = () => {
+  // State hooks for notification preferences
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
   const [smsNotifications, setSmsNotifications] = useState(false);
 
+  // Function to handle saving settings
   const handleSaveSettings = () => {
     console.log('Settings saved:', {
       emailNotifications,
@@ -19,7 +49,7 @@ const NotificationSettingsPage = () => {
   return (
     <div className="h-screen flex bg-background-light">
       {/* Sidebar */}
-      <div className="w-1/4 bg-background-lighter text-white p-4 rounded-lg shadow-lg border border-gray-600">  
+      <div className="w-1/4 bg-background-lighter text-white p-4 rounded-lg shadow-lg border border-gray-600">
         <h2 className="text-xl font-semibold">Settings & Privacy</h2>
 
         {/* Tools and Resources Section */}
@@ -172,55 +202,53 @@ const NotificationSettingsPage = () => {
             </li>
             <li className="mb-2 text-gray-300 cursor-pointer hover:underline">
               <FontAwesomeIcon icon={faGavel} className="mr-2" />
-              Account ownership and control
+              Request your information
             </li>
           </ul>
-          <hr className="my-2 border-gray-600" />
         </div>
       </div>
 
-       {/* Main Content */}
-      <div className="flex-grow bg-background-light text-white p-4 rounded-lg shadow-lg border border-gray-600 ml-4">
+      {/* Main Content */}
+      <div className="w-3/4 p-6">
         <h1 className="text-2xl font-bold">Notification Settings</h1>
-        <form className="mt-8">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={emailNotifications}
-              onChange={(e) => setEmailNotifications(e.target.checked)}
-              className="mr-2"
-            />
-            Email Notifications
-          </label>
-        </form>
-        <div className="mb-4">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={pushNotifications}
-              onChange={(e) => setPushNotifications(e.target.checked)}
-              className="mr-2"
-            />
-            Push Notifications
-          </label>
+        <div className="mt-4">
+          <h2 className="text-lg font-medium">Manage Your Notifications</h2>
+          <div className="mt-2">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={emailNotifications}
+                onChange={() => setEmailNotifications(!emailNotifications)}
+                className="mr-2"
+              />
+              Email Notifications
+            </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={pushNotifications}
+                onChange={() => setPushNotifications(!pushNotifications)}
+                className="mr-2"
+              />
+              Push Notifications
+            </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={smsNotifications}
+                onChange={() => setSmsNotifications(!smsNotifications)}
+                className="mr-2"
+              />
+              SMS Notifications
+            </label>
+          </div>
+          <button
+            onClick={handleSaveSettings}
+            className="mt-4 bg-blue-500 text-white p-2 rounded"
+          >
+            Save Settings
+          </button>
         </div>
-        <div className="mb-4">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={smsNotifications}
-              onChange={(e) => setSmsNotifications(e.target.checked)}
-              className="mr-2"
-            />
-            SMS Notifications
-          </label>
-        </div>
-        <button
-          onClick={handleSaveSettings}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Save Settings
-        </button>
       </div>
     </div>
   );
