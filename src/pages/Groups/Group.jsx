@@ -29,7 +29,7 @@ const Groups = () => {
   const [mygroup, setMygroup] = useState([]);
   const [inforgroup, setInforgroup] = useState(null);
   const [activeTab, setActiveTab] = useState("discussion");
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false); 
   const [isRemoveMember, setIsRemoveMember] = useState("");
   const [isAddAdmin, setIsAddAdmin] = useState("");
   const [isLeaveGroup, setIsLeaveGroup] = useState("");
