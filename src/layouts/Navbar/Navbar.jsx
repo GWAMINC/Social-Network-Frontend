@@ -52,32 +52,30 @@ const Navbar = () => {
 
     const fetchCurrentUser = async () => {
       try {
-useEffect(() => {
-  const fetchCurrentUser = async () => {
-    try {
-      const response = await axios.get(`${apiUrl}/user/profile`, {
-        withCredentials: true,
-      });
-      setCurrentUser(response.data.user); // Chỉ cần gọi hàm setCurrentUser
-    } catch (error) {
-      console.error("Failed to fetch user:", error);
-    }
-  };
+        const response = await axios.get(`${apiUrl}/user/profile`, {
+          withCredentials: true,
+        });
+        await setCurrentUser(response.data.user);
 
-  fetchCurrentUser();
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
 
-  // Cleanup function to disconnect socket on component unmount
-  return () => {
-    socket.disconnect();
-  };
-}, [apiUrl]);
+    fetchCurrentUser();
 
-return (
-  <nav>
-    <NotificationPopover currentUser={currentUser} />
-  </nav>
-);
+    // Cleanup function to disconnect socket on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, [apiUrl]);
 
+  return (
+    <nav>
+      <NotificationPopover currentUser={currentUser} />
+    </nav>
+  );
+};
 
 const handleViewProfile = () => {
   const userId = localStorage.getItem("userId");
@@ -317,8 +315,7 @@ const NotificationPopover = ({ currentUser }) => {
 };
 
 const handleOpenNotifications = () => {
-
-  navigate('/notifications'); 
+  history.push('/notifications'); 
 };
 
 const handleOpenSettings = () => {
