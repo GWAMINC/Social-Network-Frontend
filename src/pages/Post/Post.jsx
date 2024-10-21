@@ -20,6 +20,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toPostData } from "@/lib/utils";
 
 const Post = ({ data }) => {
+  console.log(data);
   const ownerId = data.postInfo.userId;
   const currentUserId = localStorage.getItem("token");
   const [isVisible, setIsVisible] = useState(true);
