@@ -39,6 +39,7 @@ import io from 'socket.io-client';
 import "./Messenger.css";
 import "./Notification.css";
 import { GroupIdContext } from "../DefaultLayout/DefaultLayout";
+import NewChatModal from "../../pages/Chat/NewChatModal";
 
 const socket = io('http://localhost:3000');
 const Navbar = () => {
@@ -99,7 +100,7 @@ const NotificationPopover = ({ currentUser }) => {
   const [groupSearchResults, setGroupSearchResults] = useState([]);
   const [postSearchResults, setPostSearchResults] = useState([]);
   const [profile, setProfile] = useState();
-
+  const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false);
   const [theme, setTheme] = useContext(ThemeContext);
   const [groupId, setGroupId] = useContext(GroupIdContext);
 
@@ -207,20 +208,24 @@ const NotificationPopover = ({ currentUser }) => {
     };
     fetchnoti();
   };
+  const fetchChats = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/chat/all/${userId}`, {
+        withCredentials: true,
+      });
+      setChats(response.data.chats);
+    } catch (error) {
+      console.error("Failed to fetch chats:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchChats = async () => {
-      try {
-        const response = await axios.get(`${apiUrl}/chat/all/${userId}`, {
-          withCredentials: true,
-        });
-        setChats(response.data.chats);
-      } catch (error) {
-        console.error("Failed to fetch chats:", error);
-      }
-    };
     fetchChats();
   }, [userId]);
+
+  const updateNavbarChats = () => {
+    fetchChats();
+  };
   const toggleChats = () => {
     const setUserDatas = async () => {
       const userDatas = {};
@@ -350,6 +355,19 @@ const handleOpenSettings = () => {
       alert("An error occurred");
     }
   };
+
+  const handleNewChatClick = () => {
+    setIsNewChatModalOpen(true);
+  };
+
+  const handleNewChatClose = () => {
+    setIsNewChatModalOpen(false);
+  };
+
+  // const handleCreateChat = (chatData) => {
+  //   // Logic để tạo cuộc trò chuyện mới, ví dụ: gọi API
+  //   console.log('New chat created:', chatData);
+  // };
 
   const navButtons = [
     { name: "Home", icon: House, linkTo: "/" },
@@ -732,6 +750,7 @@ const handleOpenSettings = () => {
                   <Button
                     variant="secondary"
                     className="gap-2 rounded-full opacity-100"
+                    onClick={handleNewChatClick}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -786,6 +805,13 @@ const handleOpenSettings = () => {
                     </Link>
                   </div>
                 ))}
+                <NewChatModal
+                    isOpen={isNewChatModalOpen}
+                    onClose={handleNewChatClose}
+                    // onCreate={handleCreateChat}
+                    updateNavbarChats={updateNavbarChats}
+                    setUserChatDatas={setUserChatDatas}
+                />
               </div>
               <div className="border-t messenger-footer border-border bg-background">
                 <Link to={"/chats"}>
