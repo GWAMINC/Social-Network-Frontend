@@ -320,7 +320,7 @@ const NotificationPopover = ({ currentUser }) => {
 };
 
 const handleOpenNotifications = () => {
-  history.push('/notifications'); 
+  navigate('/notifications'); 
 };
 
 const handleOpenSettings = () => {
