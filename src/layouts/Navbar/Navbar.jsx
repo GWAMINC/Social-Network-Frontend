@@ -280,6 +280,7 @@ const NotificationPopover = ({ currentUser }) => {
   if (
     location.pathname === "/login" ||
     location.pathname === "/register" ||
+    location.pathname === "/chats" ||
     location.pathname === "/forgot-password"
   ) {
     return null;
