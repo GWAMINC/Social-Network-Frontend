@@ -1,0 +1,257 @@
+/* ChatRoomPage.css */
+.chatroom-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f0f2f5; /* Màu nền nhẹ */
+    padding-top: 16px; 
+}
+
+.feature-sidebar {
+    width: 5%; /* 0.3/10 cho thanh tính năng */
+    background-color: #fff;
+    border-right: 1px solid #eaeaea;
+    padding: 16px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: calc(100% - 16px);
+    margin-top: 48px; 
+    font-size: 20px; 
+    font-weight: bold;
+    
+    
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+}
+
+.feature-sidebar h2 {
+    margin: 0; /* Để loại bỏ margin mặc định */
+}
+
+.pending-messages-sidebar {
+    width: 25%; /* 3.8/10 cho tin nhắn chờ */
+    background-color: #fff;
+    border-right: 1px solid #eaeaea;
+    padding: 16px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: calc(100% - 16px);
+    margin-top: 48px; 
+    font-size: 20px; 
+    font-weight: bold;
+    overflow-y: auto;
+}
+
+.pending-message:hover {
+    background-color: #f5f5f5; /* Hiệu ứng hover */
+}
+
+.pending-message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.main-content {
+    width: 70%; /* Chiều rộng 70% cho nội dung chính */
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    overflow: hidden;
+    justify-content: space-between;
+}
+
+.chat-header {
+    background-color: #333; /* Màu nền thanh tiêu đề */
+    color: white;
+    padding: 16px;
+    margin-top: 48px; 
+    font-size: 20px; 
+    font-weight: bold;
+    border-radius: 8px;
+    text-align: center;
+    position: sticky;
+    display: flex; /* Sử dụng flexbox */
+    justify-content: space-between; /* Chia khoảng giữa tiêu đề và biểu tượng */
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+
+.pending-title, .feature-title {
+    background-color: #333; /* Màu nền thanh tiêu đề */
+    color: white;
+    padding: 16px;
+    margin-top: 48px; 
+    font-size: 20px; 
+    font-weight: bold;
+    border-radius: 8px;
+    text-align: center;
+    position: sticky;
+}
+.message-container {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    max-height: auto;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    max-width: 80%;
+    display: flex; 
+    align-items: flex-start; 
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.message-content {
+    display: flex;
+    flex-direction: column;
+}
+.message-status {
+    margin-left: auto;
+    font-size: 14px;
+    color: #999;
+}
+
+.read {
+    color: green;
+}
+
+.unread {
+    color: orange;
+}
+
+.message-content {
+    background-color: #f1f1f1; 
+    padding: 10px;
+    border-radius: 15px;
+    max-width: 80%;
+    position: relative;
+}
+
+.my-message {
+    background-color: #e1ffc7; 
+    align-self: flex-end; 
+    margin-left: auto; 
+}
+
+.my-message .message-content {
+    background-color: #e1ffc7; /* Màu nền cho tin nhắn gửi đi */
+}
+
+.other-message {
+    background-color: #f1f1f1; 
+    align-self: flex-start;
+}
+
+.input-container {
+    display: flex;
+    border-top: 1px solid #eaeaea;
+    position: sticky;
+}
+
+.message-input {
+    flex: 1;
+    border: none;
+    padding: 12px;
+    border-radius: 20px 0 0 20px;
+    outline: none;
+}
+
+.send-button {
+    background-color: #3897f0;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.send-button:hover {
+    background-color: #2e7db4;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.modal-content {
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 1000px; 
+    width: 100%; 
+}
+
+.calendar-container {
+    width: 100%;
+    max-width: 1000px; 
+    margin: 0 auto; 
+    position: relative;
+}
+
+
+.grid-cols-7 > div {
+    height: 100px;
+    min-width: 120px;
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    background: #3b3b3b; 
+    border-radius: 5px 5px; 
+    transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+
+.grid-cols-7 > div:hover {
+    transform: scale(1.05); 
+    background: linear-gradient(135deg, #4a4a4a, #6a6a6a); 
+}
+
+.grid-cols-7 p {
+    font-weight: bold; 
+    text-align: center; 
+}
+
+
+.absolute {
+    font-size: 1.5rem; 
+    color: white; 
+}
+
+.icon-container {
+    display: flex; /* Để xếp các biểu tượng theo hàng */
+    gap: 8px; /* Khoảng cách giữa các nút */
+}
+
+.icon-button {
+    background: none; /* Không nền */
+    border: none; /* Không viền */
+    cursor: pointer; /* Con trỏ dạng tay */
+    font-size: 24px; /* Kích thước biểu tượng */
+    color: white; /* Màu sắc biểu tượng */
+}
