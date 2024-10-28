@@ -530,9 +530,9 @@ const Post = ({ data }) => {
 
           {data.postInfo.images.length > 0 && (
             <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {data.postInfo.images.map((image) => (
+              {data.postInfo.images.map((image, index) => (
                 <img
-                  key={data.postInfo._id}
+                  key={`${data.postInfo._id}_${index}`}
                   src={image}
                   alt="Post Media"
                   className="w-full h-auto rounded-lg"
