@@ -1,8 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../App.jsx";
 import "./Login.css";
+import ms from "ms";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,8 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const { checkAuth } = useContext(AuthContext);
+  
+  const tokenTimeoutRef = useRef(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -28,8 +31,17 @@ const Login = () => {
           withCredentials: true,
         }
       );
+
       localStorage.setItem("token", res.data.token);
+
+      clearTimeout(tokenTimeoutRef.current);
+      tokenTimeoutRef.current = setTimeout(() => {
+        localStorage.removeItem("token");
+        navigate('/login');
+      }, ms(res.data.tokenExpiresIn));
+
       console.log(res.data);
+      
       setMessage("Đăng nhập thành công!");
       checkAuth();
       navigate("/");
@@ -45,9 +57,9 @@ const Login = () => {
   return (
     <div className="bg-wave">
       <div className="login-container">
-      <h1 className="text-3xl font-bold mb-6 text-center">Sign in</h1>
-        {message && <div className="text-green-500 mb-4">{message}</div>}
-        {error && <div className="text-red-500 mb-4">{error}</div>}
+      <h1 className="mb-6 text-3xl font-bold text-center">Sign in</h1>
+        {message && <div className="mb-4 text-green-500">{message}</div>}
+        {error && <div className="mb-4 text-red-500">{error}</div>}
         <form onSubmit={handleLogin} className="login-form">
           <div className="input-group">
             <label>Email:</label>
@@ -80,7 +92,7 @@ const Login = () => {
             <button type="submit">Login</button>
             <button className="google-login-button">
               <svg
-                className="h-6 w-6 mr-2"
+                className="w-6 h-6 mr-2"
                 xmlns="http://www.w3.org/2000/svg"
                 xmlnsXlink="http://www.w3.org/1999/xlink"
                 width="800px"
