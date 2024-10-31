@@ -1,10 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { AiOutlineSearch, AiOutlineMore } from "react-icons/ai";
 import { Button } from "@/components/ui/button";
 import "./ActiveFr.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ActiveFr = () => {
+  const navigate = useNavigate();
+
   const [searchVisible, setSearchVisible] = useState(false);
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [statusActive, setStatusActive] = useState(true);
@@ -12,6 +15,8 @@ const ActiveFr = () => {
   const searchRef = useRef(null);
   const [friends, setFriends] = useState([]);
   const [users, setUsers] = useState([]);
+
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -86,7 +91,7 @@ const ActiveFr = () => {
         {},
         { withCredentials: true }
       );
-      
+
       setFriends(res.data);
       alert("Added friend successfully");
     } catch (error) {
@@ -112,6 +117,20 @@ const ActiveFr = () => {
     } catch (error) {
       console.log(error);
       alert(error.response?.data?.message);
+    }
+  };
+
+  const handleUserClick = async (id) => {
+    try {
+      const res = await axios.post(
+        `${apiUrl}/user/getProfileById`,
+        { userId: id },
+        { withCredentials: true }
+      );
+      const userData = res.data;
+      navigate("/profile", { state: { userData } });
+    } catch (error) {
+      console.log("Error fetching user data: ", error);
     }
   };
 
@@ -153,13 +172,18 @@ const ActiveFr = () => {
         </div>
       </div>
       <div className="relative flex items-center mb-4" ref={searchRef}>
-        <button onClick={toggleSearch} className="text-foreground-lighter w-6 h-6 mr-2">
+        <button
+          onClick={toggleSearch}
+          className="text-foreground-lighter w-6 h-6 mr-2"
+        >
           <AiOutlineSearch />
         </button>
         <input
           type="text"
           placeholder="Search Contacts..."
-          className={`search-input bg-input text-foreground ${searchVisible ? "visible" : ""}`}
+          className={`search-input bg-input text-foreground ${
+            searchVisible ? "visible" : ""
+          }`}
         />
       </div>
 
@@ -175,10 +199,19 @@ const ActiveFr = () => {
                 alt="Friend Avatar"
                 className="w-8 h-8 rounded-full"
               />
-              <p className="text-foreground">{friend.name} is online</p>
+
+              <a
+                onClick={() => handleUserClick(friend._id)}
+                className="text-foreground cursor-pointer hover:underline"
+              >
+                {friend.name} is online
+              </a>
             </div>
 
-            <Button variant="secondary" onClick={() => deleteFriend(friend._id)}>
+            <Button
+              variant="secondary"
+              onClick={() => deleteFriend(friend._id)}
+            >
               Delete Friend
             </Button>
           </div>
@@ -194,12 +227,15 @@ const ActiveFr = () => {
                 alt="Friend Avatar"
                 className="w-8 h-8 rounded-full"
               />
-              <p className="text-foreground">{user.name}</p>
+              <a
+                onClick={() => handleUserClick(user._id)}
+                className="text-foreground cursor-pointer hover:underline"
+              >
+                {user.name}
+              </a>
             </div>
 
-            <Button onClick={() => addFriend(user._id)}>
-              Add Friend
-            </Button>
+            <Button onClick={() => addFriend(user._id)}>Add Friend</Button>
           </div>
         ))}
       </div>
