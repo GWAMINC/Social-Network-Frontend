@@ -656,24 +656,27 @@ const Post = ({ data }) => {
 
           {showComments &&
             (comments.length > 0 ? (
-              <section className="comments-section p-5 bg-gray-900 shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
-                {comments.map((comments, index) => (
-                  <div key={index} className="comments-section relative">
-                    <Comment cmtdata={comments} fetchComments={fetchComments} />
-                  </div>
-                ))}
-              </section>
+                <section
+                    className="comments-section p-5 bg-gray-900 shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
+                  {comments.map((comments) => (
+                      <div key={comments} className="comments-section relative">
+                        <Comment cmtdata={comments} fetchComments={fetchComments}/>
+
+                      </div>
+                  ))}
+
+                </section>
             ) : (
-              <div>No Comment Found</div>
+                <div>No Comment Found</div>
             ))}
         </div>
       </div>
 
 
       <UpdateModal
-        data={data.postInfo}
-        isOpen={isUpdateModalOpen}
-        onClose={handleUpdateModalClose}
+          data={data.postInfo}
+          isOpen={isUpdateModalOpen}
+          onClose={handleUpdateModalClose}
         onUpdate={handleUpdate}
       />
 
