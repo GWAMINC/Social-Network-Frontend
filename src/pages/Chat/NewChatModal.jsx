@@ -94,6 +94,9 @@ const NewChatModal = ({ isOpen, onClose, updateNavbarChats, setUserChatDatas}) =
                         />
                         {searchQuery && (
                             <div className="search-results">
+                                {searchResults.length === 0 && (
+                                    <div className="search-result-item">Không tìm thấy kết quả</div>
+                                )}
                                 {searchResults
                                     .filter(user => user.id !== currentUserId)
                                     .map((user) => (
