@@ -99,8 +99,11 @@ const NotificationPopover = ({ currentUser }) => {
   const [userSearchResults, setUserSearchResults] = useState([]);
   const [groupSearchResults, setGroupSearchResults] = useState([]);
   const [postSearchResults, setPostSearchResults] = useState([]);
+  const [chatSearchQuery, setChatSearchQuery] = useState("");
+  const [chatSearchResults, setChatSearchResults] = useState([]);
   const [profile, setProfile] = useState();
   const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false);
+  const [isSearchingChats,setIsSearchingChats] = useState(false);
   const [theme, setTheme] = useContext(ThemeContext);
   const [groupId, setGroupId] = useContext(GroupIdContext);
 
@@ -223,6 +226,31 @@ const NotificationPopover = ({ currentUser }) => {
     fetchChats();
   }, [userId]);
 
+  //search chats
+  useEffect(() => {
+    async function searchChats(query) {
+      try {
+        const res = await axios.get(
+            `${apiUrl}/chat/chats/getByUsername/${query}`,
+            { withCredentials: true }
+        );
+        setChatSearchResults(res.data.chats);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (chatSearchQuery && isSearchingChats)
+    {
+      searchChats(chatSearchQuery);
+    }
+  }, [chatSearchQuery]);
+
+  const handleChatSearch = (e) => {
+    const { value } = e.target;
+    if (value.length > 0) setIsSearchingChats(true);
+    else setIsSearchingChats(false);
+    setChatSearchQuery(value);
+  }
   const updateNavbarChats = () => {
     fetchChats();
   };
@@ -773,6 +801,7 @@ const handleOpenSettings = () => {
                   type="text"
                   placeholder="Search Messenger"
                   className="w-full px-4 py-2 border-none rounded-full bg-input text-foreground focus:outline-none"
+                  onChange={handleChatSearch}
                 />
               </div>
 
@@ -781,31 +810,56 @@ const handleOpenSettings = () => {
                 className="overflow-y-auto messenger-content"
                 style={{ height: "calc(100% - 150px)" }}
               >
-                {chats.map((chat, index) => (
-                  <div key={index}>
-                    <Link
-                      to={`/chats/${chat._id}`}
-                      className="flex items-center gap-3 px-3 py-2 cursor-pointer messenger-item hover:bg-gray-100"
-                    >
-                      <Avatar className="w-10 h-10">
-                        <AvatarImage
-                          src={
-                            userChatDatas[chat.participants[1]]?.avatar ||  userChatDatas[chat.participants[0]]?.avatar || ""
-                          }
-                        />
-                        <AvatarFallback>{userChatDatas[chat.participants[0]]?.name.charAt(0).toUpperCase() || userChatDatas[chat.participants[1]]?.name.charAt(0).toUpperCase() }</AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col">
+
+                {isSearchingChats ? (
+                    chatSearchResults.map((chat, index) => (
+                          <div key={index}>
+                            <Link
+                                to={`/chats/${chat._id}`}
+                                className="flex items-center gap-3 px-3 py-2 cursor-pointer messenger-item hover:bg-gray-100"
+                            >
+                              <Avatar className="w-10 h-10">
+                                <AvatarImage
+                                    src={
+                                        userChatDatas[chat.participants[1]]?.avatar || userChatDatas[chat.participants[0]]?.avatar || ""
+                                    }
+                                />
+                                <AvatarFallback>{userChatDatas[chat.participants[0]]?.name.charAt(0).toUpperCase() || userChatDatas[chat.participants[1]]?.name.charAt(0).toUpperCase()}</AvatarFallback>
+                              </Avatar>
+                              <div className="flex flex-col">
+                          <span className="font-semibold text-foreground">
+                              {userChatDatas[chat.participants[1]]?.name || userChatDatas[chat.participants[0]]?.name || "User Name"}
+                          </span>
+                                <span className="text-sm truncate text-foreground-lighter"></span>
+                              </div>
+                            </Link>
+                          </div>
+                    ))
+                ) : (
+                    chats.map((chat, index) => (
+                        <div key={index}>
+                          <Link
+                              to={`/chats/${chat._id}`}
+                              className="flex items-center gap-3 px-3 py-2 cursor-pointer messenger-item hover:bg-gray-100"
+                          >
+                            <Avatar className="w-10 h-10">
+                              <AvatarImage
+                                  src={
+                                      userChatDatas[chat.participants[1]]?.avatar || userChatDatas[chat.participants[0]]?.avatar || ""
+                                  }
+                              />
+                              <AvatarFallback>{userChatDatas[chat.participants[0]]?.name.charAt(0).toUpperCase() || userChatDatas[chat.participants[1]]?.name.charAt(0).toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col">
                         <span className="font-semibold text-foreground">
-                          {userChatDatas[chat.participants[1]]?.name ||  userChatDatas[chat.participants[0]]?.name ||
-                            "User Name"}
+                            {userChatDatas[chat.participants[1]]?.name || userChatDatas[chat.participants[0]]?.name || "User Name"}
                         </span>
-                        <span className="text-sm truncate text-foreground-lighter">
-                        </span>
-                      </div>
-                    </Link>
-                  </div>
-                ))}
+                              <span className="text-sm truncate text-foreground-lighter"></span>
+                            </div>
+                          </Link>
+                        </div>
+                    ))
+                )}
                 <NewChatModal
                     isOpen={isNewChatModalOpen}
                     onClose={handleNewChatClose}
