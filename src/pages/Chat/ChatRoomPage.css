@@ -7,30 +7,9 @@
     padding-top: 16px; 
 }
 
-.feature-sidebar {
-    width: 5%; /* 0.3/10 cho thanh tính năng */
-    background-color: #fff;
-    border-right: 1px solid #eaeaea;
-    padding: 16px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    height: calc(100% - 16px);
-    margin-top: 48px; 
-    font-size: 20px; 
-    font-weight: bold;
-    
-    
-    display: flex;
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-}
-
-.feature-sidebar h2 {
-    margin: 0; /* Để loại bỏ margin mặc định */
-}
 
 .pending-messages-sidebar {
-    width: 25%; /* 3.8/10 cho tin nhắn chờ */
+    width: 20%; /* 3.8/10 cho tin nhắn chờ */
     background-color: #fff;
     border-right: 1px solid #eaeaea;
     padding: 16px;
@@ -42,21 +21,54 @@
     overflow-y: auto;
 }
 
+.pending-messages-sidebar h2 {
+    padding: 20px;
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .pending-message:hover {
     background-color: #f5f5f5; /* Hiệu ứng hover */
 }
 
 .pending-message {
+    padding: 15px 20px;
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 8px;
-    transition: background-color 0.2s;
+    gap: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.pending-message:hover {
+    background-color: rgba(74, 144, 226, 0.1);
+}
+
+.pending-message-content {
+    flex: 1;
+}
+
+.pending-message-content strong {
+    display: block;
+    color: var(--text-color);
+    margin-bottom: 4px;
+}
+
+.pending-message-content p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.pending-message-content small {
+    color: #999;
+    font-size: 0.8rem;
 }
 
 .main-content {
-    width: 70%; /* Chiều rộng 70% cho nội dung chính */
+    width: 80%; /* Chiều rộng 70% cho nội dung chính */
     display: flex;
     flex-direction: column;
     padding: 16px;
@@ -72,16 +84,19 @@
     font-size: 20px; 
     font-weight: bold;
     border-radius: 8px;
-    text-align: center;
-    position: sticky;
-    display: flex; /* Sử dụng flexbox */
-    justify-content: space-between; /* Chia khoảng giữa tiêu đề và biểu tượng */
-    align-items: center; /* Căn giữa theo chiều dọc */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
 }
 
+.chat-title {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+}
 
 .pending-title, .feature-title {
-    background-color: #333; /* Màu nền thanh tiêu đề */
+    background-color: #333; 
     color: white;
     padding: 16px;
     margin-top: 48px; 
@@ -91,70 +106,138 @@
     text-align: center;
     position: sticky;
 }
-.message-container {
+.message-list {
     flex: 1;
-    padding: 16px;
     overflow-y: auto;
-    max-height: auto;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-
+    gap: 20px;
 }
 
 .message {
-    margin-bottom: 10px;
-    padding: 8px 12px;
-    border-radius: 20px;
-    max-width: 80%;
-    display: flex; 
-    align-items: flex-start; 
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 8px 0;
+    max-width: 70%;
+}
+
+.my-message {
+    margin-left: auto;
+    flex-direction: row-reverse;
+}
+
+.other-message {
+    margin-right: auto;
+}
+
+.message-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.my-message .message-wrapper {
+    flex-direction: row-reverse;
 }
 
 .avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-right: 8px;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.message-content {
-    display: flex;
-    flex-direction: column;
-}
 .message-status {
-    margin-left: auto;
-    font-size: 14px;
-    color: #999;
+    margin-left: 4px;
 }
 
 .read {
-    color: green;
+    color: var(--primary-color);
 }
 
 .unread {
-    color: orange;
+    color: #999;
 }
+
+.date {
+    font-weight: 500;
+}
+
+.time {
+    opacity: 0.8;
+}
+
+.message-input-container {
+    padding: 20px;
+    background-color: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 12px;
+}
+
 
 .message-content {
-    background-color: #f1f1f1; 
-    padding: 10px;
-    border-radius: 15px;
-    max-width: 80%;
+    background-color: var(--background-color);
+    padding: 8px 12px;
+    border-radius: 16px;
     position: relative;
-}
-
-.my-message {
-    background-color: #e1ffc7; 
-    align-self: flex-end; 
-    margin-left: auto; 
+    min-width: 200px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .my-message .message-content {
-    background-color: #e1ffc7; /* Màu nền cho tin nhắn gửi đi */
+    background-color: var(--primary-color);
+    color: rgb(19, 17, 17);
+    align-self: flex-end;
+    margin-left: auto;
 }
 
-.other-message {
-    background-color: #f1f1f1; 
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    font-size: 0.85em;
+}
+
+
+.message-info {
+    margin-bottom: 4px;
+}
+
+.message-time {
+    display: flex;
+    gap: 8px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.message-body {
+    position: relative;
+}
+
+.message-text {
+    margin: 0;
+    word-wrap: break-word;
+}
+
+.message-author {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.message-timestamp {
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 4px;
+}
+
+.other-message .message-content {
+    background-color: #f1f1f1;
     align-self: flex-start;
 }
 
@@ -170,22 +253,30 @@
     padding: 12px;
     border-radius: 20px 0 0 20px;
     outline: none;
+    font-size: 16px;
+    margin-right: 8px;
+    background-color: #f9f9f9;
+}
+
+.message-input::placeholder {
+    color: #999;
 }
 
 .send-button {
-    background-color: #3897f0;
-    color: white;
+    padding: 12px 24px;
+    background: linear-gradient(145deg, var(--primary-color), #2980b9);
+    color: rgb(41, 41, 41);
     border: none;
-    padding: 12px 16px;
-    border-radius: 0 20px 20px 0;
+    border-radius: 24px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
 }
 
 .send-button:hover {
-    background-color: #2e7db4;
+    box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
 }
-
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -244,14 +335,269 @@
 }
 
 .icon-container {
-    display: flex; /* Để xếp các biểu tượng theo hàng */
-    gap: 8px; /* Khoảng cách giữa các nút */
+    display: flex;
+    gap: 12px;
 }
 
 .icon-button {
-    background: none; /* Không nền */
-    border: none; /* Không viền */
-    cursor: pointer; /* Con trỏ dạng tay */
-    font-size: 24px; /* Kích thước biểu tượng */
-    color: white; /* Màu sắc biểu tượng */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--background-color);
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .feature-sidebar {
+        width: 60px;
+    }
+
+    .pending-messages-sidebar {
+        width: 280px;
+    }
+
+    .message {
+        max-width: 85%;
+    }
+}
+
+@media (max-width: 576px) {
+    .pending-messages-sidebar {
+        display: none;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+}
+
+.new-message-button {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    background: var(--primary-color);
+    color: rgb(19, 18, 18);
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+.new-message-button:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.main-content {
+    position: relative;
+}
+
+/* Animation cho nút */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.message-list {
+    scroll-behavior: smooth;
+}
+
+
+.c-app {
+    display: flex;
+    max-width: 20%;
+    margin-top: 48px; 
+    box-shadow: -1px 1px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.c-sidepanel {
+    margin-top: 48px; 
+    width: 20%; 
+    background-color: #f8f8f8;
+    padding: 20px;
+    box-sizing: border-box;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+  }
+  
+
+.c-sidepanel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 1rem;
+  }
+  
+  .c-sidepanel__header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgb(34, 40, 49);
+  }
+  
+  .c-sidepanel__header button {
+    border: none;
+    background: none;
+    color: rgb(31, 141, 251);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+  }
+
+  .c-sidepanel__header button:hover {
+    color: rgb(22, 115, 204);
+    text-decoration: underline;
+  }
+.c-sidepanel__nav {
+    border-radius: 8px;
+    background-color: rgb(235, 240, 246);
+    margin-top: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.c-sidepanel__nav--spacer {
+    margin-top: 1.5rem;
+}
+
+.c-sidepanel__nav__li {
+    list-style: none;
+    position: relative;
+    margin-bottom: 1px;
+}
+
+.c-sidepanel__nav__link {
+    text-decoration: none;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    color: rgb(45, 45, 46);
+    border-bottom: 1px solid #d3dae0;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+}
+
+.c-sidepanel__nav__link svg {
+    margin-right: 10px;
+}
+
+.c-sidepanel__nav__link:hover {
+    color: rgb(90, 93, 95);
+    background-color: rgb(220, 220, 220);
+}
+
+.c-sidepanel__nav__link--success svg {
+    color: rgb(55, 212, 33);
+}
+
+.c-sidepanel__nav__link--pending svg {
+    color: rgb(256, 196, 59);
+}
+
+.c-sidepanel__nav__link--warning svg {
+    color: rgb(253, 78, 64);
+}
+
+.c-friends ul {
+    padding-bottom: 10px;
+    list-style: none;
+    margin: 0;
+}
+
+.c-friends__active {
+    font-weight: 300;
+    font-size: 12px;
+    margin-left: auto;
+    color: rgb(128, 132, 136);
+}
+
+.c-friends__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px; 
+    overflow-y: auto;
+}
+  
+.c-friends__link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    background-color: rgb(245, 249, 253);
+    transition: background-color 0.3s ease;
+}
+  
+.c-friends__link:hover {
+    background-color: rgb(231, 239, 246);
+}
+  
+.c-friends__image {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+    border-radius: 50%;
+    border: 1px solid rgb(44, 46, 48);
+}
+  
+.c-friends__active {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(128, 132, 136);
+    margin-top: 15px;
 }
