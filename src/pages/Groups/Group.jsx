@@ -13,6 +13,7 @@ import "./Group.css";
 import axios from "axios";
 import Post from "../Post";
 import { GroupIdContext } from "@/layouts/DefaultLayout/DefaultLayout";
+import AddPostInGroup from "../AddPostInGroup";
 
 const Groups = () => {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ const Groups = () => {
   const [isUpdateGroup, setIsUpdateGroup] = useState("");
   const [selectedMember, setSelectedMember] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
+  const [postCreated,setPostCreated]=useState(null)
 
   const handleMemberClick = (member) => {
     setSelectedMember(member);
@@ -160,6 +162,7 @@ const Groups = () => {
   const getGroupIdFromLocalStorage = () => {
     return localStorage.getItem("groupId");
   };
+  
   const getMainContent = () => {
     const path = location.pathname.split("/").pop(); // Lấy phần cuối của URL
     switch (path) {
@@ -487,7 +490,7 @@ const Groups = () => {
               <div className="group-cover-edit">
                 <img
                   src={
-                    inforgroup.group.profile.coverPhoto || "default-cover.jpg"
+                    inforgroup.group?.profile.coverPhoto || "default-cover.jpg"
                   }
                   alt="Group Cover"
                   className="group-cover"
@@ -787,10 +790,11 @@ const Groups = () => {
             </div>
 
             <div className="posts">
+              <AddPostInGroup setPostCreated={setPostCreated}/>
               <div className="group-posts">
                 <h3>Posts:</h3>
                 {inforgroup.data && inforgroup.data.length > 0 ? (
-                  inforgroup.data.map((post) => (
+                  inforgroup.data.slice().reverse().map((post) => (
                     <div key={post.postInfo._id} className="post-item">
                       <Post data={post} />
                     </div>
@@ -933,7 +937,7 @@ const Groups = () => {
       };
       fetchGroupById();
     }
-  }, [groupId, isRemoveMember, isAddAdmin, isUpdateGroup]);
+  }, [groupId, isRemoveMember, isAddAdmin, isUpdateGroup, postCreated]);
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
