@@ -4,6 +4,7 @@ const routes = {
     login: '/login',
     register: '/register',
     addPost: '/addPost',
+    addPostInGroup: '/addPostInGroup',
     forgotPassword: '/forgot-password',
     chats: '/chats',
     chatRoom: '/chats/:chatId',
