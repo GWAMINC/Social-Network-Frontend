@@ -7,6 +7,8 @@ import {
   FaBookmark,
   FaEllipsisV,
   FaSmile,
+  FaLock,
+  FaGlobeAsia,
 } from "react-icons/fa";
 import Data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
@@ -496,7 +498,7 @@ const Post = ({ data }) => {
                 {groupName}
               </div>
 
-              <div className="flex gap-2 text-sm text-foreground-lighter">
+              <div className="flex items-center gap-2 text-sm text-foreground-lighter">
                 <span
                   onClick={() => fetchProfile(data.postInfo.userId)}
                   className="cursor-pointer hover:underline"
@@ -505,6 +507,14 @@ const Post = ({ data }) => {
                 </span>
                 <span>·</span>
                 <span>{handleDateTime(data.postInfo.createdAt)}</span>
+                <span>·</span>
+                <span>
+                  {data.postInfo.access === "public" ? (
+                    <FaGlobeAsia />
+                  ) : (
+                    <FaLock />
+                  )}
+                </span>
               </div>
             </div>
           ) : (
@@ -517,9 +527,17 @@ const Post = ({ data }) => {
                 {data.userInfo.name}
               </div>
 
-              <p className="text-sm text-foreground-lighter">
-                {handleDateTime(data.postInfo.createdAt)}
-              </p>
+              <div className="flex items-center gap-2 text-sm text-foreground-lighter">
+                <span>{handleDateTime(data.postInfo.createdAt)}</span>
+                <span>·</span>
+                <span>
+                  {data.postInfo.access === "public" ? (
+                    <FaGlobeAsia />
+                  ) : (
+                    <FaLock />
+                  )}
+                </span>
+              </div>
             </div>
           )}
         </div>
@@ -540,11 +558,7 @@ const Post = ({ data }) => {
             </div>
           )}
           {data.postInfo.videos.map((video, index) => (
-            <video
-              key={index}
-              controls
-              className="w-1/2 rounded-lg mb-4"
-            >
+            <video key={index} controls className="w-1/2 rounded-lg mb-4">
               <source src={video} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
@@ -615,11 +629,10 @@ const Post = ({ data }) => {
             <span>Chia Sẻ</span>
           </button>
           <button
-
-
-              className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"}`}
-              onClick={handleSavePostClick}
-
+            className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${
+              isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"
+            }`}
+            onClick={handleSavePostClick}
           >
             <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
           </button>
@@ -655,27 +668,23 @@ const Post = ({ data }) => {
 
           {showComments &&
             (comments.length > 0 ? (
-                <section
-                    className="comments-section p-5 bg-gray-900 shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
-                  {comments.map((comments) => (
-                      <div key={comments} className="comments-section relative">
-                        <Comment cmtdata={comments} fetchComments={fetchComments}/>
-
-                      </div>
-                  ))}
-
-                </section>
+              <section className="comments-section p-5 bg-gray-900 shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
+                {comments.map((comments) => (
+                  <div key={comments} className="comments-section relative">
+                    <Comment cmtdata={comments} fetchComments={fetchComments} />
+                  </div>
+                ))}
+              </section>
             ) : (
-                <div>No Comment Found</div>
+              <div>No Comment Found</div>
             ))}
         </div>
       </div>
 
-
       <UpdateModal
-          data={data.postInfo}
-          isOpen={isUpdateModalOpen}
-          onClose={handleUpdateModalClose}
+        data={data.postInfo}
+        isOpen={isUpdateModalOpen}
+        onClose={handleUpdateModalClose}
         onUpdate={handleUpdate}
       />
 
