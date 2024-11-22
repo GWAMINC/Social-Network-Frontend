@@ -104,6 +104,7 @@ const NotificationPopover = ({ currentUser }) => {
   const [profile, setProfile] = useState();
   const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false);
   const [isSearchingChats,setIsSearchingChats] = useState(false);
+  const [isGroupChat, setIsGroupChat] = useState(false);
   const [theme, setTheme] = useContext(ThemeContext);
   const [groupId, setGroupId] = useContext(GroupIdContext);
 
@@ -216,11 +217,20 @@ const NotificationPopover = ({ currentUser }) => {
       const response = await axios.get(`${apiUrl}/chat/all/${userId}`, {
         withCredentials: true,
       });
-      setChats(response.data.chats);
+      const Chats = response.data.chats
+      setChats(Chats);
     } catch (error) {
       console.error("Failed to fetch chats:", error);
     }
   };
+  const handleFetchNonGroupChats = () => {
+    setIsGroupChat(false);
+  };
+
+  const handleFetchGroupChats = () => {
+    setIsGroupChat(true);
+  };
+
 
   useEffect(() => {
     fetchChats();
@@ -722,6 +732,7 @@ const handleOpenSettings = () => {
                   <Button
                     variant="secondary"
                     className="flex items-center gap-2 opacity-100"
+                    onClick={handleFetchNonGroupChats}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -734,13 +745,14 @@ const handleOpenSettings = () => {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
+                        d="M4,20 C4,17 8,17 10,15 C11,14 8,14 8,9 C8,5.667 9.333,4 12,4 C14.667,4 16,5.667 16,9 C16,14 13,14 14,15 C16,17 20,17 20,20"
+                        />
                     </svg>
                   </Button>
                   <Button
                     variant="secondary"
                     className="flex items-center gap-2 opacity-100"
+                    onClick={handleFetchGroupChats}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -753,7 +765,9 @@ const handleOpenSettings = () => {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        d="M.221 16.268a15.064 15.064 0 0 0 1.789 1.9C2.008 18.111 2 18.057 2 18a5.029 5.029 0 0 1 3.233-4.678 1 1 0 0 0 .175-1.784A2.968 2.968 0 0 1 4 9a2.988 2.988 0 0 1 5.022-2.2 5.951 5.951 0 0 1 2.022-.715 4.994 4.994 0 1 0-7.913 6.085 7.07 7.07 0 0 0-2.91 4.098zM23.779 16.268a7.07 7.07 0 0 0-2.91-4.1 4.994 4.994 0 1 0-7.913-6.086 5.949 5.949 0 0 1 2.022.715 2.993 2.993 0 1 1 3.614 4.74 1 1 0 0 0 .175 1.784A5.029 5.029 0 0 1 22 18c0 .057-.008.111-.01.167a15.065 15.065 0 0 0 1.789-1.899z">
+                      </path>
+                      <path d="M18.954 20.284a7.051 7.051 0 0 0-3.085-5.114A4.956 4.956 0 0 0 17 12a5 5 0 1 0-8.869 3.17 7.051 7.051 0 0 0-3.085 5.114 14.923 14.923 0 0 0 1.968.849C7.012 21.088 7 21.046 7 21a5.031 5.031 0 0 1 3.233-4.678 1 1 0 0 0 .175-1.785A2.964 2.964 0 0 1 9 12a3 3 0 1 1 6 0 2.964 2.964 0 0 1-1.408 2.537 1 1 0 0 0 .175 1.785A5.031 5.031 0 0 1 17 21c0 .046-.012.088-.013.133a14.919 14.919 0 0 0 1.967-.849z"
                       />
                     </svg>
                   </Button>
@@ -836,29 +850,46 @@ const handleOpenSettings = () => {
                           </div>
                     ))
                 ) : (
-                    chats.map((chat, index) => (
+                    chats.map((chat, index) => {
+                      if (chat.isGroupChat === isGroupChat) {
+                      return (
                         <div key={index}>
                           <Link
                               to={`/chats/${chat._id}`}
                               className="flex items-center gap-3 px-3 py-2 cursor-pointer messenger-item hover:bg-gray-100"
                           >
                             <Avatar className="w-10 h-10">
-                              <AvatarImage
-                                  src={
-                                      userChatDatas[chat.participants[1]]?.avatar || userChatDatas[chat.participants[0]]?.avatar || ""
-                                  }
-                              />
+                              {chat.isGroupChat ? (
+                                  <AvatarImage
+                                      src={chat.groupPhoto || ""}
+                                  />
+                              ) : (
+                                  <AvatarImage
+                                      src={
+                                          userChatDatas[chat.participants[1]]?.avatar || userChatDatas[chat.participants[0]]?.avatar || ""
+                                      }
+                                  />
+                              )
+                              }
                               <AvatarFallback>{userChatDatas[chat.participants[0]]?.name.charAt(0).toUpperCase() || userChatDatas[chat.participants[1]]?.name.charAt(0).toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col">
-                        <span className="font-semibold text-foreground">
-                            {userChatDatas[chat.participants[1]]?.name || userChatDatas[chat.participants[0]]?.name || "User Name"}
-                        </span>
+                              {chat.isGroupChat ? (
+                                <span className="font-semibold text-foreground">
+                                  {chat.groupName || "Group Name"}
+                                </span>
+                                  ): (
+                                <span className="font-semibold text-foreground">
+                                    {userChatDatas[chat.participants[1]]?.name || userChatDatas[chat.participants[0]]?.name || "User Name"}
+                                </span>
+                                )}
                               <span className="text-sm truncate text-foreground-lighter"></span>
                             </div>
                           </Link>
                         </div>
-                    ))
+                    )}
+                      return null;
+                    })
                 )}
                 <NewChatModal
                     isOpen={isNewChatModalOpen}
@@ -866,6 +897,7 @@ const handleOpenSettings = () => {
                     // onCreate={handleCreateChat}
                     updateNavbarChats={updateNavbarChats}
                     setUserChatDatas={setUserChatDatas}
+                    userChatDatas={userChatDatas}
                 />
               </div>
               <div className="border-t messenger-footer border-border bg-background">

@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import './NewChatModal.css';
 
-const NewChatModal = ({ isOpen, onClose, updateNavbarChats, setUserChatDatas}) => {
+const NewChatModal = ({ isOpen, onClose, updateNavbarChats, setUserChatDatas,userChatDatas }) => {
     const currentUserId = localStorage.getItem('token');
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedUsers, setSelectedUsers] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [groupName, setGroupName] = useState("");
+
 
     useEffect(() => {
         async function searchUsers(query) {
@@ -33,9 +35,23 @@ const NewChatModal = ({ isOpen, onClose, updateNavbarChats, setUserChatDatas}) =
         const { value } = e.target;
         setSearchQuery(value);
     };
-
+    useEffect(() => {
+        if (selectedUsers.length > 0) {
+            const names = selectedUsers.slice(0, 3).map(user => user.name).join(', ');
+            const moreUsers = selectedUsers.length > 3 ? ', ...' : '';
+            setGroupName(names + moreUsers);
+        } else {
+            setGroupName("");
+        }
+    }, [selectedUsers]);
     const handleUserSelect = (user) => {
-        setSelectedUser(user);
+        setSelectedUsers(prevSelectedUsers => {
+            if (prevSelectedUsers.some(selectedUser => selectedUser._id === user._id)) {
+                return prevSelectedUsers.filter(selectedUser => selectedUser._id !== user._id);
+            } else {
+                return [...prevSelectedUsers, user];
+            }
+        });
     };
 
     const fetchUser = async (userId) => {
@@ -49,28 +65,40 @@ const NewChatModal = ({ isOpen, onClose, updateNavbarChats, setUserChatDatas}) =
             console.error("Failed to fetch user:", error);
         }
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (selectedUser) {
+        if (selectedUsers.length > 0) {
             try {
+                const isGroupChat = selectedUsers.length > 1;
                 const res = await axios.post(
                     'http://localhost:9090/api/chat/chats',
-                    { participants: [currentUserId, selectedUser._id],
-                            isGroupChat: false,
-                            groupName: '',
-                            groupPicture: '' },
+                    {
+                        participants: [currentUserId, ...selectedUsers.map(user => user._id)],
+                        isGroupChat: isGroupChat,
+                        groupName: isGroupChat ? groupName : '' ,
+                        groupPicture: ''
+                    },
                     { withCredentials: true }
                 );
-                const userData = await fetchUser(selectedUser._id);
-                updateNavbarChats();
+                const userDataPromises = selectedUsers.map(user => fetchUser(user._id));
+                const userDatas = await Promise.all(userDataPromises);
+                const newUserChatDatas = userDatas.reduce((acc, userData) => {
+                    acc[userData._id] = userData;
+                    return acc;
+                }, {});
                 setUserChatDatas(prevData => ({
                     ...prevData,
-                    [selectedUser._id]: userData
+                    ...newUserChatDatas
                 }));
                 updateNavbarChats(res.data);
                 onClose();
             } catch (error) {
-                console.log(error);
+                if (error.response && error.response.status === 400) {
+                    alert("Chat đã tồn tại");
+                } else {
+                    console.log(error);
+                }
             }
         }
     };
@@ -81,7 +109,7 @@ const NewChatModal = ({ isOpen, onClose, updateNavbarChats, setUserChatDatas}) =
         <>
             <div className="modal-overlay" onClick={onClose}></div>
             <div className="modal">
-                <div className="modal-header">Tạo Chat Mới</div>
+                <div className="modal-header">Tạo Chat Nhóm Mới</div>
                 <div className="modal-body">
                     <form onSubmit={handleSubmit}>
                         <input
@@ -97,29 +125,32 @@ const NewChatModal = ({ isOpen, onClose, updateNavbarChats, setUserChatDatas}) =
                                 {searchResults.length === 0 && (
                                     <div className="search-result-item">Không tìm thấy kết quả</div>
                                 )}
-                                {searchResults
-                                    .filter(user => user.id !== currentUserId)
-                                    .map((user) => (
-                                        <div
-                                            key={user.id}
-                                            className={`search-result-item ${selectedUser && selectedUser.id === user.id ? 'selected' : ''}`}
-                                            onClick={() => handleUserSelect(user)}
-                                        >
-                                            {user.profile.profilePhoto ? (
-                                                <img src={user.profile.profilePhoto} alt="Avatar" />
-                                            ) : (
-                                                <div className="avatar-placeholder">
-                                                    {user.name.charAt(0)}
-                                                </div>
-                                            )}
-                                            {user.name}
-                                        </div>
-                                    ))}
+                                {searchResults.map((user) => (
+                                    <div
+                                        key={user._id}
+                                        className={`search-result-item ${selectedUsers.some(selectedUser => selectedUser._id === user._id) ? 'selected' : ''}`}
+                                        onClick={() => handleUserSelect(user)}
+                                    >
+                                        {user.profile.profilePhoto ? (
+                                            <img src={user.profile.profilePhoto} alt="Avatar" />
+                                        ) : (
+                                            <div className="avatar-placeholder">
+                                                {user.name.charAt(0)}
+                                            </div>
+                                        )}
+                                        {user.name}
+                                    </div>
+                                ))}
                             </div>
                         )}
-                        {selectedUser && (
-                            <div className="selected-user">
-                                <span>Người dùng đã chọn: {selectedUser.name}</span>
+                        {selectedUsers.length > 0 && (
+                            <div className="selected-users">
+                                <span>Người dùng đã chọn:</span>
+                                <ul>
+                                    {selectedUsers.map(user => (
+                                        <li key={user._id}>{user.name}</li>
+                                    ))}
+                                </ul>
                             </div>
                         )}
                     </form>
@@ -136,9 +167,9 @@ const NewChatModal = ({ isOpen, onClose, updateNavbarChats, setUserChatDatas}) =
 NewChatModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    onCreate: PropTypes.func.isRequired,
     updateNavbarChats: PropTypes.func.isRequired,
-    setUserChatDatas: PropTypes.func.isRequired
+    setUserChatDatas: PropTypes.func.isRequired,
+    userChatDatas: PropTypes.object.isRequired
 };
 
 export default NewChatModal;
