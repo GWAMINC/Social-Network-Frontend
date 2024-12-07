@@ -526,7 +526,6 @@ const Post = ({ data }) => {
 
         <div className="flex flex-col flex-grow rounded-lg shadow-md">
           <p className="mt-1 text-lg text-foreground">{content}</p>
-
           {data.postInfo.images.length > 0 && (
             <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {data.postInfo.images.map((image, index) => (
@@ -540,15 +539,138 @@ const Post = ({ data }) => {
             </div>
           )}
           {data.postInfo.videos.map((video, index) => (
-            <video
-              key={index}
-              controls
-              className="w-1/2 rounded-lg mb-4"
-            >
+            <video key={index} controls className="w-1/2 rounded-lg mb-4">
               <source src={video} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           ))}
+        </div>
+        {/* sharedPost */}
+        <div className="w-full px-4">
+          {data.sharedPost?.userInfo && (
+            <div className="flex flex-col items-start gap-3 border-2 w-full">
+              {/* header */}
+              <div className="flex items-center gap-3 m-1">
+                {/* Avatar and group avatar */}
+                {data.sharedPost?.group ? (
+                  <div className="w-11 h-11 relative">
+                    {data.sharedPost.group?.profile.profilePhoto[0] ? (
+                      <img
+                        src={data.sharedPost.group?.profile.profilePhoto[0]}
+                        alt="Avatar"
+                        className="w-full h-full object-cover rounded-lg cursor-pointer"
+                      />
+                    ) : (
+                      <div className="text-2xl text-gray-600 bg-gray-200 w-full h-full rounded-lg flex items-center justify-center select-none">
+                        {data.sharedPost.group?.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+
+                    <div className="w-7 h-7 rounded-full overflow-hidden absolute -bottom-1 -right-1 ring ring-background-lighter">
+                      {data.sharedPost.userInfo.profile.profilePhoto ? (
+                        <img
+                          src={data.sharedPost.userInfo.profile.profilePhoto}
+                          alt="Avatar"
+                          className="w-full h-full object-cover rounded-full cursor-pointer"
+                          onClick={() =>
+                            fetchProfile(data.sharedPost.userInfo._id)
+                          }
+                        />
+                      ) : (
+                        <div className="text-sm text-gray-600 bg-gray-200 w-full h-full flex items-center justify-center rounded-full">
+                          {data.sharedPost.userInfo.name
+                            ?.charAt(0)
+                            .toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => fetchProfile(data.sharedPost.userInfo._id)}
+                    className="cursor-pointer w-11 h-11"
+                  >
+                    {data.sharedPost?.userInfo?.profile.profilePhoto ? (
+                      <img
+                        src={data.sharedPost.userInfo.profile.profilePhoto}
+                        alt="Avatar"
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <div className="text-2xl text-gray-600 bg-gray-200 w-full h-full flex items-center justify-center rounded-full select-none">
+                        {data.sharedPost?.userInfo?.name
+                          ?.charAt(0)
+                          .toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Group name, username, day posted */}
+                {data.sharedPost?.group ? (
+                  <div>
+                    <div className="text-lg font-semibold text-foreground cursor-pointer">
+                      {data.sharedPost.group?.name}
+                    </div>
+
+                    <div className="flex gap-2 text-sm text-foreground-lighter">
+                      <span
+                        onClick={() =>
+                          fetchProfile(data.sharedPost.userInfo._id)
+                        }
+                        className="cursor-pointer hover:underline"
+                      >
+                        {data.sharedPost.userInfo?.name}
+                      </span>
+                      <span>·</span>
+                      <span>
+                        {handleDateTime(data.sharedPost?.sharedPost?.createdAt)}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div
+                      className="text-lg font-semibold text-foreground"
+                      onClick={() => fetchProfile(data.sharedPost.userInfo._id)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {data.sharedPost?.userInfo?.name}
+                    </div>
+
+                    <p className="text-sm text-foreground-lighter">
+                      {handleDateTime(data.sharedPost?.sharedPost?.createdAt)}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* content */}
+              <div className="flex flex-col flex-grow rounded-lg shadow-md ml-2">
+                <p className=" text-lg text-foreground">
+                  {data.sharedPost.sharedPost.content}
+                </p>
+                {data.sharedPost.sharedPost.images.length > 0 && (
+                  <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {data.sharedPost.sharedPost.images.map((image, index) => (
+                      <img
+                        key={`${data.sharedPost.sharedPost._id}_${index}`}
+                        src={image}
+                        alt="Post Media"
+                        className="w-full h-auto rounded-lg"
+                      />
+                    ))}
+                  </div>
+                )}
+                {data.sharedPost.sharedPost.videos.map((video, index) => (
+                  <video key={index} controls className="w-1/2 rounded-lg mb-4">
+                    <source src={video} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -615,11 +737,10 @@ const Post = ({ data }) => {
             <span>Chia Sẻ</span>
           </button>
           <button
-
-
-              className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"}`}
-              onClick={handleSavePostClick}
-
+            className={`save-post-button absolute bottom-0 right-0 mb-3 mr-3 text-[#B48FD9] hover:text-[#BFB26F] transition-colors flex items-center gap-2 ${
+              isBookmarked ? "text-yellow-200" : "text-[#B48FD9]"
+            }`}
+            onClick={handleSavePostClick}
           >
             <FaBookmark className="w-4 h-4 transition-transform duration-300 transform hover:scale-125" />
           </button>
@@ -655,31 +776,27 @@ const Post = ({ data }) => {
 
           {showComments &&
             (comments.length > 0 ? (
-                <section
-                    className="comments-section p-5 bg-gray-900 shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
-                  {comments.map((comments) => (
-                      <div key={comments} className="comments-section relative">
-                        <Comment cmtdata={comments} fetchComments={fetchComments}/>
-
-                      </div>
-                  ))}
-
-                </section>
+              <section className="comments-section p-5 bg-gray-900 shadow-md rounded-lg max-w-xl mx-auto mb-7 relative">
+                {comments.map((comments) => (
+                  <div key={comments} className="comments-section relative">
+                    <Comment cmtdata={comments} fetchComments={fetchComments} />
+                  </div>
+                ))}
+              </section>
             ) : (
-                <div>No Comment Found</div>
+              <div>No Comment Found</div>
             ))}
         </div>
       </div>
 
-
       <UpdateModal
-          data={data.postInfo}
-          isOpen={isUpdateModalOpen}
-          onClose={handleUpdateModalClose}
+        data={data.postInfo}
+        isOpen={isUpdateModalOpen}
+        onClose={handleUpdateModalClose}
         onUpdate={handleUpdate}
       />
 
-      <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal} />
+      <ShareModal isOpen={shareModalOpen} onClose={handleCloseModal} sharedPostId={data.postInfo._id}/>
     </div>
   );
 };
@@ -701,8 +818,7 @@ export function PostWrapper() {
           { withCredentials: true }
         );
 
-        if (!ignore)
-          setPostData(await toPostData(postRes.data.post));
+        if (!ignore) setPostData(await toPostData(postRes.data.post));
       } catch (error) {
         console.error("Failed to fetch post data:", error);
       }
